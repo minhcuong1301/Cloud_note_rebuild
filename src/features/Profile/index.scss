@@ -1,0 +1,86 @@
+
+.numberMessIcon{
+   background-color: rgba(237, 29, 29, 1);
+   width: 20px;
+   height: 20px;
+   border-radius: 50%;
+   color: #fff;
+   font-size: 14px;
+   font-weight: 600;
+   padding-left: 7px;
+   position: absolute;
+   top: 30px;
+   left: 30px;
+   
+}
+.wrap-record{
+    width: 100%;
+    height: 477px;
+    background-color: #fff;
+    border-radius: 32px;
+    margin-top: 30px;
+    overflow:hidden;
+    .record{
+        display: flex;
+        padding: 30px;
+        gap: 40px;
+        border-bottom: 1px solid rgba(129, 129, 129, 1);
+        align-items: center;
+        .number{
+            font-size: 44px;
+            font-weight: 600;
+        }
+        .title{
+            font-size: 22px;
+            font-weight: 600;
+            width: 400px;
+            display: -webkit-box;
+            max-height: 53px;
+            max-width: 200px;
+            -webkit-line-clamp: 2;  /* số dòng hiển thị */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            visibility: visible;
+        }
+        .title-expand{
+            font-size: 22px;
+            font-weight: 600;
+            width: 200px;transition: max-height 0.3s ease; 
+        }
+        .content{
+           
+            display: -webkit-box;
+            max-height: 53px;
+           width: 343px;
+            -webkit-line-clamp: 2;  /* số dòng hiển thị */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            visibility: visible;
+            font-size: 18px;
+            font-weight: 600;
+            transition: max-height 0.3s ease; 
+            
+            
+        }
+        .expanded {
+         
+           width: 379px;
+          
+            font-size: 18px;
+            font-weight: 600;
+            transition: max-height 0.3s ease; 
+            
+       
+            // -webkit-line-clamp:5;  /* số dòng hiển thị */
+    
+    
+          }
+        
+        .date-post{
+            font-size: 18px;
+            font-weight: 600;
+        }
+    }
+}

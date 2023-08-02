@@ -1,0 +1,43 @@
+.search_Results{
+position: absolute;
+left: 25vw;
+top: 15vh;
+height: 60vh;
+overflow-y: auto;
+overflow-x: hidden;
+    .custom-item{
+        display: flex;
+        padding: 30px;
+        gap:30px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 32px;
+        margin-bottom: 20px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        margin-right:100vh ;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 20px;
+
+      
+        p{
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.75;
+        }
+        .title{
+            max-height: 53px;
+            width: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .content{
+            max-height: 79px;
+            max-width: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    }
+    .custom-item:hover{
+        cursor: pointer;
+    }
+}

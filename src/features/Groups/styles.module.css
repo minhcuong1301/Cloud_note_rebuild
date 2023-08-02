@@ -1,0 +1,18 @@
+.root {
+    width: calc(100vw - 250px);
+    height: calc(100vh - 64px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+.feature {
+    width: 100%;
+    padding: 0 20px;
+    height: calc(100% - 50px);
+    overflow: hidden auto;
+}
+.grid{
+    margin: 0 !important;
+    width: 100% !important;
+}
