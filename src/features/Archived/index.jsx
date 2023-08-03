@@ -10,6 +10,9 @@ import NoteItemLock from "../../components/NoteItemLock";
 import SearchInput from "../../components/SearchInput";
 import ListView from "./ListView";
 import classes from "./styles.module.css";
+import EditForm from "./EditForm";
+
+
 Archived.propTypes = {
     data: PropTypes.array.isRequired,
     handleDelNote: PropTypes.func.isRequired,
@@ -22,7 +25,15 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
     const [dataFilter, setDataFilter] = useState([]);
     const [construct, setConstruct] = useState("List");
     const { view } = useSelector((state) => state.settings);
-
+    const [selectedNote, setSelectedNote] = useState(null);
+    const [drawerEdit, setDrawerEdit] = useState(false);
+    // const [selectedNote, setSelectedNote] = useState(null);
+    const handleSearchItemClick = (noteData) => {
+        setSelectedNote(noteData);
+        console.log("Before setDrawerEdit:", drawerEdit);
+        setDrawerEdit((prevState) => true);
+        console.log("After setDrawerEdit:", drawerEdit);
+    };
     useEffect(() => {
         if (value.trim() === "") {
             setDataFilter(data);
@@ -43,10 +54,25 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
     useEffect(() => {
         setDataFilter(data);
     }, [data]);
-
+    useEffect(() => {
+        console.log("DrawerEdit has been updated:", drawerEdit);
+    }, [drawerEdit]);
     return (
         <div className={classes.root}>
             <div className={classes.headerFeature}>
+
+                {selectedNote && (
+                    <EditForm
+                        dataItem={selectedNote}
+                        handleDelNote={handleDelNote}
+                        setArchivedData={setArchivedData}
+                        construct="List"
+                        clear={() => setSelectedNote(null)}
+                        selectedNote={selectedNote}
+                    />
+
+                )}
+             
                 <Box className='feature'>
                     <Button
                         variant='outlined'
@@ -66,7 +92,10 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
                         {construct}
                     </Button>
                 </Box>
-                <SearchInput setValue={setValue} />
+                <SearchInput
+                    setValue={setValue}
+                    onSearchItemClick={handleSearchItemClick}
+                />
             </div>
             {view === "Side" && construct === "List" ? (
                 <ListView

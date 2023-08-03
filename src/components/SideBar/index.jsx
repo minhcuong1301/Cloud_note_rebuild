@@ -148,7 +148,7 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
                                 primary={
                                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
                                         {user.name}
-                                        {console.log("123", )}
+                                     
                                     </span>
                                 }
                             />

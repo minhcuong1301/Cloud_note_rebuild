@@ -27,7 +27,7 @@ function ListView({ construct = "Grid", data, setArchivedData, handleDelNote, to
   const unlockNote = async () => {
     try {
       const lockNote = await noteApi.openNote(data[selected].idNote, { pass_lock: password });
-
+      console.log("data-select",data[selected].idNote);
       setLockData((prev) => {
         const newData = [...prev];
         newData[selected] = lockNote;
@@ -62,7 +62,6 @@ function ListView({ construct = "Grid", data, setArchivedData, handleDelNote, to
           <div key={index}>
             {
 
-              console.log(item)
             }
             <Button
               sx={{

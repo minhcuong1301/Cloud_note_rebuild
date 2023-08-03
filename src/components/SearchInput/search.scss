@@ -1,8 +1,8 @@
 .search_Results{
 position: absolute;
-left: 25vw;
-top: 15vh;
-height: 60vh;
+left: -39vw;
+top: 8vh;
+height: 69vh;
 overflow-y: auto;
 overflow-x: hidden;
     .custom-item{
@@ -17,6 +17,7 @@ overflow-x: hidden;
         margin-top: 20px;
         margin-bottom: 20px;
         margin-left: 20px;
+        width: 61vw;
 
       
         p{
@@ -32,7 +33,7 @@ overflow-x: hidden;
         }
         .content{
             max-height: 79px;
-            max-width: 400px;
+            width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
         }

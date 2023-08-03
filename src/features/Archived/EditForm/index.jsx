@@ -28,7 +28,10 @@ function getList(list, type) {
   }
 }
 
-export default function EditForm({ dataItem, handleDelNote, setArchivedData, clear }) {
+export default function EditForm({ dataItem, handleDelNote, setArchivedData, clear,  }) {
+  console.log('dataitem',dataItem);
+  console.log('typeofData',typeof(dataItem));
+  // console.log(selectedNote);
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));
@@ -51,21 +54,10 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
     setOptions({ ...options, ...param });
   };
   const handleNoteForm = async (value) => {
-    // const configOptions = {
-    //   ...options,
-    //   dueAt:
-    //     typeof options.dueAt === "object" && options.dueAt
-    //       ? dayjs(options.dueAt).format("DD/MM/YYYY hh:mm A Z")
-    //       : options.dueAt,
-    //   remindAt:
-    //     typeof options.remindAt === "object" && options.remindAt
-    //       ? dayjs(options.remindAt).format("DD/MM/YYYY hh:mm A Z")
-    //       : options.remindAt,
-    //   notePublic: options.notePublic ? 1 : 0,
-    // };
+    
     const configParam = {
       ...value,
-      // ...configOptions,
+     
       pinned: pinned,
       type: dataItem.type,
     };
@@ -73,18 +65,22 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
     try {
       setIsSubmitting(true);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
+      
+
       setIsSubmitting(false);
 
       enqueueSnackbar(res.message, { variant: "success" });
 
       setDrawerEdit(false);
       setArchivedData(dataItem.idNote, res.note);
+      
+     
     } catch (error) {
       setIsSubmitting(false);
       enqueueSnackbar(error.message, { variant: "error" });
     }
   };
-
+ 
   return (
     <Drawer
       variant='persistent'
@@ -162,13 +158,14 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
           >
             <PinnedIcon active={Boolean(pinned)} />
           </span>
+          
           {dataItem.type === "text" && (
             <TextFieldBox
               isSubmitting={isSubmitting}
               handleNoteForm={handleNoteForm}
-              bg={colorNote}
+              bg={colorNote||{}}
               action='Edit'
-              cx={dataItem.data}
+              cx={dataItem.data||dataItem.content}
               tt={dataItem.title}
               type={"2"}
             />

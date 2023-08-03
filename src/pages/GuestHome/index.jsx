@@ -34,7 +34,7 @@ const theme = createTheme({
 
 function Home(props) {
   const { enqueueSnackbar } = useSnackbar();
-
+  const [selectedNote, setSelectedNote] = useState(null);
   const [user, setUser] = useState(
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"))
   );
@@ -50,7 +50,9 @@ function Home(props) {
   const [dataTrash, setDataTrash] = useState([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const handleSearchItemClick = (noteData) => {
+    setSelectedNote(noteData);
+  };
   const [options, setOptions] = useState({
     dueAt: null,
     remindAt: null,
@@ -457,6 +459,7 @@ function Home(props) {
                     handleChangeNote: handleChangeNote,
                     handleOptionsNote: handleOptionsNote,
                   }}
+                  selectedNote={selectedNote}
                 />
               }
             />
