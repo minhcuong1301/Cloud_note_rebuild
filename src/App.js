@@ -34,7 +34,7 @@ function App() {
         <Route path='/upload' element={<ImageUploader />} />
         <Route path='/group/:idGroup/*' element={<GroupDetail />} />
         <Route path='/note/:noteId' element={<Note />} />
-        <Route path='/anonymous' element={checkJWT() ? <Register /> : <Anonymous />} />
+        <Route path='/anonymous' element={<Anonymous />} />
       </Routes>
     </div>
   );
