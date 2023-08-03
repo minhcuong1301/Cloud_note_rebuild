@@ -9,6 +9,7 @@ import { checkJWT } from "./constants";
 import GroupDetail from "./components/GroupDetail";
 import { Explore } from "./features";
 import Note from "./components/Note";
+import Anonymous from "./features/Anonymous/Anonymous";
 
 function App() {
   if (localStorage.getItem("show") !== "false") {
@@ -33,6 +34,7 @@ function App() {
         <Route path='/upload' element={<ImageUploader />} />
         <Route path='/group/:idGroup/*' element={<GroupDetail />} />
         <Route path='/note/:noteId' element={<Note />} />
+        <Route path='/anonymous' element={checkJWT() ? <Register /> : <Anonymous />} />
       </Routes>
     </div>
   );

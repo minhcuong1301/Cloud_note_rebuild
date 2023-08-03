@@ -38,12 +38,15 @@ const userApi = {
   profile(id) {
     const url = "/profile/" + id;
     return axiosClient.get(url);
-    
   },
-  search(key){
-    const url="/notes_search?key="+key;
+  search(key) {
+    const url = "/notes_search?key=" + key;
     return axiosClient.get(url);
-  }
+  },
+  userOnline() {
+    const url = "/login";
+    return axiosClient.get(url);
+  },
 };
 
 export default userApi;
