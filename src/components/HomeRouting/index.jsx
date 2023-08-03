@@ -10,6 +10,7 @@ import {
   Groups,
 } from "../../features";
 import Profile from "../../features/Profile";
+import Profile_orther from "../../features/Profile_orther/Profile_orther";
 
 export default function HomeRouting(props) {
   const {
@@ -26,15 +27,13 @@ export default function HomeRouting(props) {
     handleEditTrash,
     handleInTrash,
     handleOptionsNote,
-   
   } = props;
 
   return (
-    
     <Routes>
-     
       <Route path='/' element={<Navigate to={`/home/${df_nav.toLowerCase()}`} />} />
-      <Route path='/profile'  element={<Profile data={data} />} />
+      <Route path='/profile' element={<Profile data={data} />} />
+      <Route path='/profile/:id' element={<Profile_orther data={data} />} />
       <Route path='/calendar' element={<CalendarTable data={data} />} />
       <Route
         path='/archived'

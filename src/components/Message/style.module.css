@@ -1,0 +1,22 @@
+.inputMessage {
+  color: #65676b;
+  font-size: 17px;
+  border-radius: 20px;
+  ::placeholder {
+    color: #fff;
+  }
+}
+input:focus {
+  outline: none;
+}
+.display {
+  display: block;
+}
+.display_false {
+  display: none !important;
+}
+.option_message {
+  :hover {
+    background-color: #dadada;
+  }
+}

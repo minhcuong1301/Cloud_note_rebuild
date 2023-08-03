@@ -1,0 +1,14 @@
+.box_anoymous {
+  background-color: rgba(255, 255, 255, 10%);
+  padding: 24px;
+}
+.anonymos_img:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 43px;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  background-color: #31a24c;
+}

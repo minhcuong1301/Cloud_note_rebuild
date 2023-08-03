@@ -60,22 +60,34 @@ export default function LandingPage() {
   const [modal, setModal] = useState(false);
   const [largeNote, setLargeNote] = useState(-1);
   const [theme, setTheme] = useState(true);
+  const [statusUser, setStatusUser] = useState(false);
+  const [listUserOnline, setlistUserOnline] = useState([]);
+  useEffect(() => {
+    userApi.getNewUsers().then((res) => setNewUsers(res.data.slice(0, 5)));
+    userApi.userOnline().then((res) => {
+      console.log(res);
+      res.data.forEach((value, index) => {
+        console.log(value);
+        setStatusUser(value.statesLogin);
+      });
+      if (statusUser === true) {
+        setlistUserOnline([...listUserOnline, res.user]);
+        console.log(listUserOnline);
+      }
+    });
+    noteApi
+      .getLastestNotes()
+      .then((res) => {
+        let notes = [...res.notes.slice(-10)];
+        notes.forEach(async (note, index) => {
+          const user = await userApi.profile(note.idUser);
+          notes[index].username = user.user.name;
+        });
+        return notes;
+      })
+      .then((notes) => setNewNotes(notes));
+  }, []);
 
-    useEffect(() => {
-      userApi.getNewUsers().then((res) => setNewUsers(res.data.slice(0, 5)));
-      
-      noteApi
-        .getLastestNotes().then((res) => {
-          let notes = [...res.notes.slice(-10)];
-          notes.forEach(async (note, index) => {
-            const user = await userApi.profile(note.idUser);
-            notes[index].username = user.user.name;
-          });
-          return notes;
-        })
-        .then((notes) => setNewNotes(notes));
-    }, []);
-      
   const changeTheme = (val) => {
     setTheme(val);
   };
@@ -146,7 +158,6 @@ export default function LandingPage() {
                 .map((item, index) => Math.floor(Math.random() * 750) + 251)
                 .sort((a, b) => b - a)
                 .map((item, index) => {
-                  
                   return (
                     <div className={cx("list-item")} key={index}>
                       <div className={cx("index")}>{index}</div>
@@ -203,25 +214,19 @@ export default function LandingPage() {
           <div className={cx("online-users")}>
             <div className={cx("title")}>Online</div>
             <div className={cx("list")}>
-              {[
-                "QTV",
-                "Hao9x",
-                "Thuylinh",
-                "Cubucucbu",
-                "Thien",
-                "Kazuha",
-                "Ronaldo",
-                "Succubus",
-              ].map((user) => {
+              {listUserOnline.map((user) => {
                 return (
-                  <div className={cx("list-item")}>
-                    <div className={cx("avatar")}>
-                      <img src='' alt='' width={40} height={40} />
+                  <Link to={`/home/profile/${user.id}`}>
+                    <div className={cx("list-item")}>
+                      <div className={cx("avatar")}>
+                        <img src={user.Avarta} alt='' width={40} height={40} />
+                      </div>
+
+                      <div className={cx("name")}>{user.name}</div>
+                      <div className={cx("time")}>Onlines</div>
+                      <div className={cx("status", "active")}></div>
                     </div>
-                    <div className={cx("name")}>{user}</div>
-                    <div className={cx("time")}>Online</div>
-                    <div className={cx("status", "active")}></div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
@@ -402,81 +407,84 @@ export default function LandingPage() {
   );
 }
 
-  function Note({ note, active, index, large = false, clearLarge,  }) {
-    const { r, g, b, a } = note.color;
-    const containerRef = useRef(null);
-    const noteId = note.idNote;
+function Note({ note, active, index, large = false, clearLarge }) {
+  const { r, g, b, a } = note.color;
+  const containerRef = useRef(null);
+  const noteId = note.idNote;
 
-    const [open, setOpen] = useState(false);
-    const handleClickOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
+  const clipboard = () => {
+    navigator.clipboard.writeText("http://samnotes.online/note/" + noteId);
+    enqueueSnackbar("Copied to Clipboard", { variant: "success" });
+    handleClose();
+    console.log("Clipboard");
+  };
 
-    const clipboard = () => {
-      navigator.clipboard.writeText("http://samnotes.online/note/" + noteId);
-      enqueueSnackbar("Copied to Clipboard", { variant: "success" });
-      handleClose();
-      console.log("Clipboard");
-    };
-
-    return (
-      <div
-        className={cx("large-note", { large: large })}
-        style={{
-          backgroundColor: `rgba(${r},${g},${b},${a})`,
-          "--index": index,
-        }}
-        ref={containerRef}
-      >
-        {large && (
-          <div
-            className={cx("overlay")}
-            onClick={(e) => {
-              if (!e.target.contains(containerRef.current)) clearLarge();
-            }}
-          ></div>
-        )}
-        <div className={cx("title")}>
-          {note.title}
-          <span>{diffTime(note.createAt)}</span>
-        </div>
-        {(note.type === "text" || note.type === "image") && (
-          <div className={cx("content")}>{note.data}</div>
-        )}
-        {note.metaData && (
-          <div className={cx("image")}>
-            <img src={note.metaData} alt='' />
-          </div>
-        )}
-        {note.type === "checklist" &&
-          note.data.map((item) => (
-            <div>
-              <input type='checkbox' disabled checked={item.status} />
-              {item.content}
-            </div>
-          ))}
-          <Button sx={{ marginTop: "30px", width:"10%"}} variant='contained' onClick={handleClickOpen}>
-            Share
-          </Button>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Share</DialogTitle>
-            <DialogContent>
-              <TextField
-                id='name'
-                type='text'
-                fullWidth
-                variant='standard'
-                disabled
-                value={"http://samnotes.online/note/" + noteId}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={clipboard}> COPY URL</Button>
-            </DialogActions>
-          </Dialog>
+  return (
+    <div
+      className={cx("large-note", { large: large })}
+      style={{
+        backgroundColor: `rgba(${r},${g},${b},${a})`,
+        "--index": index,
+      }}
+      ref={containerRef}
+    >
+      {large && (
+        <div
+          className={cx("overlay")}
+          onClick={(e) => {
+            if (!e.target.contains(containerRef.current)) clearLarge();
+          }}
+        ></div>
+      )}
+      <div className={cx("title")}>
+        {note.title}
+        <span>{diffTime(note.createAt)}</span>
       </div>
-    );
-  }
+      {(note.type === "text" || note.type === "image") && (
+        <div className={cx("content")}>{note.data}</div>
+      )}
+      {note.metaData && (
+        <div className={cx("image")}>
+          <img src={note.metaData} alt='' />
+        </div>
+      )}
+      {note.type === "checklist" &&
+        note.data.map((item) => (
+          <div>
+            <input type='checkbox' disabled checked={item.status} />
+            {item.content}
+          </div>
+        ))}
+      <Button
+        sx={{ marginTop: "30px", width: "10%" }}
+        variant='contained'
+        onClick={handleClickOpen}
+      >
+        Share
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Share</DialogTitle>
+        <DialogContent>
+          <TextField
+            id='name'
+            type='text'
+            fullWidth
+            variant='standard'
+            disabled
+            value={"http://samnotes.online/note/" + noteId}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={clipboard}> COPY URL</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
 
 function CustomizedSwitches({ handleChange, theme }) {
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
