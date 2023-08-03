@@ -4,8 +4,9 @@ import classes from "./styles.module.css";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-function Profile_orther(data) {
+function Profile_orther() {
   const users =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
 
@@ -14,11 +15,14 @@ function Profile_orther(data) {
   const [GmailUser, setGmailUser] = useState("");
   const [Note, setNode] = useState([]);
   const [startIndex, setStartIndex] = useState(5);
+
+  const { id } = useParams();
   useEffect(() => {
+    console.log(id);
     const api_profile = async () => {
       const reslut = await axios({
         method: "GET",
-        url: `http://14.225.7.221:18011/profile/10`,
+        url: `http://14.225.7.221:18011/profile/${id}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -159,22 +163,24 @@ function Profile_orther(data) {
                 src={`${process.env.PUBLIC_URL + "/assets/Vector.png"}`}
                 alt=''
               />
-              <button
-                style={{
-                  backgroundColor: "#3644C7",
-                  border: "none",
-                  borderRadius: 12 + "px",
-                  paddingTop: 8 + "px",
-                  paddingBottom: 8 + "px",
-                  paddingLeft: 12 + "px",
-                  paddingRight: 12 + "px",
-                  color: "#FFFFFF",
-                  fontSize: 16 + "px",
-                  cursor: "pointer",
-                }}
-              >
-                Messenger
-              </button>
+              <Link to={"/anonymous"}>
+                <button
+                  style={{
+                    backgroundColor: "#3644C7",
+                    border: "none",
+                    borderRadius: 12 + "px",
+                    paddingTop: 8 + "px",
+                    paddingBottom: 8 + "px",
+                    paddingLeft: 12 + "px",
+                    paddingRight: 12 + "px",
+                    color: "#FFFFFF",
+                    fontSize: 16 + "px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Messenger
+                </button>
+              </Link>
             </div>
             <div
               style={{

@@ -60,20 +60,17 @@ export default function LandingPage() {
   const [modal, setModal] = useState(false);
   const [largeNote, setLargeNote] = useState(-1);
   const [theme, setTheme] = useState(true);
-  const [statusUser, setStatusUser] = useState(false);
+  const [statusUser, setStatusUser] = useState(0);
   const [listUserOnline, setlistUserOnline] = useState([]);
   useEffect(() => {
     userApi.getNewUsers().then((res) => setNewUsers(res.data.slice(0, 5)));
     userApi.userOnline().then((res) => {
-      console.log(res);
-      res.data.forEach((value, index) => {
-        console.log(value);
+      res.users.forEach((value, index) => {
         setStatusUser(value.statesLogin);
+        if (value.statesLogin === 1) {
+          setlistUserOnline([...listUserOnline, value]);
+        }
       });
-      if (statusUser === true) {
-        setlistUserOnline([...listUserOnline, res.user]);
-        console.log(listUserOnline);
-      }
     });
     noteApi
       .getLastestNotes()
@@ -215,11 +212,12 @@ export default function LandingPage() {
             <div className={cx("title")}>Online</div>
             <div className={cx("list")}>
               {listUserOnline.map((user) => {
+                console.log(user.id);
                 return (
                   <Link to={`/home/profile/${user.id}`}>
                     <div className={cx("list-item")}>
                       <div className={cx("avatar")}>
-                        <img src={user.Avarta} alt='' width={40} height={40} />
+                        <img src={user.img} alt='' width={40} height={40} />
                       </div>
 
                       <div className={cx("name")}>{user.name}</div>
