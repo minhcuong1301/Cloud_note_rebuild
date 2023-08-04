@@ -1,10 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Box, createTheme, Typography, Button } from "@mui/material";
 import rectangleImage from "./img/Rectangle 1.png";
-import avatar from "./img/Ellipse 33.png";
-import add from "./img/material-symbols_group-add.svg";
-import mess from "./img/Vector.svg";
-import createGroup from "./img/ri_group-fill.svg";
+
 import messImg from "./img/messImg.svg";
 import React, { useEffect, useState } from "react";
 import classes from "../Groups/styles.module.css";
@@ -81,9 +78,9 @@ function Profile(data) {
     (async () => {
       const res = await userApi.profile(user.id);
 
-      setProfile(res.notePublic);
+      setProfile(res.note);
       setProfileInfo(res.user);
-      setLimitedData(res.notePublic.slice(2, maxRecordsToShow));
+      setLimitedData(res.note.slice(2, maxRecordsToShow));
     })();
   }, []);
   console.log(profileInfo);
