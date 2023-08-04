@@ -33,7 +33,7 @@ function Profile_orther() {
       setUser(data.user);
       setUserName(data.user.name);
       setGmailUser(data.user.gmail);
-      setNode(data.notePublic);
+      setNode(data.note);
     });
   }, []);
   console.log(userName, GmailUser, Note, user);
