@@ -60,17 +60,12 @@ export default function LandingPage() {
   const [modal, setModal] = useState(false);
   const [largeNote, setLargeNote] = useState(-1);
   const [theme, setTheme] = useState(true);
-  const [statusUser, setStatusUser] = useState(0);
   const [listUserOnline, setlistUserOnline] = useState([]);
   useEffect(() => {
     userApi.getNewUsers().then((res) => setNewUsers(res.data.slice(0, 5)));
     userApi.userOnline().then((res) => {
-      res.users.forEach((value, index) => {
-        setStatusUser(value.statesLogin);
-        if (value.statesLogin === 1) {
-          setlistUserOnline([...listUserOnline, value]);
-        }
-      });
+      const status = res.users.filter((user) => user.statesLogin === 1);
+      setlistUserOnline(status);
     });
     noteApi
       .getLastestNotes()
