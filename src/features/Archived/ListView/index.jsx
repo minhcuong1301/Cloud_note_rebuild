@@ -17,7 +17,14 @@ import EditForm from "../EditForm";
 import noteApi from "../../../api/noteApi";
 import { enqueueSnackbar } from "notistack";
 
-function ListView({ construct = "Grid", data, setArchivedData, handleDelNote, toolsNote }) {
+function ListView({
+  construct = "Grid",
+  data,
+  setArchivedData,
+  handleDelNote,
+  toolsNote,
+  toggleNote,
+}) {
   const [selected, setSelected] = useState(0);
   const [dialog, setDialog] = useState(true);
   const [password, setPassword] = useState("");
@@ -27,7 +34,7 @@ function ListView({ construct = "Grid", data, setArchivedData, handleDelNote, to
   const unlockNote = async () => {
     try {
       const lockNote = await noteApi.openNote(data[selected].idNote, { pass_lock: password });
-      console.log("data-select",data[selected].idNote);
+      console.log("data-select", data[selected].idNote);
       setLockData((prev) => {
         const newData = [...prev];
         newData[selected] = lockNote;
@@ -58,11 +65,8 @@ function ListView({ construct = "Grid", data, setArchivedData, handleDelNote, to
         }}
       >
         {data.map((item, index) => (
-         
           <div key={index}>
-            {
-
-            }
+            {}
             <Button
               sx={{
                 backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
@@ -127,6 +131,7 @@ function ListView({ construct = "Grid", data, setArchivedData, handleDelNote, to
             setArchivedData={setArchivedData}
             construct={construct}
             clear={clear}
+            toggleNote={toggleNote}
           />
         ) : (
           lockData[selected] && (

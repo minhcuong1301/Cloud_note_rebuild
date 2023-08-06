@@ -13,7 +13,8 @@ import classNames from "classnames";
 import userApi from "../../api/userApi";
 import { useSelector } from "react-redux";
 import Message from "../../components/Message/Message";
-function Profile(data) {
+import ListView from "../Archived/ListView/index";
+function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
   const theme = createTheme({
     components: {
       MuiTypography: {
@@ -68,6 +69,9 @@ function Profile(data) {
   const handle_message = () => {
     set_togle_Message(!togle_Message);
   };
+  const handleNote = () => {
+    setToggleNote(!toggleNote);
+  };
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
 
@@ -76,17 +80,21 @@ function Profile(data) {
   const [limitedData, setLimitedData] = useState([]);
   const [maxRecordsToShow, setMaxRecordsToShow] = useState(7);
   const [togle_Message, set_togle_Message] = useState(false);
-
+  const [userOnline, setUserOnline] = useState([]);
+  const [toggleNote, setToggleNote] = useState(false);
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
 
-      setProfile(res.notePublic);
+      setProfile(res.note);
       setProfileInfo(res.user);
-      setLimitedData(res.notePublic.slice(2, maxRecordsToShow));
+      setLimitedData(res.note.slice(2, maxRecordsToShow));
     })();
+    userApi.userOnline().then((res) => {
+      const status = res.users.filter((user) => user.statesLogin === 1);
+      setUserOnline(status);
+    });
   }, []);
-  console.log(profileInfo);
   const handleShowMore = () => {
     const newRecordsToShow = maxRecordsToShow + 4;
 
@@ -173,7 +181,7 @@ function Profile(data) {
             >
               <img onClick={handle_message} src={messImg}></img>
               <div className='numberMessIcon'>1</div>
-              <Message togle={togle_Message} />
+              <Message listUserOnline={userOnline} togle={togle_Message} />
             </Box>
           </Box>
         </div>
@@ -221,68 +229,84 @@ function Profile(data) {
                             Create Group
                         </Button> */}
           </Box>
-          <Box
-            sx={{
-              width: "72%",
-              marginRight: "14%",
-              minHeight: "630px",
-              backgroundColor: "rgba(162, 221, 159, 1)",
-              backgroundImage:
-                "linear-gradient(90deg, rgba(162, 221, 159, 1), rgba(238, 146, 196, 1))",
-              borderRadius: "32px",
-              marginLeft: "14%",
-              padding: "57px 44px",
-            }}
-          >
-            <Typography sx={{ color: "#fff", fontSize: "24px", fontWeight: "600" }}>
-              Latest PublicNote
-            </Typography>
-
-            <div
-              className='wrap-record'
-              style={{ height: maxRecordsToShow <= 50 ? "auto" : "477px" }}
+          {toggleNote === true ? (
+            <ListView
+              toggleNote={toggleNote}
+              data={data}
+              setArchivedData={setArchivedData}
+              handleDelNote={handleDelNote}
+              toolsNote={toolsNote}
+            />
+          ) : (
+            <Box
+              // className={toggleNote === true ? "box_note_hidden" : "box_note_diplay"}
+              sx={{
+                width: "72%",
+                marginRight: "14%",
+                minHeight: "630px",
+                backgroundColor: "rgba(162, 221, 159, 1)",
+                backgroundImage:
+                  "linear-gradient(90deg, rgba(162, 221, 159, 1), rgba(238, 146, 196, 1))",
+                borderRadius: "32px",
+                marginLeft: "14%",
+                padding: "57px 44px",
+              }}
             >
-              {limitedData &&
-                limitedData.map((limitedData, index) => {
-                  return (
-                    <>
-                      <div className='record' key={index}>
-                        <p style={{ width: "50px" }} className='number'>
-                          {index + 1}
-                        </p>
-                        <p className='title'>{limitedData.title} </p>
+              <Typography sx={{ color: "#fff", fontSize: "24px", fontWeight: "600" }}>
+                Latest PublicNote
+              </Typography>
 
-                        {typeof limitedData.data === "string" ? (
-                          <p className='content'>{limitedData.data}</p>
-                        ) : (
-                          <div>
-                            {limitedData.data.map((dataItem, i) => (
-                              <p
-                                style={{
-                                  fontSize: "22px",
-                                  fontWeight: "600",
-                                  width: "200px",
-                                }}
-                                key={i}
-                              >
-                                {dataItem.content}
-                              </p>
-                            ))}
-                          </div>
-                        )}
-                        <p className='date-post'>{limitedData.createAt}</p>
-                      </div>
-                    </>
-                  );
-                })}
-            </div>
+              <div
+                className='wrap-record'
+                style={{ height: maxRecordsToShow <= 50 ? "auto" : "477px" }}
+              >
+                {limitedData &&
+                  limitedData.map((limitedData, index) => {
+                    return (
+                      <>
+                        <div
+                          style={{ cursor: "pointer" }}
+                          className='record'
+                          key={index}
+                          onClick={handleNote}
+                        >
+                          <p style={{ width: "50px" }} className='number'>
+                            {index + 1}
+                          </p>
+                          <p className='title'>{limitedData.title} </p>
 
-            {profile.length > maxRecordsToShow && (
-              <Button sx={{ marginLeft: "40%" }} variant='text' onClick={handleShowMore}>
-                View more
-              </Button>
-            )}
-          </Box>
+                          {typeof limitedData.data === "string" ? (
+                            <p className='content'>{limitedData.data}</p>
+                          ) : (
+                            <div>
+                              {limitedData.data.map((dataItem, i) => (
+                                <p
+                                  style={{
+                                    fontSize: "22px",
+                                    fontWeight: "600",
+                                    width: "200px",
+                                  }}
+                                  key={i}
+                                >
+                                  {dataItem.content}
+                                </p>
+                              ))}
+                            </div>
+                          )}
+                          <p className='date-post'>{limitedData.createAt}</p>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+
+              {profile.length > maxRecordsToShow && (
+                <Button sx={{ marginLeft: "40%" }} variant='text' onClick={handleShowMore}>
+                  View more
+                </Button>
+              )}
+            </Box>
+          )}
         </Box>
       </div>
     </div>

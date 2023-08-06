@@ -28,9 +28,9 @@ function getList(list, type) {
   }
 }
 
-export default function EditForm({ dataItem, handleDelNote, setArchivedData, clear,  }) {
-  console.log('dataitem',dataItem);
-  console.log('typeofData',typeof(dataItem));
+export default function EditForm({ dataItem, handleDelNote, setArchivedData, clear, toggleNote }) {
+  console.log("dataitem", dataItem);
+  console.log("typeofData", typeof dataItem);
   // console.log(selectedNote);
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
@@ -54,10 +54,9 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
     setOptions({ ...options, ...param });
   };
   const handleNoteForm = async (value) => {
-    
     const configParam = {
       ...value,
-     
+
       pinned: pinned,
       type: dataItem.type,
     };
@@ -65,7 +64,6 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
     try {
       setIsSubmitting(true);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
-      
 
       setIsSubmitting(false);
 
@@ -73,14 +71,12 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
 
       setDrawerEdit(false);
       setArchivedData(dataItem.idNote, res.note);
-      
-     
     } catch (error) {
       setIsSubmitting(false);
       enqueueSnackbar(error.message, { variant: "error" });
     }
   };
- 
+
   return (
     <Drawer
       variant='persistent'
@@ -94,9 +90,11 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
         [`& .MuiDrawer-paper`]: {
           width: "calc(100% - 500px)",
           boxSizing: "border-box",
-          height: "calc(100% - 65px)",
+          height: toggleNote ? 100 + "%" : "calc(100% - 65px)",
           visibility: "visible !important",
           transform: "translateX(0) !important",
+          // top: 30 + "px",
+          top: toggleNote ? 220 + "px" : 0,
         },
       }}
     >
@@ -158,14 +156,14 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
           >
             <PinnedIcon active={Boolean(pinned)} />
           </span>
-          
+
           {dataItem.type === "text" && (
             <TextFieldBox
               isSubmitting={isSubmitting}
               handleNoteForm={handleNoteForm}
-              bg={colorNote||{}}
+              bg={colorNote || {}}
               action='Edit'
-              cx={dataItem.data||dataItem.content}
+              cx={dataItem.data || dataItem.content}
               tt={dataItem.title}
               type={"2"}
             />

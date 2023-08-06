@@ -47,6 +47,10 @@ const userApi = {
     const url = "/login";
     return axiosClient.get(url);
   },
+  getMessage(id) {
+    const url = `/message/chat-unknown/${id}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default userApi;
