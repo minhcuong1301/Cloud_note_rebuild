@@ -60,6 +60,14 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
     handleOpenDrawer(type);
   };
 
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    
+
+
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -68,6 +76,7 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
   const [showPassword2, setShowPassword2] = useState(false);
   const [valueLock2, setValueLock2] = useState("");
   const { enqueueSnackbar } = useSnackbar();
+
 
   const [openLock2, setOpenLock2] = useState(false);
   const handleMouseDownPassword2 = (event) => {
@@ -103,6 +112,57 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
     if (pathname.split("/")[2] === nav) return;
     navigate(`/home/${nav}`);
   };
+
+
+    const handleProfileClick = (nav) => {
+        navigate("/home/profile/");
+    };
+    
+    return (
+        <div className={classes.sidebar}>
+            <Dialog open={openLock2} onClose={handleCloseLock2}>
+                <DialogContent>
+                    <FormControl fullWidth sx={{ marginTop: "10px" }} variant='standard'>
+                        <InputLabel htmlFor='lock-password'>Password 2</InputLabel>
+                        <Input
+                            autoFocus
+                            id='lock-password'
+                            type={showPassword2 ? "text" : "password"}
+                            value={valueLock2}
+                            onChange={(e) => setValueLock2(e.target.value)}
+                            endAdornment={
+                                <InputAdornment position='end'>
+                                    <IconButton
+                                        aria-label='toggle password visibility'
+                                        onClick={handleClickShowPassword2}
+                                        onMouseDown={handleMouseDownPassword2}
+                                    >
+                                        {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseLock2}>Cancel</Button>
+                    <Button onClick={handleOkLock2}>Open</Button>
+                </DialogActions>
+            </Dialog>
+            <Box className='nav'>
+                <List>
+                    <ListItem sx={{ color: "#fff" }} disablePadding>
+                        <ListItemButton onClick={handleProfileClick}>
+                      
+                            <img style={{width:"40px",height:"40px",borderRadius:"50%",marginRight:"1rem"}} src={user.Avarta}></img>
+                            <ListItemText
+                                primary={
+                                    <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
+                                        {user.name}
+                                     
+                                    </span>
+                                }
+                            />
 
   const handleProfileClick = (nav) => {
     navigate("/home/profile");
@@ -156,6 +216,7 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
                   </span>
                 }
               />
+
 
               <ListItemIcon>
                 <SettingsOutlined sx={{ color: "#fff", fontSize: "30px", marginLeft: "20px" }} />

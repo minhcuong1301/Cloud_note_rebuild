@@ -9,7 +9,7 @@ BoxDoubleContent.propTypes = {
 
 };
 BoxDoubleContent.defaultProps={
-    customHeight:"50px",
+    customHeight:"72px",
 }
 
 function BoxDoubleContent(props) {

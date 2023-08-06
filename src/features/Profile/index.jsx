@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Box, createTheme, Typography, Button } from "@mui/material";
 import rectangleImage from "./img/Rectangle 1.png";
-
+import { useDispatch } from "react-redux";
 import messImg from "./img/messImg.svg";
 import React, { useEffect, useState } from "react";
 import classes from "../Groups/styles.module.css";
@@ -10,8 +10,12 @@ import classNames from "classnames";
 import userApi from "../../api/userApi";
 import { useSelector } from "react-redux";
 import Message from "../../components/Message/Message";
+
+import { profileUser } from "../../features/Auth/userSlice";
+
 import ListView from "../Archived/ListView/index";
 function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
+
   const theme = createTheme({
     components: {
       MuiTypography: {
@@ -32,7 +36,7 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
       },
     },
   });
-
+  const dispatch = useDispatch();
   useEffect(() => {
     document.querySelectorAll(" .content ").forEach((item) => {
       item.addEventListener("click", function (e) {
@@ -83,7 +87,12 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
+
+      // const res = await dispatch(profileUser(user.id))
+      
+
       setProfile(res.note);
+
       setProfileInfo(res.user);
       setLimitedData(res.note.slice(2, maxRecordsToShow));
     })();
@@ -92,6 +101,7 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
       setUserOnline(status);
     });
   }, []);
+
   const handleShowMore = () => {
     const newRecordsToShow = maxRecordsToShow + 4;
 
@@ -106,7 +116,7 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
     <div className={classes.root}>
       <div className={classNames()}>
         <div className='i' style={{ position: "relative" }}>
-          <img style={{ width: "100%", marginLeft: "16px" }} src={rectangleImage} alt='note' />
+          <img style={{ width: "100%", marginLeft: "16px",height:"20rem" }} src={profileInfo.AvtProfile} alt='note' />
           <Box
             sx={{
               display: "flex",
