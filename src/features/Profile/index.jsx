@@ -69,23 +69,23 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
   const handle_message = () => {
     set_togle_Message(!togle_Message);
   };
-  const handleNote = () => {
-    setToggleNote(!toggleNote);
-  };
+
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
 
   const [profile, setProfile] = useState([]);
   const [profileInfo, setProfileInfo] = useState([]);
   const [limitedData, setLimitedData] = useState([]);
-  const [maxRecordsToShow, setMaxRecordsToShow] = useState(7);
+  const [maxRecordsToShow, setMaxRecordsToShow] = useState(12);
   const [togle_Message, set_togle_Message] = useState(false);
   const [userOnline, setUserOnline] = useState([]);
   const [toggleNote, setToggleNote] = useState(false);
+  const handleNote = () => {
+    setToggleNote(!toggleNote);
+  };
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
-
       setProfile(res.note);
       setProfileInfo(res.user);
       setLimitedData(res.note.slice(2, maxRecordsToShow));
@@ -100,7 +100,7 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
 
     if (newRecordsToShow <= 50) {
       setMaxRecordsToShow(newRecordsToShow);
-      setLimitedData(profile.slice(2, newRecordsToShow));
+      setLimitedData(profile.slice(1, newRecordsToShow));
     }
     console.log(maxRecordsToShow);
   };
@@ -231,6 +231,7 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
           </Box>
           {toggleNote === true ? (
             <ListView
+              limitedData={limitedData}
               toggleNote={toggleNote}
               data={data}
               setArchivedData={setArchivedData}
