@@ -7,11 +7,67 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MessageIcon from "@mui/icons-material/Message";
 import "./index.css";
+import userApi from "../../api/userApi";
+import { useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 const Anonymous = () => {
+  const [Message_user, setz_Message_user] = useState([]);
+  const [messageContent, setMessageContent] = useState("");
+  const [listUserOnline, setlistUserOnline] = useState([]);
   const My_button = styled(Button)({ backgroundColor: "#5BE260", color: "#fff" });
   const My_text = styled(Typography)({
     color: "#fff",
   });
+  const users =
+    useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  const handle_delete = () => {
+    const deleteUser = document.querySelectorAll(".deleteUser");
+    deleteUser.forEach((el) => {
+      el.addEventListener("click", () => {
+        const parent = el.parentElement.parentElement;
+        console.log(parent);
+        parent.classList.add("none");
+      });
+    });
+  };
+  const handleMessage = () => {
+    const messageAnoymous = document.querySelectorAll(".messageAnoymous");
+    messageAnoymous.forEach((el, index) => {
+      el.addEventListener("click", (e) => {
+        const dataId = e.target.parentElement.parentElement.parentElement.getAttribute("data-id");
+      });
+    });
+  };
+  useEffect(() => {
+    userApi.userOnline().then((res) => {
+      const status = res.users.filter((user) => user.statesLogin === 1);
+      setlistUserOnline(status);
+    });
+  }, []);
+
+  const sendMessage = () => {
+    const data = axios({
+      method: "POST",
+      url: `http://14.225.7.221:18011/message/chat-unknown/${users.id}`,
+      data: {
+        content: messageContent,
+        id: 13,
+        idReceive: 15,
+        idSend: users.id,
+        sendAt: new Date().toISOString(),
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setz_Message_user([...Message_user]);
+    setMessageContent("");
+  };
+  useEffect(() => {
+    userApi.getMessage(users.id).then((data) => setz_Message_user(data.data));
+  }, [Message_user]);
   return (
     <Box
       sx={{
@@ -87,17 +143,20 @@ const Anonymous = () => {
           <My_text textAlign='center' variant='subtitle1'>
             You now in anonymous mode. You can chat with others anonymously
           </My_text>
-          <My_button
-            style={{
-              marginBottom: 10 + "px",
-              marginTop: 10 + "px",
-              fontSize: 18 + "px",
-              height: 50 + "px",
-            }}
-            color={My_button}
-          >
-            Quit
-          </My_button>
+          <Link to={"/home/profile"}>
+            <My_button
+              style={{
+                marginBottom: 10 + "px",
+                marginTop: 10 + "px",
+                fontSize: 18 + "px",
+                height: 50 + "px",
+                width: 100 + "%",
+              }}
+              color={My_button}
+            >
+              Quit
+            </My_button>
+          </Link>
         </Box>
         <Stack
           sx={{
@@ -124,73 +183,57 @@ const Anonymous = () => {
             />
           </Stack>
           <Box>
-            <Stack direction='row' alignItems='center' justifyContent='space-between'>
-              <Stack
-                direction='row'
-                alignItems='center'
-                mt={2}
-                mb={1}
-                style={{ cursor: "pointer", position: "relative" }}
-                className='anonymos_img'
-              >
-                <img
-                  style={{ width: 60 + "px", height: 60 + "px" }}
-                  src={`${process.env.PUBLIC_URL + "/assets/user.png"}`}
-                  alt=''
-                />
-                <My_text ml={1}>User Name</My_text>
-              </Stack>
-              <Stack direction='row' alignItems='center'>
-                <DeleteIcon
-                  style={{
-                    fontSize: 30 + "px",
-                    cursor: "pointer",
-                    color: "#fff",
-                  }}
-                />
-                <MessageIcon
-                  style={{
-                    color: "#fff",
-                    fontSize: 28 + "px",
-                    cursor: "pointer",
-                  }}
-                />
-              </Stack>
-            </Stack>
-            {/* user2 */}
-            <Stack direction='row' alignItems='center' justifyContent='space-between'>
-              <Stack
-                direction='row'
-                alignItems='center'
-                mt={2}
-                mb={1}
-                style={{ cursor: "pointer", position: "relative" }}
-                className='anonymos_img'
-              >
-                <img
-                  style={{ width: 60 + "px", height: 60 + "px" }}
-                  src={`${process.env.PUBLIC_URL + "/assets/user.png"}`}
-                  alt=''
-                />
-                <My_text ml={1}>User Name</My_text>
-              </Stack>
-              <Stack direction='row' alignItems='center'>
-                <DeleteIcon
-                  style={{
-                    fontSize: 30 + "px",
-                    cursor: "pointer",
-                    color: "#fff",
-                  }}
-                />
-                <MessageIcon
-                  style={{
-                    color: "#fff",
-                    fontSize: 28 + "px",
-                    cursor: "pointer",
-                  }}
-                />
-              </Stack>
-            </Stack>
+            {listUserOnline.map((user, index) => {
+              return (
+                <Stack
+                  className='User_mess'
+                  data-id={index}
+                  key={index}
+                  direction='row'
+                  alignItems='center'
+                  justifyContent='space-between'
+                >
+                  <Link to={`/profile/${user.id}`}>
+                    <Stack
+                      direction='row'
+                      alignItems='center'
+                      mt={2}
+                      mb={1}
+                      style={{ cursor: "pointer", position: "relative" }}
+                      className='anonymos_img'
+                    >
+                      <img
+                        style={{ width: 60 + "px", height: 60 + "px", borderRadius: 50 + "px" }}
+                        src={user.img}
+                        alt=''
+                      />
+                      <My_text ml={1}>{user.name}</My_text>
+                    </Stack>
+                  </Link>
+                  <Stack direction='row' alignItems='center'>
+                    <DeleteIcon
+                      className='deleteUser'
+                      data={index}
+                      onClick={handle_delete}
+                      style={{
+                        fontSize: 30 + "px",
+                        cursor: "pointer",
+                        color: "#fff",
+                      }}
+                    />
+                    <MessageIcon
+                      className='messageAnoymous'
+                      onClick={handleMessage}
+                      style={{
+                        color: "#fff",
+                        fontSize: 28 + "px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Stack>
+                </Stack>
+              );
+            })}
           </Box>
         </Stack>
       </Box>
@@ -236,46 +279,49 @@ const Anonymous = () => {
           </header>
         </Box>
         <Box
-          className='box_anoymous'
+          className='Box_message box_anoymous'
           sx={{
             position: "absolute",
             maxWidth: 800 + "px",
             borderRadius: 32 + "px",
+            marginBottom: 30 + "px",
             right: 0,
             top: 100,
           }}
         >
-          <Stack mt={4} direction='row' alignItems='center'>
-            <img
-              style={{ width: 60 + "px", height: 60 + "px" }}
-              src={`${process.env.PUBLIC_URL + "/assets/anoymous.png"}`}
-              alt=''
-            />
-            <Box
-              ml={5}
-              sx={{
-                width: 450 + "px",
-                height: 130 + "px",
-                borderRadius: 24 + "px",
-                backgroundColor: "#FFF",
-              }}
-            ></Box>
-          </Stack>
-          <Stack ml={30} mt={7} direction='row' alignItems='center'>
-            <Box
-              mr={5}
-              sx={{
-                width: 550 + "px",
-                height: 150 + "px",
-                borderRadius: 24 + "px",
-                backgroundColor: "#FFF",
-              }}
-            ></Box>
-            <img
-              style={{ width: 60 + "px", height: 60 + "px" }}
-              src={`${process.env.PUBLIC_URL + "/assets/user.png"}`}
-              alt=''
-            />
+          <Stack mt={4} direction='column' alignItems='center'>
+            {Message_user.map((message) => {
+              return (
+                <Stack direction={"row"} mt={2}>
+                  <>
+                    <img
+                      style={{ width: 60 + "px", height: 60 + "px" }}
+                      src={`${
+                        message.idSend == `${users.id}`
+                          ? `${process.env.PUBLIC_URL + "/assets/anoymous.png"}`
+                          : `${process.env.PUBLIC_URL + "/assets/user.png"}`
+                      }`}
+                      alt=''
+                    ></img>
+                    <Box
+                      className={`${message.idSend == `${users.id}` ? "sent" : "received"}`}
+                      ml={5}
+                      sx={{
+                        width: 450 + "px",
+                        padding: 10 + "px",
+                        minHeight: 50 + "px",
+                        borderRadius: 24 + "px",
+                      }}
+                    >
+                      <div key={message.id}>
+                        <p style={{ fontWeight: 600 }}> {message.content}</p>
+                        <p>Đã gửi: {message.sendAt}</p>
+                      </div>
+                    </Box>
+                  </>
+                </Stack>
+              );
+            })}
           </Stack>
         </Box>
       </Box>
@@ -301,8 +347,11 @@ const Anonymous = () => {
               borderRadius: 32 + "px",
             }}
             placeholder='Give a comment'
+            value={messageContent}
+            onChange={(e) => setMessageContent(e.target.value)}
           ></TextField>
           <img
+            onClick={sendMessage}
             style={{ width: 60 + "px", height: 60 + "px", cursor: "pointer" }}
             src={`${process.env.PUBLIC_URL + "/assets/send.png"}`}
             alt=''

@@ -12,3 +12,18 @@
   height: 18px;
   background-color: #31a24c;
 }
+.Box_message {
+  height: calc(80vh - 90px);
+  overflow: hidden auto;
+}
+.sent {
+  background-color: #82b829;
+  color: white;
+}
+.received {
+  background-color: white;
+  color: black;
+}
+.none {
+  display: none !important;
+}

@@ -1,31 +1,31 @@
 import {
-    AddPhotoAlternateOutlined,
-    CalendarMonth,
-    DeleteOutline,
-    Inventory2Outlined,
-    ListAltOutlined,
-    PeopleOutline,
-    Screenshot,
-    SettingsOutlined,
-    TextSnippetOutlined,
-    Visibility,
-    VisibilityOff,
-    GridView,
-    DocumentScannerOutlined,
-    AccountCircle,
+  AddPhotoAlternateOutlined,
+  CalendarMonth,
+  DeleteOutline,
+  Inventory2Outlined,
+  ListAltOutlined,
+  PeopleOutline,
+  Screenshot,
+  SettingsOutlined,
+  TextSnippetOutlined,
+  Visibility,
+  VisibilityOff,
+  GridView,
+  DocumentScannerOutlined,
+  AccountCircle,
 } from "@mui/icons-material";
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControl,
-    IconButton,
-    Input,
-    InputAdornment,
-    InputLabel,
-    Menu,
-    MenuItem,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -42,68 +42,77 @@ import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import Profile from "../../features/Profile";
 SideBar.propTypes = {
-    handleOpenDrawer: PropTypes.func.isRequired,
-    drawerNew: PropTypes.bool.isRequired,
+  handleOpenDrawer: PropTypes.func.isRequired,
+  drawerNew: PropTypes.bool.isRequired,
 };
 
 function SideBar({ handleOpenDrawer, drawerNew }) {
-    const { pathname } = useLocation();
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleCreate = (type) => {
-        handleClose();
-        handleOpenDrawer(type);
-    };
+  const handleCreate = (type) => {
+    handleClose();
+    handleOpenDrawer(type);
+  };
+
 
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const user =
-        useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-        console.log('ádasda',user);
-    const [showPassword2, setShowPassword2] = useState(false);
-    const [valueLock2, setValueLock2] = useState("");
-    const { enqueueSnackbar } = useSnackbar();
+    
 
-    const [openLock2, setOpenLock2] = useState(false);
-    const handleMouseDownPassword2 = (event) => {
-        event.preventDefault();
-    };
-    const handleClickShowPassword2 = () => {
-        setShowPassword2((x) => !x);
-    };
-    const handleCloseLock2 = () => {
-        setOpenLock2(false);
-    };
-    const handleOkLock2 = async () => {
-        try {
-            await userApi.open2(user.id, { password_2: valueLock2 });
-            navigate("/home/screenshot");
-            setOpenLock2(false);
-        } catch (error) {
-            enqueueSnackbar("Password 2 not true", { variant: "error" });
-        }
-    };
-    const dark = { color: "#fff" };
-    const icons = [
-        <GridView style={dark} />,
-        <CalendarMonth style={dark} />,
-        <Inventory2Outlined style={dark} />,
-        <Screenshot style={dark} />,
-        <DeleteOutline style={dark} />,
 
-        <SettingsOutlined style={dark} />,
-        <PeopleOutline style={dark} />,
-    ];
-    const handleNav = (nav) => {
-        if (pathname.split("/")[2] === nav) return;
-        navigate(`/home/${nav}`);
-    };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const user =
+    useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [valueLock2, setValueLock2] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+
+
+  const [openLock2, setOpenLock2] = useState(false);
+  const handleMouseDownPassword2 = (event) => {
+    event.preventDefault();
+  };
+  const handleClickShowPassword2 = () => {
+    setShowPassword2((x) => !x);
+  };
+  const handleCloseLock2 = () => {
+    setOpenLock2(false);
+  };
+  const handleOkLock2 = async () => {
+    try {
+      await userApi.open2(user.id, { password_2: valueLock2 });
+      navigate("/home/screenshot");
+      setOpenLock2(false);
+    } catch (error) {
+      enqueueSnackbar("Password 2 not true", { variant: "error" });
+    }
+  };
+  const dark = { color: "#fff" };
+  const icons = [
+    <GridView style={dark} />,
+    <CalendarMonth style={dark} />,
+    <Inventory2Outlined style={dark} />,
+    <Screenshot style={dark} />,
+    <DeleteOutline style={dark} />,
+
+    <SettingsOutlined style={dark} />,
+    <PeopleOutline style={dark} />,
+  ];
+  const handleNav = (nav) => {
+    if (pathname.split("/")[2] === nav) return;
+    navigate(`/home/${nav}`);
+  };
+
 
     const handleProfileClick = (nav) => {
         navigate("/home/profile/");
@@ -155,15 +164,69 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
                                 }
                             />
 
-                            <ListItemIcon>
-                                <SettingsOutlined sx={{ color: "#fff", fontSize: "30px", marginLeft: "20px" }} />
-                            </ListItemIcon>
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Box>
-            <div className='btn-new'>
-                {/* <Button
+  const handleProfileClick = (nav) => {
+    navigate("/home/profile");
+  };
+  return (
+    <div className={classes.sidebar}>
+      <Dialog open={openLock2} onClose={handleCloseLock2}>
+        <DialogContent>
+          <FormControl fullWidth sx={{ marginTop: "10px" }} variant='standard'>
+            <InputLabel htmlFor='lock-password'>Password 2</InputLabel>
+            <Input
+              autoFocus
+              id='lock-password'
+              type={showPassword2 ? "text" : "password"}
+              value={valueLock2}
+              onChange={(e) => setValueLock2(e.target.value)}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label='toggle password visibility'
+                    onClick={handleClickShowPassword2}
+                    onMouseDown={handleMouseDownPassword2}
+                  >
+                    {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseLock2}>Cancel</Button>
+          <Button onClick={handleOkLock2}>Open</Button>
+        </DialogActions>
+      </Dialog>
+      <Box className='nav'>
+        <List>
+          <ListItem sx={{ color: "#fff" }} disablePadding>
+            <ListItemButton onClick={handleProfileClick}>
+              <img
+                style={{ width: "40px", height: "40px", borderRadius: "50%", marginRight: "1rem" }}
+                src={
+                  user.avt ||
+                  "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
+                }
+              ></img>
+              <ListItemText
+                primary={
+                  <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
+                    {user.name || "user"}
+                  </span>
+                }
+              />
+
+
+              <ListItemIcon>
+                <SettingsOutlined sx={{ color: "#fff", fontSize: "30px", marginLeft: "20px" }} />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
+      <div className='btn-new'>
+        {/* <Button
           variant='contained'
           onClick={handleClick}
           className={classes.btnNew}
@@ -194,98 +257,98 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
         >
           New
         </Button> */}
-                <Menu
-                    id='new-menu'
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                    }}
-                >
-                    <MenuItem onClick={() => handleCreate("text")}>
-                        <ListItemIcon>
-                            <TextSnippetOutlined fontSize='small' />
-                        </ListItemIcon>
-                        Text
-                    </MenuItem>
-                    <MenuItem onClick={() => handleCreate("checklist")}>
-                        <ListItemIcon>
-                            <ListAltOutlined fontSize='small' />
-                        </ListItemIcon>
-                        Check list
-                    </MenuItem>
-                    <MenuItem onClick={() => handleCreate("image")}>
-                        <ListItemIcon>
-                            <AddPhotoAlternateOutlined fontSize='small' />
-                        </ListItemIcon>
-                        Image
-                    </MenuItem>
-                    <MenuItem onClick={() => handleCreate("scan")}>
-                        <ListItemIcon>
-                            <DocumentScannerOutlined fontSize='small' />
-                        </ListItemIcon>
-                        Scan text
-                    </MenuItem>
-                </Menu>
-            </div>
+        <Menu
+          id='new-menu'
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={() => handleCreate("text")}>
+            <ListItemIcon>
+              <TextSnippetOutlined fontSize='small' />
+            </ListItemIcon>
+            Text
+          </MenuItem>
+          <MenuItem onClick={() => handleCreate("checklist")}>
+            <ListItemIcon>
+              <ListAltOutlined fontSize='small' />
+            </ListItemIcon>
+            Check list
+          </MenuItem>
+          <MenuItem onClick={() => handleCreate("image")}>
+            <ListItemIcon>
+              <AddPhotoAlternateOutlined fontSize='small' />
+            </ListItemIcon>
+            Image
+          </MenuItem>
+          <MenuItem onClick={() => handleCreate("scan")}>
+            <ListItemIcon>
+              <DocumentScannerOutlined fontSize='small' />
+            </ListItemIcon>
+            Scan text
+          </MenuItem>
+        </Menu>
+      </div>
 
-            <Box className='nav' sx={{ marginTop: 4 }}>
-                <List>
-                    {["Explore", "Calendar", "Archived", "Screenshot", "Deleted", "Settings", "Groups"].map(
-                        (text, index) => (
-                            <ListItem
-                                key={text}
-                                sx={{ color: "white" }}
-                                disablePadding
-                                onClick={() => {
-                                    if (text.toLowerCase() === "screenshot") {
-                                        setOpenLock2(true);
-                                    } else {
-                                        handleNav(text.toLowerCase());
-                                    }
-                                }}
-                            >
-                                <ListItemButton
-                                    selected={pathname.split("/")[2] === text.toLowerCase() ? true : false}
-                                >
-                                    <ListItemIcon>{icons[index]}</ListItemIcon>
-                                    <ListItemText primary={<span style={{ fontWeight: 500 }}>{text}</span>} />
-                                </ListItemButton>
-                            </ListItem>
-                        )
-                    )}
-                </List>
-            </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: 4,
-                    position: "relative",
+      <Box className='nav' sx={{ marginTop: 4 }}>
+        <List>
+          {["Explore", "Calendar", "Archived", "Screenshot", "Deleted", "Settings", "Groups"].map(
+            (text, index) => (
+              <ListItem
+                key={text}
+                sx={{ color: "white" }}
+                disablePadding
+                onClick={() => {
+                  if (text.toLowerCase() === "screenshot") {
+                    setOpenLock2(true);
+                  } else {
+                    handleNav(text.toLowerCase());
+                  }
                 }}
-            >
-                <img
-                    style={{ width: "150px", transform: "rotate(15deg)" }}
-                    src='../../assets/note.png'
-                    alt='note'
-                />
-                <span
-                    style={{
-                        position: "absolute",
-                        top: "45%",
-                        left: "50%",
-                        transform: "translate(-50%,-50%)",
-                        fontWeight: "700",
-                        color: "white",
-                        fontSize: "16px",
-                    }}
+              >
+                <ListItemButton
+                  selected={pathname.split("/")[2] === text.toLowerCase() ? true : false}
                 >
-                    Cloud Note
-                </span>
-            </Box>
-        </div>
-    );
+                  <ListItemIcon>{icons[index]}</ListItemIcon>
+                  <ListItemText primary={<span style={{ fontWeight: 500 }}>{text}</span>} />
+                </ListItemButton>
+              </ListItem>
+            )
+          )}
+        </List>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 4,
+          position: "relative",
+        }}
+      >
+        <img
+          style={{ width: "150px", transform: "rotate(15deg)" }}
+          src='../../assets/note.png'
+          alt='note'
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "45%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            fontWeight: "700",
+            color: "white",
+            fontSize: "16px",
+          }}
+        >
+          Cloud Note
+        </span>
+      </Box>
+    </div>
+  );
 }
 
 export default SideBar;

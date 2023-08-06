@@ -22,6 +22,7 @@ import axios from "axios";
 // import { useJwt } from "react-jwt";
 import { io } from "socket.io-client";
 import { socketActions } from "../socketSlice";
+
 Home.propTypes = {};
 const theme = createTheme({
   palette: {
@@ -247,8 +248,8 @@ function Home(props) {
   const view = !(
     pathname.split("/")[2] === "settings" ||
     pathname.split("/")[2] === "calendar" ||
-    pathname.split("/")[2] === "groups"   ||
-    pathname.split("/")[2] === "profile" 
+    pathname.split("/")[2] === "groups" ||
+    pathname.split("/")[2] === "profile"
   );
 
   return (

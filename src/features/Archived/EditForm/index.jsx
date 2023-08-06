@@ -3,7 +3,7 @@ import { Box, Drawer, IconButton, LinearProgress } from "@mui/material";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import noteApi from "../../../api/noteApi";
 import PinnedIcon from "../../../components/CustomIcons/PinnedIcon";
 import CheckListBox from "../../../components/FieldNote/CheckListFieldBox";
@@ -28,17 +28,25 @@ function getList(list, type) {
   }
 }
 
-export default function EditForm({ dataItem, handleDelNote, setArchivedData, clear,  }) {
-  console.log('dataitem',dataItem);
-  console.log('typeofData',typeof(dataItem));
+export default function EditForm({
+  dataItem,
+  handleDelNote,
+  setArchivedData,
+  clear,
+  toggleNote,
+  limitedData,
+}) {
+  // console.log("dataitem", dataItem);
+  // console.log("typeofData", typeof dataItem);
   // console.log(selectedNote);
+  console.log(limitedData);
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));
   const [colorNote, setColorNote] = useState(dataItem.color);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+
   const [options, setOptions] = useState({
     dueAt: typeof dataItem.dueAt !== "object" ? dayjs(dataItem.dueAt) : dataItem.dueAt,
     remindAt: typeof dataItem.remindAt !== "object" ? dayjs(dataItem.remindAt) : dataItem.remindAt,
@@ -54,10 +62,9 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
     setOptions({ ...options, ...param });
   };
   const handleNoteForm = async (value) => {
-    
     const configParam = {
       ...value,
-     
+
       pinned: pinned,
       type: dataItem.type,
     };
@@ -65,7 +72,6 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
     try {
       setIsSubmitting(true);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
-      
 
       setIsSubmitting(false);
 
@@ -73,14 +79,12 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
 
       setDrawerEdit(false);
       setArchivedData(dataItem.idNote, res.note);
-      
-     
     } catch (error) {
       setIsSubmitting(false);
       enqueueSnackbar(error.message, { variant: "error" });
     }
   };
- 
+
   return (
     <Drawer
       variant='persistent'
@@ -94,9 +98,11 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
         [`& .MuiDrawer-paper`]: {
           width: "calc(100% - 500px)",
           boxSizing: "border-box",
-          height: "calc(100% - 65px)",
+          height: toggleNote ? 100 + "%" : "calc(100% - 65px)",
           visibility: "visible !important",
           transform: "translateX(0) !important",
+          // top: 30 + "px",
+          top: toggleNote ? 220 + "px" : 0,
         },
       }}
     >
@@ -158,14 +164,33 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
           >
             <PinnedIcon active={Boolean(pinned)} />
           </span>
-          
+          {toggleNote === true
+            ? limitedData.map((dataItem, index) => {
+                if (dataItem) {
+                  return (
+                    <TextFieldBox
+                      isSubmitting={isSubmitting}
+                      handleNoteForm={handleNoteForm}
+                      bg={colorNote || {}}
+                      action='Edit'
+                      cx={dataItem.data || dataItem.content}
+                      tt={dataItem.title}
+                      type={"2"}
+                      key={index}
+                    />
+                  );
+                } else {
+                  return null;
+                }
+              })
+            : null}
           {dataItem.type === "text" && (
             <TextFieldBox
               isSubmitting={isSubmitting}
               handleNoteForm={handleNoteForm}
-              bg={colorNote||{}}
+              bg={colorNote || {}}
               action='Edit'
-              cx={dataItem.data||dataItem.content}
+              cx={dataItem.data || dataItem.content}
               tt={dataItem.title}
               type={"2"}
             />
