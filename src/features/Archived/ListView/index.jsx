@@ -24,8 +24,11 @@ function ListView({
   handleDelNote,
   toolsNote,
   toggleNote,
+  limitedData,
 }) {
+  console.log(limitedData);
   const [selected, setSelected] = useState(0);
+  const [selectedID, setSelectedID] = useState(0);
   const [dialog, setDialog] = useState(true);
   const [password, setPassword] = useState("");
   const [lockData, setLockData] = useState(new Array(data.length));
@@ -64,67 +67,124 @@ function ListView({
           padding: "0 20px",
         }}
       >
-        {data.map((item, index) => (
-          <div key={index}>
-            {}
-            <Button
-              sx={{
-                backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
-                color: "#000",
-                padding: "10px 16px",
-                width: "100%",
-                display: "grid",
-                gridTemplateColumns: "50px 1fr",
-                textAlign: "left",
-              }}
-              onClick={() => {
-                setSelected(item.idNote);
-                setDialog(true);
-              }}
-            >
-              {item.type === "text" && (
-                <ListItemIcon>
-                  <TextSnippetOutlined fontSize='small' />
-                </ListItemIcon>
-              )}
-              {item.type === "checklist" && (
-                <ListItemIcon>
-                  <ListAltOutlined fontSize='small' />
-                </ListItemIcon>
-              )}
-              {item.type === "image" && (
-                <ListItemIcon>
-                  <Photo fontSize='small' />
-                </ListItemIcon>
-              )}
-              <span
-                style={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                title={item.title}
-              >
-                {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                {item.title}
-              </span>
-              {item.type === "image" && (
-                <img
-                  src={item.metaData}
-                  alt={item.title}
-                  style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
-                />
-              )}
-            </Button>
-          </div>
-        ))}
+        {toggleNote === true
+          ? limitedData.map((item, index) => (
+              <div key={index}>
+                <Button
+                  sx={{
+                    backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
+                    color: "#000",
+                    padding: "10px 16px",
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "50px 1fr",
+                    textAlign: "left",
+                  }}
+                  onClick={() => {
+                    setSelected(item.idNote);
+                    setDialog(true);
+                  }}
+                >
+                  {item.type === "text" && (
+                    <ListItemIcon>
+                      <TextSnippetOutlined fontSize='small' />
+                    </ListItemIcon>
+                  )}
+                  {item.type === "checklist" && (
+                    <ListItemIcon>
+                      <ListAltOutlined fontSize='small' />
+                    </ListItemIcon>
+                  )}
+                  {item.type === "image" && (
+                    <ListItemIcon>
+                      <Photo fontSize='small' />
+                    </ListItemIcon>
+                  )}
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    title={item.title}
+                  >
+                    {item.lock && <KeyIcon style={{ color: "#33f" }} />}
+                    {item.title}
+                  </span>
+                  {item.type === "image" && (
+                    <img
+                      src={item.metaData}
+                      alt={item.title}
+                      style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
+                    />
+                  )}
+                </Button>
+              </div>
+            ))
+          : data.map((item, index) => (
+              <div key={index}>
+                {}
+                <Button
+                  sx={{
+                    backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
+                    color: "#000",
+                    padding: "10px 16px",
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "50px 1fr",
+                    textAlign: "left",
+                  }}
+                  onClick={() => {
+                    setSelected(item.idNote);
+                    setDialog(true);
+                  }}
+                >
+                  {item.type === "text" && (
+                    <ListItemIcon>
+                      <TextSnippetOutlined fontSize='small' />
+                    </ListItemIcon>
+                  )}
+                  {item.type === "checklist" && (
+                    <ListItemIcon>
+                      <ListAltOutlined fontSize='small' />
+                    </ListItemIcon>
+                  )}
+                  {item.type === "image" && (
+                    <ListItemIcon>
+                      <Photo fontSize='small' />
+                    </ListItemIcon>
+                  )}
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    title={item.title}
+                  >
+                    {item.lock && <KeyIcon style={{ color: "#33f" }} />}
+                    {item.title}
+                  </span>
+                  {item.type === "image" && (
+                    <img
+                      src={item.metaData}
+                      alt={item.title}
+                      style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
+                    />
+                  )}
+                </Button>
+              </div>
+            ))}
       </Box>
 
       {data[selected] &&
         (!data[selected].lock ? (
           <EditForm
+            limitedData={limitedData}
             key={selected}
             dataItem={data[selected]}
             handleDelNote={handleDelNote}

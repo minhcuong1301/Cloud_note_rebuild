@@ -3,7 +3,7 @@ import { Box, Drawer, IconButton, LinearProgress } from "@mui/material";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import noteApi from "../../../api/noteApi";
 import PinnedIcon from "../../../components/CustomIcons/PinnedIcon";
 import CheckListBox from "../../../components/FieldNote/CheckListFieldBox";
@@ -28,17 +28,25 @@ function getList(list, type) {
   }
 }
 
-export default function EditForm({ dataItem, handleDelNote, setArchivedData, clear, toggleNote }) {
-  console.log("dataitem", dataItem);
-  console.log("typeofData", typeof dataItem);
+export default function EditForm({
+  dataItem,
+  handleDelNote,
+  setArchivedData,
+  clear,
+  toggleNote,
+  limitedData,
+}) {
+  // console.log("dataitem", dataItem);
+  // console.log("typeofData", typeof dataItem);
   // console.log(selectedNote);
+  console.log(limitedData);
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));
   const [colorNote, setColorNote] = useState(dataItem.color);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+
   const [options, setOptions] = useState({
     dueAt: typeof dataItem.dueAt !== "object" ? dayjs(dataItem.dueAt) : dataItem.dueAt,
     remindAt: typeof dataItem.remindAt !== "object" ? dayjs(dataItem.remindAt) : dataItem.remindAt,
@@ -156,7 +164,26 @@ export default function EditForm({ dataItem, handleDelNote, setArchivedData, cle
           >
             <PinnedIcon active={Boolean(pinned)} />
           </span>
-
+          {toggleNote === true
+            ? limitedData.map((dataItem, index) => {
+                if (dataItem) {
+                  return (
+                    <TextFieldBox
+                      isSubmitting={isSubmitting}
+                      handleNoteForm={handleNoteForm}
+                      bg={colorNote || {}}
+                      action='Edit'
+                      cx={dataItem.data || dataItem.content}
+                      tt={dataItem.title}
+                      type={"2"}
+                      key={index}
+                    />
+                  );
+                } else {
+                  return null;
+                }
+              })
+            : null}
           {dataItem.type === "text" && (
             <TextFieldBox
               isSubmitting={isSubmitting}
