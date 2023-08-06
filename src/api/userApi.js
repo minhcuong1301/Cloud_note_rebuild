@@ -47,6 +47,10 @@ const userApi = {
     const url = "/login";
     return axiosClient.get(url);
   },
+  updateProfile(userId, updatedFields) {
+    const url = `/profile/change_Profile/${userId}`;
+    return axiosClient.patch(url, updatedFields);
+  }
 };
 
 export default userApi;

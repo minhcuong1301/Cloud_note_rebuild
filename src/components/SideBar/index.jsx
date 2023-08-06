@@ -65,6 +65,7 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
     };
     const user =
         useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+        console.log('ádasda',user);
     const [showPassword2, setShowPassword2] = useState(false);
     const [valueLock2, setValueLock2] = useState("");
     const { enqueueSnackbar } = useSnackbar();
@@ -105,8 +106,9 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
     };
 
     const handleProfileClick = (nav) => {
-        navigate("/home/profile");
+        navigate("/home/profile/");
     };
+    
     return (
         <div className={classes.sidebar}>
             <Dialog open={openLock2} onClose={handleCloseLock2}>
@@ -143,7 +145,7 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
                     <ListItem sx={{ color: "#fff" }} disablePadding>
                         <ListItemButton onClick={handleProfileClick}>
                       
-                            <img style={{width:"40px",height:"40px",borderRadius:"50%",marginRight:"1rem"}} src={user.avt}></img>
+                            <img style={{width:"40px",height:"40px",borderRadius:"50%",marginRight:"1rem"}} src={user.Avarta}></img>
                             <ListItemText
                                 primary={
                                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
