@@ -8,6 +8,7 @@
   overflow: hidden auto;
   z-index: 10;
 }
+
 .wapper_profile_box_header {
   position: absolute;
   top: 12px;
@@ -26,6 +27,7 @@
 }
 .wapper_profile_contain {
   position: relative;
+  height: 213px;
 }
 .wapper_profile_li {
   cursor: pointer;

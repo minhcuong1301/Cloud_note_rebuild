@@ -6,7 +6,7 @@ import classes from "./style.module.css";
 import CheckIcon from "@mui/icons-material/Check";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
-const Message = ({ togle }) => {
+const Message = ({ togle, listUserOnline }) => {
   const [toogleOption, setToogleOption] = useState(false);
   const handle_option = () => {
     setToogleOption(!toogleOption);
@@ -25,7 +25,7 @@ const Message = ({ togle }) => {
         backgroundColor: "#FFFFFF",
         position: "absolute",
         right: 10,
-        zIndex: 10,
+        zIndex: 1500,
       }}
     >
       <Box
