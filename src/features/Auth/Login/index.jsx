@@ -6,12 +6,16 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import InputField from "../../../components/FormControls/InputField";
 import PasswordField from "../../../components/FormControls/PasswordField";
 import useWindowDimensions from "../../../customHook/WindowDimensions";
 import { login } from "../userSlice";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
+import StorageKeys from "../../../constants/storage-keys";
+import { useNavigate } from "react-router-dom";
+import "./index.css";
 Login.propTypes = {};
 
 function Login(props) {
@@ -56,7 +60,25 @@ function Login(props) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
   };
+  const handleSuccess = (credentialResponse) => {
+    // Xử lý kết quả đăng nhập thành công
 
+    StorageKeys.TOKEN = credentialResponse.credential;
+    localStorage.setItem(StorageKeys.TOKEN, StorageKeys.TOKEN);
+    let tok = localStorage.getItem(StorageKeys.TOKEN);
+    const decode = jwtDecode(credentialResponse.credential);
+    console.log(tok);
+    if (!tok) {
+      return;
+    }
+    navigate("/home");
+    console.log(decode);
+  };
+
+  const handleFailure = (response) => {
+    console.log(response);
+    // Xử lý kết quả đăng nhập thất bại ở đây
+  };
   return (
     <div
       style={{
@@ -152,7 +174,6 @@ function Login(props) {
               </Typography>
               <span style={{ color: "rgb(122, 122, 122)" }}>Login to continue</span>
             </Box>
-
             <form
               style={{ display: "flex", flexDirection: "column" }}
               onSubmit={form.handleSubmit(handleSubmit)}
@@ -189,20 +210,10 @@ function Login(props) {
                 <span className='line'></span> Other login <span className='line'></span>
               </Typography>
             </Box>
-            <Box
-              sx={{
-                "&:hover": { background: "#f1f1f1" },
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
-                margin: "0 auto",
-                padding: "10px",
-                cursor: "pointer",
-              }}
-            >
-              <img style={{ width: "100%", height: "100%" }} src='../../../assets/gg.png' alt='' />
-            </Box>
+            <GoogleOAuthProvider clientId='1092813439180-sbl9dbmjhu01po9vhmdltn4f8qbqiapf.apps.googleusercontent.com'>
+              <GoogleLogin className='google' onSuccess={handleSuccess} onError={handleFailure} />
+            </GoogleOAuthProvider>
+            ;
           </Box>
         </Box>
       </Box>

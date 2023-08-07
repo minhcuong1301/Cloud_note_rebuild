@@ -30,7 +30,7 @@ export default function HomeRouting(props) {
 
   return (
     <Routes>
-      <Route path='/' element={<Navigate to={`/home/${df_nav.toLowerCase()}`} />} />
+      <Route path='/' element={<Navigate to={`/home/archived`} />} />
       <Route path='/profile' element={<Profile data={data} />} />
 
       <Route path='/calendar' element={<CalendarTable data={data} />} />
