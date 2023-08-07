@@ -431,7 +431,7 @@ function Home(props) {
             </Box>
           </Drawer>
           <Routes>
-            <Route path='/' element={<Navigate to={`/home/${df_nav.toLowerCase()}`} />} />
+            <Route path='/' element={<Navigate to={`/home/archived`} />} />
             <Route
               path='/explore'
               element={
