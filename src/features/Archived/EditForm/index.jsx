@@ -96,13 +96,13 @@ export default function EditForm({
         flexShrink: 0,
 
         [`& .MuiDrawer-paper`]: {
-          width: "calc(100% - 500px)",
+          width: "calc(100% - 550px)",
           boxSizing: "border-box",
           height: toggleNote ? 100 + "%" : "calc(100% - 65px)",
           visibility: "visible !important",
           transform: "translateX(0) !important",
           // top: 30 + "px",
-          top: toggleNote ? 220 + "px" : 0,
+          // top: toggleNote ? 220 + "px" : 0,
         },
       }}
     >

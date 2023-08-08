@@ -11,11 +11,15 @@ import InputField from "../../../components/FormControls/InputField";
 import PasswordField from "../../../components/FormControls/PasswordField";
 import useWindowDimensions from "../../../customHook/WindowDimensions";
 import { login } from "../userSlice";
+
+import { profileUser } from "../userSlice";
+
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import StorageKeys from "../../../constants/storage-keys";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
+
 Login.propTypes = {};
 
 function Login(props) {
@@ -55,14 +59,18 @@ function Login(props) {
       const action = login(values);
 
       const resultAction = await dispatch(action);
+      console.log("res1",resultAction);
       unwrapResult(resultAction);
+
       enqueueSnackbar("Logged in successfully", { variant: "success" });
       setTimeout(() => {
         navigate("/home");
       }, 1000);
+
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
+    
   };
   const handleSuccess = (credentialResponse) => {
     // Xử lý kết quả đăng nhập thành công
@@ -216,10 +224,28 @@ function Login(props) {
                 <span className='line'></span> Other login <span className='line'></span>
               </Typography>
             </Box>
+
+            <Box
+              sx={{
+                "&:hover": { background: "#f1f1f1" },
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
+                margin: "0 auto",
+                padding: "10px",
+                cursor: "pointer",
+              }}
+            >
+              <img style={{ width: "100%", height: "100%" }} src='../../../assets/gg.png' alt='' />
+         
+            </Box>
+
             <GoogleOAuthProvider clientId='1092813439180-sbl9dbmjhu01po9vhmdltn4f8qbqiapf.apps.googleusercontent.com'>
               <GoogleLogin className='google' onSuccess={handleSuccess} onError={handleFailure} />
             </GoogleOAuthProvider>
             ;
+
           </Box>
         </Box>
       </Box>

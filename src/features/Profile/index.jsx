@@ -85,10 +85,10 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
-
+console.log(res);
       // const res = await dispatch(profileUser(user.id))
 
-      setProfile(res.note);
+     
 
       setProfileInfo(res.user);
       setLimitedData(res.note.slice(2, maxRecordsToShow));
@@ -98,7 +98,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
       setUserOnline(status);
     });
   }, []);
-
+console.log(profileInfo.AvtProfile);
   const handleShowMore = () => {
     const newRecordsToShow = maxRecordsToShow + 4;
 

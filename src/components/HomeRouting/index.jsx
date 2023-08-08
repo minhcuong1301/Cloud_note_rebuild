@@ -32,7 +32,9 @@ export default function HomeRouting(props) {
   return (
     <Routes>
       <Route path='/' element={<Navigate to={`/home/archived`} />} />
+
       <Route path='/profile' element={<Profile usergg={usergg} data={data} />} />
+
 
       <Route path='/calendar' element={<CalendarTable data={data} />} />
       <Route

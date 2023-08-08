@@ -431,7 +431,9 @@ function Home(props) {
             </Box>
           </Drawer>
           <Routes>
+
             <Route path='/' element={<Navigate to={`/home/archived`} />} />
+
             <Route
               path='/explore'
               element={

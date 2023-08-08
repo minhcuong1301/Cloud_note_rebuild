@@ -206,11 +206,11 @@ export default function LandingPage() {
           <div className={cx("online-users")}>
             <div className={cx("title")}>Online</div>
             <div className={cx("list")}>
-              {listUserOnline.map((user) => {
+              {listUserOnline.map((user,index) => {
                 console.log(user.id);
                 return (
                   <Link to={`/profile/${user.id}`}>
-                    <div className={cx("list-item")}>
+                    <div className={cx("list-item")} key={index} >
                       <div className={cx("avatar")}>
                         <img src={user.img} alt='' width={40} height={40} />
                       </div>

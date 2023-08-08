@@ -1,5 +1,6 @@
 import { LoginOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+
   Box,
   Button,
   Dialog,
@@ -15,6 +16,7 @@ import {
   MenuItem,
   Select,
   TextField,
+
 } from "@mui/material";
 import classNames from "classnames";
 import { useSnackbar } from "notistack";
@@ -35,19 +37,20 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../Auth/userSlice";
 Settings.propTypes = {
-  setDf_nav: PropTypes.func.isRequired,
-  setColorNote: PropTypes.func.isRequired,
-  setUser: PropTypes.func.isRequired,
+    setDf_nav: PropTypes.func.isRequired,
+    setColorNote: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired,
 };
 
 const configColorBox = {
-  width: "30px",
-  height: "30px",
-  borderRadius: "50%",
-  margin: "0 auto",
-  border: "1px solid black",
+    width: "30px",
+    height: "30px",
+    borderRadius: "50%",
+    margin: "0 auto",
+    border: "1px solid black",
 };
 function diff(color, otherColor) {
+
   if (color.r || undefined !== otherColor.r) {
     return false;
   }
@@ -248,36 +251,12 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
     </FormControl>
   );
 
-  const CustomMenuColor = () => (
-    <FormControl className='stand-select' variant='standard' sx={{ m: 1, minWidth: 80 }}>
-      <Select id='color-select' value={color} onChange={handleChangeColor} autoWidth>
-        <MenuItem value={"color_1"}>
-          <ColorBox color={colorBucket.color_1} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_2"}>
-          <ColorBox color={colorBucket.color_2} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_3"}>
-          <ColorBox color={colorBucket.color_3} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_4"}>
-          <ColorBox color={colorBucket.color_4} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_5"}>
-          <ColorBox color={colorBucket.color_5} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_6"}>
-          <ColorBox color={colorBucket.color_6} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_7"}>
-          <ColorBox color={colorBucket.color_7} sx={configColorBox} />
-        </MenuItem>
-        <MenuItem value={"color_8"}>
-          <ColorBox color={colorBucket.color_8} sx={configColorBox} />
-        </MenuItem>
-      </Select>
-    </FormControl>
-  );
+
+                        />
+                        <BoxDoubleContent
+                            content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
+                            content_2={user.gmail}
+
 
   const handleChangeScreen = async (e) => {
     setScreen(e.target.value);
@@ -483,38 +462,39 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
           </Box>
           <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
 
-          <Box sx={{ mt: 3, mb: 3 }}>
-            <span className={classes.mainText}>General</span>
-            <BoxDoubleContent
-              content_1={<span style={{ fontWeight: 600 }}>Default screen:</span>}
-              content_2={<CustomMenuScreen />}
-              customHeight='40px'
-            />
-            <BoxDoubleContent
-              content_1={<span style={{ fontWeight: 600 }}>Default color:</span>}
-              content_2={<CustomMenuColor />}
-              customHeight='40px'
-            />
-          </Box>
-          <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
-          <Box sx={{ mt: 3 }}>
-            <span className={classes.mainText}>Online Sync & Backup</span>
-            <BoxDoubleContent
-              content_1={<span style={{ fontWeight: 600 }}>Sync on lauch:</span>}
-              content_2={<CheckIcon />}
-              customHeight='30px'
-            />
-            <BoxDoubleContent
-              content_1={<span style={{ fontWeight: 600 }}>Auto backup:</span>}
-              content_2={<CheckIcon />}
-              customHeight='30px'
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={24} sm={12} md={6} lg={6}></Grid>
-      </Grid>
-    </div>
-  );
+
+                    <Box sx={{ mt: 3, mb: 3 }}>
+                        <span className={classes.mainText}>General</span>
+                        <BoxDoubleContent
+                            content_1={<span style={{ fontWeight: 600 }}>Default screen:</span>}
+                            content_2={<CustomMenuScreen />}
+                            customHeight='40px'
+                        />
+                        <BoxDoubleContent
+                            content_1={<span style={{ fontWeight: 600 }}>Default color:</span>}
+                            content_2={<CustomMenuColor />}
+                            customHeight='40px'
+                        />
+                    </Box>
+                    <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
+                    <Box sx={{ mt: 3 }}>
+                        <span className={classes.mainText}>Online Sync & Backup</span>
+                        <BoxDoubleContent
+                            content_1={<span style={{ fontWeight: 600 }}>Sync on lauch:</span>}
+                            content_2={<CheckIcon />}
+                            customHeight='30px'
+                        />
+                        <BoxDoubleContent
+                            content_1={<span style={{ fontWeight: 600 }}>Auto backup:</span>}
+                            content_2={<CheckIcon />}
+                            customHeight='30px'
+                        />
+                    </Box>
+                </Grid>
+                <Grid item xs={24} sm={12} md={6} lg={6}></Grid>
+            </Grid>
+        </div>
+    );
 }
 
 export default Settings;
