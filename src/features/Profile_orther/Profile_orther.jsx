@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import SideBar from "../../components/SideBar";
 import { checkJWT } from "../../constants";
-
-function Profile_orther() {
+import ListView from "../Archived/ListView";
+function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
   const users =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
   console.log(users);
@@ -17,7 +17,8 @@ function Profile_orther() {
   const [GmailUser, setGmailUser] = useState("");
   const [Note, setNode] = useState([]);
   const [startIndex, setStartIndex] = useState(5);
-
+  const [toggleNote, setToggleNote] = useState(false);
+  const [limitedData, setLimitedData] = useState([]);
   const { id } = useParams();
   useEffect(() => {
     console.log(id);
@@ -32,6 +33,7 @@ function Profile_orther() {
       return reslut.data;
     };
     api_profile().then((data) => {
+      setLimitedData(data.note.slice(2, startIndex));
       setUser(data.user);
       setUserName(data.user.name);
       setGmailUser(data.user.gmail);
@@ -41,6 +43,9 @@ function Profile_orther() {
   console.log(userName, GmailUser, Note, user);
   const handle_viewMore = () => {
     setStartIndex((startIndex) => startIndex + 5);
+  };
+  const handleToggle = () => {
+    setToggleNote(!toggleNote);
   };
   return (
     <>
@@ -262,12 +267,72 @@ function Profile_orther() {
                 Latest PublicNote
               </h2>
               <div>
+                {/* {toggleNote === true ? (
+                  <ListView
+                    limitedData={limitedData}
+                    toggleNote={toggleNote}
+                    data={data}
+                    setArchivedData={setArchivedData}
+                    handleDelNote={handleDelNote}
+                    toolsNote={toolsNote}
+                  />
+                ) : (
+                  Note.slice(0, startIndex).map((val, index) => {
+                    const lastindex = Note.slice(0, startIndex).length - 1;
+                    return (
+                      <div
+                        onClick={handleToggle}
+                        key={index}
+                        style={{
+                          cursor: "pointer",
+                          justifyContent: "start",
+                          gap: 10 + "px",
+                          backgroundColor: "#FFFFFF",
+                          paddingTop: 12 + "px",
+                          paddingBottom: 12 + "px",
+                          paddingLeft: 24 + "px",
+                          paddingRight: 24 + "px",
+                          borderBottom: 1 + "px solid",
+                          borderBottomColor: "#818181",
+                        }}
+                        className={
+                          index == 0
+                            ? classes.styleFist
+                            : index == lastindex
+                            ? classes.styleLast
+                            : "" + `${classes.wapper_content}`
+                        }
+                      >
+                        <h2>{index + 1}</h2>
+                        <p
+                          style={{
+                            margin: 5 + "px",
+                          }}
+                        >
+                          {userName}
+                        </p>
+                        <p className={`${classes.profile_text}`}>{"" + val.data}</p>
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: 170 + "px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <p>{val.createAt}</p>
+                        </div>
+                      </div>
+                    );
+                  })
+                )} */}
                 {Note.slice(0, startIndex).map((val, index) => {
                   const lastindex = Note.slice(0, startIndex).length - 1;
                   return (
                     <div
+                      onClick={handleToggle}
                       key={index}
                       style={{
+                        cursor: "pointer",
                         justifyContent: "start",
                         gap: 10 + "px",
                         backgroundColor: "#FFFFFF",

@@ -3,19 +3,27 @@ import { Button, Checkbox, FormControlLabel, Link, Typography } from "@mui/mater
 import Box from "@mui/material/Box";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSnackbar } from "notistack";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import InputField from "../../../components/FormControls/InputField";
 import PasswordField from "../../../components/FormControls/PasswordField";
 import useWindowDimensions from "../../../customHook/WindowDimensions";
 import { login } from "../userSlice";
+
 import { profileUser } from "../userSlice";
+
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
+import StorageKeys from "../../../constants/storage-keys";
+import { useNavigate } from "react-router-dom";
+import "./index.css";
+
 Login.propTypes = {};
 
 function Login(props) {
+  const [userGoogle, setUserGoogle] = useState(null);
   const window = useWindowDimensions();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,16 +61,38 @@ function Login(props) {
       const resultAction = await dispatch(action);
       console.log("res1",resultAction);
       unwrapResult(resultAction);
-      const res2= await dispatch(profileUser(resultAction.payload.id));
-      console.log('2',res2);
 
-      navigate("/home");
+      enqueueSnackbar("Logged in successfully", { variant: "success" });
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000);
+
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
     
   };
+  const handleSuccess = (credentialResponse) => {
+    // Xử lý kết quả đăng nhập thành công
 
+    localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(credentialResponse.credential));
+    let tok = localStorage.getItem(StorageKeys.TOKEN);
+    const UserGoogle = jwtDecode(credentialResponse.credential);
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(UserGoogle));
+    if (!tok) {
+      return;
+    }
+    setUserGoogle(UserGoogle);
+    enqueueSnackbar("Logged in successfully", { variant: "success" });
+    setTimeout(() => {
+      navigate("/home");
+    }, 1000);
+  };
+
+  const handleFailure = (response) => {
+    console.log(response);
+    // Xử lý kết quả đăng nhập thất bại ở đây
+  };
   return (
     <div
       style={{
@@ -158,7 +188,6 @@ function Login(props) {
               </Typography>
               <span style={{ color: "rgb(122, 122, 122)" }}>Login to continue</span>
             </Box>
-
             <form
               style={{ display: "flex", flexDirection: "column" }}
               onSubmit={form.handleSubmit(handleSubmit)}
@@ -195,6 +224,7 @@ function Login(props) {
                 <span className='line'></span> Other login <span className='line'></span>
               </Typography>
             </Box>
+
             <Box
               sx={{
                 "&:hover": { background: "#f1f1f1" },
@@ -210,6 +240,12 @@ function Login(props) {
               <img style={{ width: "100%", height: "100%" }} src='../../../assets/gg.png' alt='' />
          
             </Box>
+
+            <GoogleOAuthProvider clientId='1092813439180-sbl9dbmjhu01po9vhmdltn4f8qbqiapf.apps.googleusercontent.com'>
+              <GoogleLogin className='google' onSuccess={handleSuccess} onError={handleFailure} />
+            </GoogleOAuthProvider>
+            ;
+
           </Box>
         </Box>
       </Box>

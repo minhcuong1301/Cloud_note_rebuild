@@ -10,12 +10,10 @@ import classNames from "classnames";
 import userApi from "../../api/userApi";
 import { useSelector } from "react-redux";
 import Message from "../../components/Message/Message";
-
 import { profileUser } from "../../features/Auth/userSlice";
 
 import ListView from "../Archived/ListView/index";
-function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
-
+function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   const theme = createTheme({
     components: {
       MuiTypography: {
@@ -70,7 +68,7 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
   const handle_message = () => {
     set_togle_Message(!togle_Message);
   };
-
+  console.log(usergg);
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
 
@@ -89,7 +87,6 @@ function Profile({ data, handleDelNote, setArchivedData, toolsNote }) {
       const res = await userApi.profile(user.id);
 console.log(res);
       // const res = await dispatch(profileUser(user.id))
-      
 
      
 
@@ -116,7 +113,11 @@ console.log(profileInfo.AvtProfile);
     <div className={classes.root}>
       <div className={classNames()}>
         <div className='i' style={{ position: "relative" }}>
-          <img style={{ width: "100%", marginLeft: "16px",height:"20rem" }} src={profileInfo.AvtProfile} alt='note' />
+          <img
+            style={{ width: "100%", marginLeft: "16px", height: "20rem" }}
+            src={usergg.picture || profileInfo.AvtProfile}
+            alt='note'
+          />
           <Box
             sx={{
               display: "flex",
@@ -213,14 +214,14 @@ console.log(profileInfo.AvtProfile);
           >
             <img
               style={{ borderRadius: "50%", height: "111px", width: "111px" }}
-              src={profileInfo.Avarta}
+              src={usergg.picture || profileInfo.Avarta}
             ></img>
             <Box>
               <Typography variant='h5' fontWeight={500}>
-                {profileInfo.name}
+                {usergg.name || profileInfo.name}
               </Typography>
               <Typography variant='h6' fontWeight={400}>
-                {profileInfo.createAccount}
+                {usergg.email || profileInfo.createAccount}
               </Typography>
             </Box>
             {/* <Button variant="contained" disableElevation sx={{ display: "flex", gap: "10px", textTransform: 'capitalize', backgroundColor: "rgba(54, 68, 199, 1)", borderRadius: "12px" }}>
