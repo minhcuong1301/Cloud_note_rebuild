@@ -7,18 +7,14 @@ import StorageKeys from "../../constants/storage-keys.js";export const register 
 });
 export const login = createAsyncThunk("user/login", async (payload) => {
   const data = await userApi.login(payload);
- 
-
-
   //save local storages
   localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(data.jwt));
   localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
-
   return { ...data.user, jwt: data.jwt };
-  //  return { jwt: data.jwt };
-
-
 });
+
+
+
 export const profileUser = createAsyncThunk('profileUser', async (userId) => {
   
       const data = await userApi.profile(userId);
@@ -35,9 +31,9 @@ export const updateProfile = createAsyncThunk('user/updateProfile', async (paylo
 
   // Gọi API để cập nhật thông tin user
   const e= await userApi.updateProfile(userId, updatedFields);
-console.log('ela',e);
   // Lưu thông tin user mới vào local storage (nếu có)
   const user = JSON.parse(localStorage.getItem(StorageKeys.USER)) || {};
+console.log('ela',user);
  
   const updatedUser = { ...user, ...updatedFields };
 

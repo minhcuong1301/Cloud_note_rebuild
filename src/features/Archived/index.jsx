@@ -11,7 +11,8 @@ import SearchInput from "../../components/SearchInput";
 import ListView from "./ListView";
 import classes from "./styles.module.css";
 import EditForm from "./EditForm";
-
+import { profileUser,updateProfile } from "../Auth/userSlice";
+import { useDispatch } from "react-redux";
 
 Archived.propTypes = {
     data: PropTypes.array.isRequired,
@@ -34,6 +35,18 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
         setDrawerEdit((prevState) => true);
         console.log("After setDrawerEdit:", drawerEdit);
     };
+  const user =useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  const [infoUser,setInfoUser]=useState([])
+  const dispatch = useDispatch();
+    useEffect(() => {
+        (async () => {
+          const res = await dispatch(profileUser(user.id));
+          if (res.payload && res.payload.Avarta) {
+            const updatedInfoUser = res.payload;
+          setInfoUser(updatedInfoUser);
+          }
+        })();
+      }, []);
     useEffect(() => {
         if (value.trim() === "") {
             setDataFilter(data);

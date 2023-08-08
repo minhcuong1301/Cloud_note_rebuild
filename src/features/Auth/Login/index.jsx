@@ -12,6 +12,7 @@ import InputField from "../../../components/FormControls/InputField";
 import PasswordField from "../../../components/FormControls/PasswordField";
 import useWindowDimensions from "../../../customHook/WindowDimensions";
 import { login } from "../userSlice";
+import { profileUser } from "../userSlice";
 Login.propTypes = {};
 
 function Login(props) {
@@ -50,11 +51,16 @@ function Login(props) {
       const action = login(values);
 
       const resultAction = await dispatch(action);
+      console.log("res1",resultAction);
       unwrapResult(resultAction);
+      const res2= await dispatch(profileUser(resultAction.payload.id));
+      console.log('2',res2);
+
       navigate("/home");
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
+    
   };
 
   return (
@@ -202,6 +208,7 @@ function Login(props) {
               }}
             >
               <img style={{ width: "100%", height: "100%" }} src='../../../assets/gg.png' alt='' />
+         
             </Box>
           </Box>
         </Box>
