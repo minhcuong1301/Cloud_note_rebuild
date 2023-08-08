@@ -40,13 +40,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import userApi from "../../api/userApi";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
-import Profile from "../../features/Profile";
+import { checkJWT } from "../../constants";
 SideBar.propTypes = {
   handleOpenDrawer: PropTypes.func.isRequired,
   drawerNew: PropTypes.bool.isRequired,
 };
 
-function SideBar({ handleOpenDrawer, drawerNew }) {
+function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -60,21 +60,15 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
     handleOpenDrawer(type);
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    
-
-
-
- 
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
   const [showPassword2, setShowPassword2] = useState(false);
   const [valueLock2, setValueLock2] = useState("");
   const { enqueueSnackbar } = useSnackbar();
-
 
   const [openLock2, setOpenLock2] = useState(false);
   const handleMouseDownPassword2 = (event) => {
@@ -88,6 +82,9 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
   };
   const handleOkLock2 = async () => {
     try {
+      if (checkJWT()) {
+        return window.location.assign("/login");
+      }
       await userApi.open2(user.id, { password_2: valueLock2 });
       navigate("/home/screenshot");
       setOpenLock2(false);
@@ -107,17 +104,20 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
     <PeopleOutline style={dark} />,
   ];
   const handleNav = (nav) => {
+    if (checkJWT()) {
+      return window.location.assign("/login");
+    }
     if (pathname.split("/")[2] === nav) return;
     navigate(`/home/${nav}`);
   };
 
+  const handleProfileClick = (nav) => {
+    if (checkJWT()) {
+      window.location.assign("/login");
+    }
+    navigate("/home/profile/");
+  };
 
-    const handleProfileClick = (nav) => {
-        navigate("/home/profile/");
-    };
-    
-    
-  
   return (
     <div className={classes.sidebar}>
       <Dialog open={openLock2} onClose={handleCloseLock2}>
@@ -153,21 +153,48 @@ function SideBar({ handleOpenDrawer, drawerNew }) {
         <List>
           <ListItem sx={{ color: "#fff" }} disablePadding>
             <ListItemButton onClick={handleProfileClick}>
-              <img
-                style={{ width: "40px", height: "40px", borderRadius: "50%", marginRight: "1rem" }}
-                src={
-                  user.avt ||
-                  "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
-                }
-              ></img>
-              <ListItemText
-                primary={
-                  <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
-                    {user.name || "user"}
-                  </span>
-                }
-              />
+              {usergg ? (
+                <img
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    marginRight: "1rem",
+                  }}
+                  src={usergg.picture}
+                ></img>
+              ) : (
+                <img
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    marginRight: "1rem",
+                  }}
+                  src={
+                    user.avt ||
+                    "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
+                  }
+                ></img>
+              )}
 
+              {usergg ? (
+                <ListItemText
+                  primary={
+                    <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
+                      {usergg.name}
+                    </span>
+                  }
+                />
+              ) : (
+                <ListItemText
+                  primary={
+                    <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
+                      {user.name || "user"}
+                    </span>
+                  }
+                />
+              )}
 
               <ListItemIcon>
                 <SettingsOutlined sx={{ color: "#fff", fontSize: "30px", marginLeft: "20px" }} />

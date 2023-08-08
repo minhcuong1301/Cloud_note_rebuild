@@ -3,7 +3,7 @@ import { Button, Checkbox, FormControlLabel, Link, Typography } from "@mui/mater
 import Box from "@mui/material/Box";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSnackbar } from "notistack";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
@@ -19,6 +19,7 @@ import "./index.css";
 Login.propTypes = {};
 
 function Login(props) {
+  const [userGoogle, setUserGoogle] = useState(null);
   const window = useWindowDimensions();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -55,7 +56,10 @@ function Login(props) {
 
       const resultAction = await dispatch(action);
       unwrapResult(resultAction);
-      navigate("/home");
+      enqueueSnackbar("Logged in successfully", { variant: "success" });
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000);
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
@@ -63,16 +67,18 @@ function Login(props) {
   const handleSuccess = (credentialResponse) => {
     // Xử lý kết quả đăng nhập thành công
 
-    StorageKeys.TOKEN = credentialResponse.credential;
-    localStorage.setItem(StorageKeys.TOKEN, StorageKeys.TOKEN);
+    localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(credentialResponse.credential));
     let tok = localStorage.getItem(StorageKeys.TOKEN);
-    const decode = jwtDecode(credentialResponse.credential);
-    console.log(tok);
+    const UserGoogle = jwtDecode(credentialResponse.credential);
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(UserGoogle));
     if (!tok) {
       return;
     }
-    navigate("/home");
-    console.log(decode);
+    setUserGoogle(UserGoogle);
+    enqueueSnackbar("Logged in successfully", { variant: "success" });
+    setTimeout(() => {
+      navigate("/home");
+    }, 1000);
   };
 
   const handleFailure = (response) => {

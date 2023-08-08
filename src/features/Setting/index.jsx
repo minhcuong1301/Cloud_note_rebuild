@@ -14,13 +14,13 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField
+  TextField,
 } from "@mui/material";
 import classNames from "classnames";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import userApi from "../../api/userApi";
 import BoxDoubleContent from "../../components/BoxDoubleContent";
@@ -30,7 +30,7 @@ import { colorBucket } from "../../constants";
 import { Update, logOut } from "../Auth/userSlice";
 import classes from "./styles.module.css";
 import { Image } from "antd";
-import { profileUser,updateProfile } from "../Auth/userSlice";
+import { profileUser, updateProfile } from "../Auth/userSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../Auth/userSlice";
@@ -48,7 +48,7 @@ const configColorBox = {
   border: "1px solid black",
 };
 function diff(color, otherColor) {
-  if (color.r !== otherColor.r) {
+  if (color.r || undefined !== otherColor.r) {
     return false;
   }
   if (color.g !== otherColor.g) {
@@ -59,15 +59,18 @@ function diff(color, otherColor) {
   }
   return true;
 }
-function Settings({ setDf_nav, setColorNote, setUser }) {
-const dispatch = useDispatch();
+function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [selectedAvatarProfile, setSelectedAvatarProfile] = useState(null);
-const[re,setRe]=useState([])
-  const user =useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  const [re, setRe] = useState([]);
+  const user =
+    useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  console.log(user);
   const [screen, setScreen] = useState(user.df_screen);
+  console.log(screen);
   const [color, setColor] = useState(() => {
     for (const key in colorBucket) {
       if (diff(colorBucket[key], user.df_color)) {
@@ -75,20 +78,22 @@ const[re,setRe]=useState([])
       }
     }
   });
-  
-  
-  const handleLogOut = async () => {
-    const action = logOut();
-    await dispatch(action);
-    enqueueSnackbar("You will log out after 1s", { variant: "success" });
-    setTimeout(() => {
-      window.location.reload(true);
-    }, 1000);
-  };
- 
 
-    
-  
+  const handleLogOut = async () => {
+    try {
+      const action = logOut();
+      await dispatch(action);
+
+      enqueueSnackbar("You will log out after 1s", { variant: "success" });
+      setTimeout(() => {
+        // window.location.reload(true);
+        window.location.assign("/");
+      }, 1000);
+    } catch {
+      enqueueSnackbar("error", { variant: "error" });
+    }
+  };
+
   const [showPassword, setShowPassword] = useState(false);
   const [valueLock, setValueLock] = useState("");
   const [openLock, setOpenLock] = useState(false);
@@ -119,81 +124,79 @@ const[re,setRe]=useState([])
   const handleEditP2 = () => {
     return;
   };
-  const [infoUser,setInfoUser]=useState([])
+  const [infoUser, setInfoUser] = useState([]);
   useEffect(() => {
     (async () => {
-      const res=await dispatch(profileUser(user.id))
-    
-    setInfoUser(res.payload)
+      const res = await dispatch(profileUser(user.id));
+
+      setInfoUser((res && res.payload) || "");
     })();
   }, []);
   const [avatarURL, setAvatarURL] = useState(null);
   const [avatarURL2, setAvatarURL2] = useState(null);
 
-  console.log("anh khi chon",selectedAvatar);
-    const handleEditProfile = async () => {
-      const data = {
-        Avarta: selectedAvatar,
-        AvtProfile: selectedAvatarProfile,
-        name: editedName,
-      };
-      try {
-        // Gọi API updateProfile để gửi formData lên server và đợi kết quả
-        const response = await dispatch(updateProfile({ userId: user.id, updatedFields: data }));
-          console.log(response.payload);
-          setRe(response.payload)
-        if (response.payload) {
-          const avatarBlob = new Blob([response.payload.Avarta], { type: response.payload.Avarta.type });
-          const avatarBlob2 = new Blob([response.payload.AvtProfile], { type: response.payload.AvtProfile.type });
-        
-          const avatarURL = URL.createObjectURL(avatarBlob);
-          const avatarURL2 = URL.createObjectURL(avatarBlob2);
-
-          dispatch(updateUser({ Avarta: avatarURL,AvtProfile: avatarURL2}));
-          console.log('1',avatarURL,avatarURL2);
-          enqueueSnackbar("Profile update success", { variant: "success" });
-        } else {
-          console.log("sai");
-          enqueueSnackbar("Profile update failed ", { variant: "error" })
-        }
-       
-      } catch (error) {
-        // Xử lý lỗi (nếu có)
-      }
+  console.log("anh khi chon", selectedAvatar);
+  const handleEditProfile = async () => {
+    const data = {
+      Avarta: selectedAvatar,
+      AvtProfile: selectedAvatarProfile,
+      name: editedName,
     };
-  const handleChangeAvt = () => {
-  const inputFile = document.getElementById("input-file");
-    inputFile.click();
+    try {
+      // Gọi API updateProfile để gửi formData lên server và đợi kết quả
+      const response = await dispatch(updateProfile({ userId: user.id, updatedFields: data }));
+      console.log(response.payload);
+      setRe(response.payload);
+      if (response.payload) {
+        const avatarBlob = new Blob([response.payload.Avarta], {
+          type: response.payload.Avarta.type,
+        });
+        const avatarBlob2 = new Blob([response.payload.AvtProfile], {
+          type: response.payload.AvtProfile.type,
+        });
 
+        const avatarURL = URL.createObjectURL(avatarBlob);
+        const avatarURL2 = URL.createObjectURL(avatarBlob2);
+
+        dispatch(updateUser({ Avarta: avatarURL, AvtProfile: avatarURL2 }));
+        console.log("1", avatarURL, avatarURL2);
+        enqueueSnackbar("Profile update success", { variant: "success" });
+      } else {
+        console.log("sai");
+        enqueueSnackbar("Profile update failed ", { variant: "error" });
+      }
+    } catch (error) {
+      // Xử lý lỗi (nếu có)
+    }
+  };
+  const handleChangeAvt = () => {
+    const inputFile = document.getElementById("input-file");
+    inputFile.click();
   };
   const handleFileChangeAvt = (event) => {
     const file = event.target.files[0];
     const imageURL = URL.createObjectURL(file);
-  setAvatarURL(imageURL);
+    setAvatarURL(imageURL);
     setSelectedAvatar(imageURL);
-    setInfoUser(prevState => ({
+    setInfoUser((prevState) => ({
       ...prevState,
       Avarta: imageURL,
     }));
   };
   const handleChangeAvtProfile = () => {
- 
-  const inputFileAvatar = document.getElementById("input-file-avtprofile");
+    const inputFileAvatar = document.getElementById("input-file-avtprofile");
     inputFileAvatar.click();
-
-
   };
   const handleFileChangeAvtProfile = (event) => {
     const file = event.target.files[0];
     const imageURL = URL.createObjectURL(file);
     setSelectedAvatarProfile(imageURL);
     setAvatarURL2(imageURL);
-    setInfoUser(prevState => ({
+    setInfoUser((prevState) => ({
       ...prevState,
       AvtProfile: imageURL,
     }));
   };
-  console.log(infoUser);
   useEffect(() => {
     (async () => {
       const res = await dispatch(profileUser(user.id));
@@ -205,10 +208,10 @@ const[re,setRe]=useState([])
   const [editedName, setEditedName] = useState(infoUser.name);
   const handleNameChange = (event) => {
     setEditedName(event.target.value);
-    setInfoUser(e=>({
+    setInfoUser((e) => ({
       ...e,
-      name:editedName
-    }))
+      name: editedName,
+    }));
   };
   const handleOkLock2 = async () => {
     try {
@@ -233,7 +236,7 @@ const[re,setRe]=useState([])
     <FormControl className='stand-select' variant='standard' sx={{ m: 1, minWidth: 80 }}>
       <Select
         id='screen-select'
-        value={screen.toLowerCase()}
+        value={screen ? screen.toLowerCase() : ""}
         onChange={handleChangeScreen}
         autoWidth
       >
@@ -385,35 +388,58 @@ const[re,setRe]=useState([])
               content_2={
                 <div className='avt'>
                   {" "}
-                <Image style={{ borderRadius: "50%" }} width={50} height={50} src={infoUser.Avarta}  />{" "}
+                  <Image
+                    style={{ borderRadius: "50%" }}
+                    width={50}
+                    height={50}
+                    src={usergg.picture || infoUser.Avarta}
+                  />{" "}
                   <Button onClick={handleChangeAvt}>Choose</Button>
-                  <input type="file" id="input-file" style={{ display: "none" }}  onChange={handleFileChangeAvt} />
+                  <input
+                    type='file'
+                    id='input-file'
+                    style={{ display: "none" }}
+                    onChange={handleFileChangeAvt}
+                  />
                 </div>
               }
-             
             />
             <BoxDoubleContent
               content_1={<span style={{ fontWeight: 600 }}>Name:</span>}
               // content_2={infoUser.name}
-              content_2={<TextField id="outlined-basic"  variant="outlined" value={infoUser.name} onChange={handleNameChange} />}
-              
+              content_2={
+                <TextField
+                  id='outlined-basic'
+                  variant='outlined'
+                  value={usergg.name || infoUser.name}
+                  onChange={handleNameChange}
+                />
+              }
             />
-             <BoxDoubleContent
+            <BoxDoubleContent
               content_1={<span style={{ fontWeight: 600 }}>Cover image:</span>}
               content_2={
                 <div className='avt'>
                   {" "}
-                  <Image style={{borderRadius:"50%"}} width={50} height={50} src={infoUser.AvtProfile} />{" "}
+                  <Image
+                    style={{ borderRadius: "50%" }}
+                    width={50}
+                    height={50}
+                    src={usergg.picture || infoUser.AvtProfile}
+                  />{" "}
                   <Button onClick={handleChangeAvtProfile}>Choose</Button>
-                  <input type="file" id="input-file-avtprofile" style={{ display: "none" }} onChange={handleFileChangeAvtProfile}/>
+                  <input
+                    type='file'
+                    id='input-file-avtprofile'
+                    style={{ display: "none" }}
+                    onChange={handleFileChangeAvtProfile}
+                  />
                 </div>
               }
-             
             />
             <BoxDoubleContent
               content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
-              content_2={user.gmail}
-             
+              content_2={usergg.email || user.gmail}
             />
             <BoxDoubleContent
               content_1={<span style={{ fontWeight: 600 }}>Password 2:</span>}
@@ -453,7 +479,6 @@ const[re,setRe]=useState([])
               //     Delete Account
               //   </Button>
               // }
-              
             />
           </Box>
           <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
