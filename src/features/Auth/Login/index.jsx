@@ -225,7 +225,7 @@ function Login(props) {
               </Typography>
             </Box>
 
-            <Box
+            {/* <Box
               sx={{
                 "&:hover": { background: "#f1f1f1" },
                 width: "50px",
@@ -238,14 +238,17 @@ function Login(props) {
               }}
             >
               <img style={{ width: "100%", height: "100%" }} src='../../../assets/gg.png' alt='' />
+               
          
-            </Box>
+            </Box> */}
+
+           
+            <Box  sx={{marginLeft:"25%"}}>
 
             <GoogleOAuthProvider clientId='1092813439180-sbl9dbmjhu01po9vhmdltn4f8qbqiapf.apps.googleusercontent.com'>
               <GoogleLogin className='google' onSuccess={handleSuccess} onError={handleFailure} />
             </GoogleOAuthProvider>
-            ;
-
+            </Box>
           </Box>
         </Box>
       </Box>

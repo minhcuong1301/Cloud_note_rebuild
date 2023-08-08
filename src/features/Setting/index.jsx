@@ -252,12 +252,12 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   );
 
 
-                        />
-                        <BoxDoubleContent
-                            content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
-                            content_2={user.gmail}
+    
+    <BoxDoubleContent
+        content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
+        content_2={user.gmail}
 
-
+/>
   const handleChangeScreen = async (e) => {
     setScreen(e.target.value);
     try {
@@ -472,7 +472,7 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                         />
                         <BoxDoubleContent
                             content_1={<span style={{ fontWeight: 600 }}>Default color:</span>}
-                            content_2={<CustomMenuColor />}
+                            // content_2={<CustomMenuColor />}
                             customHeight='40px'
                         />
                     </Box>
