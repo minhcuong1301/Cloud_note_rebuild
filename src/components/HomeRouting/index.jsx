@@ -13,6 +13,7 @@ import Profile from "../../features/Profile";
 
 export default function HomeRouting(props) {
   const {
+    usergg,
     data,
     df_nav,
     setDf_nav,
@@ -31,7 +32,7 @@ export default function HomeRouting(props) {
   return (
     <Routes>
       <Route path='/' element={<Navigate to={`/home/archived`} />} />
-      <Route path='/profile' element={<Profile data={data} />} />
+      <Route path='/profile' element={<Profile usergg={usergg} data={data} />} />
 
       <Route path='/calendar' element={<CalendarTable data={data} />} />
       <Route
@@ -63,7 +64,14 @@ export default function HomeRouting(props) {
       />
       <Route
         path='/settings'
-        element={<Setting setDf_nav={setDf_nav} setColorNote={setColorNote} setUser={setUser} />}
+        element={
+          <Setting
+            usergg={usergg}
+            setDf_nav={setDf_nav}
+            setColorNote={setColorNote}
+            setUser={setUser}
+          />
+        }
       />
       <Route path='/groups' element={<Groups />} />
     </Routes>

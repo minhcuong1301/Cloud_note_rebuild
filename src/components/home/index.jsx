@@ -22,7 +22,8 @@ import axios from "axios";
 // import { useJwt } from "react-jwt";
 import { io } from "socket.io-client";
 import { socketActions } from "../socketSlice";
-
+import StorageKeys from "../../constants/storage-keys";
+import jwtDecode from "jwt-decode";
 Home.propTypes = {};
 const theme = createTheme({
   palette: {
@@ -42,7 +43,8 @@ function Home(props) {
   const [user, setUser] = useState(
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"))
   );
-
+  const usergg = jwtDecode(localStorage.getItem(StorageKeys.TOKEN));
+  console.log(usergg);
   const [sharedNoteId, setSharedNoteId] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [colorNote, setColorNote] = useState(user.df_color);
@@ -267,7 +269,7 @@ function Home(props) {
             className={"df_size"}
           >
             {release && <ReleaseDoc />}
-            <SideBar handleOpenDrawer={handleOpenDrawer} drawerNew={drawerNew} />
+            <SideBar usergg={usergg} handleOpenDrawer={handleOpenDrawer} drawerNew={drawerNew} />
             {view && (
               <img
                 style={{
@@ -448,6 +450,7 @@ function Home(props) {
             </Drawer>
             {data && (
               <HomeRouting
+                usergg={usergg}
                 data={data}
                 df_nav={df_nav}
                 setDf_nav={setDf_nav}
