@@ -104,7 +104,7 @@ export default function LandingPage() {
         </div>
         <div className={cx("menu", { hidden: !menu })}>
           <div className={cx("item")}>
-            <Link to='/home'>Home</Link>
+            <Link to={checkJWT() ? "/login" : "/home}"}>Home</Link>
           </div>
           {/* <div className={cx("item")}>
             <Link to='/upload'>Upload</Link>
@@ -206,11 +206,11 @@ export default function LandingPage() {
           <div className={cx("online-users")}>
             <div className={cx("title")}>Online</div>
             <div className={cx("list")}>
-              {listUserOnline.map((user,index) => {
+              {listUserOnline.map((user, index) => {
                 console.log(user.id);
                 return (
                   <Link to={`/profile/${user.id}`}>
-                    <div className={cx("list-item")} key={index} >
+                    <div className={cx("list-item")} key={index}>
                       <div className={cx("avatar")}>
                         <img src={user.img} alt='' width={40} height={40} />
                       </div>

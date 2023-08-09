@@ -85,10 +85,8 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
-console.log(res);
+      console.log(res);
       // const res = await dispatch(profileUser(user.id))
-
-     
 
       setProfileInfo(res.user);
       setLimitedData(res.note.slice(2, maxRecordsToShow));
@@ -98,7 +96,7 @@ console.log(res);
       setUserOnline(status);
     });
   }, []);
-console.log(profileInfo.AvtProfile);
+  console.log(profileInfo.AvtProfile);
   const handleShowMore = () => {
     const newRecordsToShow = maxRecordsToShow + 4;
 
@@ -115,7 +113,11 @@ console.log(profileInfo.AvtProfile);
         <div className='i' style={{ position: "relative" }}>
           <img
             style={{ width: "100%", marginLeft: "16px", height: "20rem" }}
-            src={usergg.picture || profileInfo.AvtProfile}
+            src={
+              usergg.picture ||
+              "https://quantrithcs.vinhphuc.edu.vn/UploadImages/thcstthoason/anh-phong-canh-dep-nhat-the-gioi.jpg" ||
+              profileInfo.AvtProfile
+            }
             alt='note'
           />
           <Box
@@ -214,7 +216,11 @@ console.log(profileInfo.AvtProfile);
           >
             <img
               style={{ borderRadius: "50%", height: "111px", width: "111px" }}
-              src={usergg.picture || profileInfo.Avarta}
+              src={
+                usergg.picture ||
+                "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
+                profileInfo.Avarta
+              }
             ></img>
             <Box>
               <Typography variant='h5' fontWeight={500}>
