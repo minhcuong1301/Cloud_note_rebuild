@@ -1,6 +1,5 @@
 import { LoginOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
-
   Box,
   Button,
   Dialog,
@@ -16,7 +15,6 @@ import {
   MenuItem,
   Select,
   TextField,
-
 } from "@mui/material";
 import classNames from "classnames";
 import { useSnackbar } from "notistack";
@@ -37,20 +35,19 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../Auth/userSlice";
 Settings.propTypes = {
-    setDf_nav: PropTypes.func.isRequired,
-    setColorNote: PropTypes.func.isRequired,
-    setUser: PropTypes.func.isRequired,
+  setDf_nav: PropTypes.func.isRequired,
+  setColorNote: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
 };
 
 const configColorBox = {
-    width: "30px",
-    height: "30px",
-    borderRadius: "50%",
-    margin: "0 auto",
-    border: "1px solid black",
+  width: "30px",
+  height: "30px",
+  borderRadius: "50%",
+  margin: "0 auto",
+  border: "1px solid black",
 };
 function diff(color, otherColor) {
-
   if (color.r || undefined !== otherColor.r) {
     return false;
   }
@@ -251,13 +248,10 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
     </FormControl>
   );
 
-
-    
-    <BoxDoubleContent
-        content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
-        content_2={user.gmail}
-
-/>
+  <BoxDoubleContent
+    content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
+    content_2={user.gmail}
+  />;
   const handleChangeScreen = async (e) => {
     setScreen(e.target.value);
     try {
@@ -371,7 +365,11 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                     style={{ borderRadius: "50%" }}
                     width={50}
                     height={50}
-                    src={usergg.picture || infoUser.Avarta}
+                    src={
+                      usergg.picture ||
+                      "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
+                      infoUser.Avarta
+                    }
                   />{" "}
                   <Button onClick={handleChangeAvt}>Choose</Button>
                   <input
@@ -404,7 +402,11 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                     style={{ borderRadius: "50%" }}
                     width={50}
                     height={50}
-                    src={usergg.picture || infoUser.AvtProfile}
+                    src={
+                      usergg.picture ||
+                      "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
+                      infoUser.AvtProfile
+                    }
                   />{" "}
                   <Button onClick={handleChangeAvtProfile}>Choose</Button>
                   <input
@@ -462,39 +464,38 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
           </Box>
           <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
 
-
-                    <Box sx={{ mt: 3, mb: 3 }}>
-                        <span className={classes.mainText}>General</span>
-                        <BoxDoubleContent
-                            content_1={<span style={{ fontWeight: 600 }}>Default screen:</span>}
-                            content_2={<CustomMenuScreen />}
-                            customHeight='40px'
-                        />
-                        <BoxDoubleContent
-                            content_1={<span style={{ fontWeight: 600 }}>Default color:</span>}
-                            // content_2={<CustomMenuColor />}
-                            customHeight='40px'
-                        />
-                    </Box>
-                    <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
-                    <Box sx={{ mt: 3 }}>
-                        <span className={classes.mainText}>Online Sync & Backup</span>
-                        <BoxDoubleContent
-                            content_1={<span style={{ fontWeight: 600 }}>Sync on lauch:</span>}
-                            content_2={<CheckIcon />}
-                            customHeight='30px'
-                        />
-                        <BoxDoubleContent
-                            content_1={<span style={{ fontWeight: 600 }}>Auto backup:</span>}
-                            content_2={<CheckIcon />}
-                            customHeight='30px'
-                        />
-                    </Box>
-                </Grid>
-                <Grid item xs={24} sm={12} md={6} lg={6}></Grid>
-            </Grid>
-        </div>
-    );
+          <Box sx={{ mt: 3, mb: 3 }}>
+            <span className={classes.mainText}>General</span>
+            <BoxDoubleContent
+              content_1={<span style={{ fontWeight: 600 }}>Default screen:</span>}
+              content_2={<CustomMenuScreen />}
+              customHeight='40px'
+            />
+            <BoxDoubleContent
+              content_1={<span style={{ fontWeight: 600 }}>Default color:</span>}
+              // content_2={<CustomMenuColor />}
+              customHeight='40px'
+            />
+          </Box>
+          <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
+          <Box sx={{ mt: 3 }}>
+            <span className={classes.mainText}>Online Sync & Backup</span>
+            <BoxDoubleContent
+              content_1={<span style={{ fontWeight: 600 }}>Sync on lauch:</span>}
+              content_2={<CheckIcon />}
+              customHeight='30px'
+            />
+            <BoxDoubleContent
+              content_1={<span style={{ fontWeight: 600 }}>Auto backup:</span>}
+              content_2={<CheckIcon />}
+              customHeight='30px'
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={24} sm={12} md={6} lg={6}></Grid>
+      </Grid>
+    </div>
+  );
 }
 
 export default Settings;

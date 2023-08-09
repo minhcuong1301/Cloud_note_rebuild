@@ -66,6 +66,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
 
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  console.log(user);
   const [showPassword2, setShowPassword2] = useState(false);
   const [valueLock2, setValueLock2] = useState("");
   const { enqueueSnackbar } = useSnackbar();
@@ -172,7 +173,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                     marginRight: "1rem",
                   }}
                   src={
-                    user.avt ||
+                    user.Avarta ||
                     "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
                   }
                 ></img>
