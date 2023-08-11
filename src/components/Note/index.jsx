@@ -62,7 +62,7 @@ const Note = () => {
       <Box>
         <div>
           <Link to='/'>
-            <img src='./logo_chua_tach_nen.png' alt='Cloudnote' />
+            <img src='./assets/logo_chua_tach_nen.png' alt='Cloudnote' />
             SAMNOTES
           </Link>
         </div>

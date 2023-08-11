@@ -100,24 +100,26 @@ const Message = ({ togle, listUserOnline }) => {
             src={`${process.env.PUBLIC_URL + "/assets/andanh.png"}`}
             alt=''
           />
-          <Box ml={1} sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography
-              style={{
-                fontSize: 17 + "px",
-                fontWeight: 600,
-              }}
-              variant='h5'
-            >
-              Anonymous
-            </Typography>
-            <p
-              style={{
-                fontSize: 16 + "px",
-              }}
-            >
-              You received a messenger from a anomymous one
-            </p>
-          </Box>
+          <Link to={"/anonymous"}>
+            <Box ml={1} sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography
+                style={{
+                  fontSize: 17 + "px",
+                  fontWeight: 600,
+                }}
+                variant='h5'
+              >
+                Anonymous
+              </Typography>
+              <p
+                style={{
+                  fontSize: 16 + "px",
+                }}
+              >
+                You received a messenger from a anomymous one
+              </p>
+            </Box>
+          </Link>
           <Button
             style={{ display: "block", position: "relative" }}
             onClick={handle_option}

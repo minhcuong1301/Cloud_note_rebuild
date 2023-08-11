@@ -31,7 +31,6 @@ const Anonymous = () => {
     deleteUser.forEach((el) => {
       el.addEventListener("click", () => {
         const parent = el.parentElement.parentElement;
-        console.log(parent);
         parent.classList.add("none");
       });
     });
@@ -48,7 +47,6 @@ const Anonymous = () => {
     });
     userApi.getMessage(UserOnlineId && UserOnlineId.id).then((data) => {
       setGetMessageuser(data.data);
-      console.log(getMessage);
     });
   };
 
@@ -56,7 +54,6 @@ const Anonymous = () => {
     userApi.userOnline().then((res) => {
       const status = res.users.filter((user) => user.statesLogin === 1);
       setlistUserOnline(status);
-      console.log(status);
     });
   }, [messageContent]);
 
@@ -77,7 +74,6 @@ const Anonymous = () => {
     });
     data.then((datas) => {
       setstatusMess(datas.data.message);
-      console.log(statusMess);
     });
     setMessageContent("");
   };
@@ -86,10 +82,16 @@ const Anonymous = () => {
   useEffect(() => {
     userApi.getMessage(users.id).then((data) => {
       setUserIdSend(data.data);
-      console.log(UserIdSend);
     });
   }, [messageContent]);
-
+  useEffect(() => {
+    document.querySelector(".inputMessageAnoymous").addEventListener("keydown", function (e) {
+      if (e.keyCode === 13) {
+        console.log(1);
+        // sendMessage();
+      }
+    });
+  });
   return (
     <Box
       sx={{
@@ -106,7 +108,7 @@ const Anonymous = () => {
           paddingBottom: 24 + "px",
         }}
       >
-        <Link to={"/"}>
+        <Link to={"/home/profile/"}>
           <Stack>
             <Stack direction='row' alignItems='center' justifyContent='space-around'>
               <img
@@ -326,8 +328,6 @@ const Anonymous = () => {
         >
           {UserOnlineId &&
             getMessage.map((message) => {
-              console.log(message.idSend);
-
               return UserOnlineId.id == message.idSend ? (
                 <Stack key={message.id} mt={4} direction='column' alignItems='center'>
                   <Stack
@@ -431,6 +431,7 @@ const Anonymous = () => {
             alt=''
           />
           <TextField
+            className={"inputMessageAnoymous"}
             style={{
               backgroundColor: "#D3D3D3",
               width: 550 + "px",

@@ -144,6 +144,7 @@ function Login(props) {
               backgroundClip: "text",
               textFillColor: "transparent",
               alignItems: "center",
+              cursor: "pointer",
             }}
             onClick={() => navigate("/")}
           >

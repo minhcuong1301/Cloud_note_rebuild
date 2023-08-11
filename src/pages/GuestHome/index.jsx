@@ -75,7 +75,7 @@ function Home(props) {
         // Nếu nhận được token mới, cập nhật lại giá trị trong state hoặc local storage
         localStorage.setItem("access_token", JSON.stringify(token));
       }
-    }, 30 * 60 * 1000);
+    }, 120 * 60 * 1000);
 
     return () => clearInterval(intervalId);
   }, [dispatch, refreshToken]);

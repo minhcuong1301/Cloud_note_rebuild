@@ -111,7 +111,7 @@ export default function LandingPage() {
           </div> */}
           <div className={cx("item")}>Contact Us</div>
           <div className={cx("item")}>Help</div>
-          <div className={cx("item")}>Blog</div>
+          <div className={cx("item")}>Blog</div> 
           <div className={cx("item")}>Support Forum</div>
           {!checkJWT() || (
             <>
@@ -134,13 +134,13 @@ export default function LandingPage() {
               "All your notes, synced on all your devices. Get Samnotes now for iOS, Android or in your browser."
             }
           </div>
-          <button className={cx("btn")}>
+          {/* <button className={cx("btn")}>
             {checkJWT ? (
               <div onClick={() => setModal(true)}>Create Public Notes</div>
             ) : (
               <Link to='/register'>Sign up now</Link>
             )}
-          </button>
+          </button> */}
 
           <div className={cx("positive-users")}>
             <div className={cx("sort")}>Member</div>

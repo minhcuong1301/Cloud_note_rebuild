@@ -48,9 +48,10 @@ const userApi = {
     return axiosClient.get(url);
   },
 
-  updateProfile(userId, updatedFields) {
+  updateProfile(userId,data) {
+    console.log('data in APIupdateProfile:', data); 
     const url = `/profile/change_Profile/${userId}`;
-    return axiosClient.patch(url, updatedFields);
+    return axiosClient.patch(url, data);
   },
 
   getMessage(id) {
