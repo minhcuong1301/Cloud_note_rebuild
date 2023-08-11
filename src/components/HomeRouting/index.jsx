@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, Router } from "react-router-dom";
-
+import { checkJWT } from "../../constants";
 import {
   Archived,
   CalendarTable,
@@ -34,7 +34,6 @@ export default function HomeRouting(props) {
       <Route path='/' element={<Navigate to={`/home/archived`} />} />
 
       <Route path='/profile' element={<Profile usergg={usergg} data={data} />} />
-
 
       <Route path='/calendar' element={<CalendarTable data={data} />} />
       <Route

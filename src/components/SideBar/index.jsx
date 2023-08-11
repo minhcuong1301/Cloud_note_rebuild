@@ -11,7 +11,6 @@ import {
   Visibility,
   VisibilityOff,
   GridView,
-  
   DocumentScannerOutlined,
   AccountCircle,
 } from "@mui/icons-material";
@@ -42,8 +41,8 @@ import userApi from "../../api/userApi";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { checkJWT } from "../../constants";
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-import HomeIcon from '@mui/icons-material/Home';
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import HomeIcon from "@mui/icons-material/Home";
 import "../../pages/LandingPage/LandingPage.module.scss";
 import GuestCreateForm from "../GuestCreateForm";
 import classNames from "classnames/bind";
@@ -103,8 +102,8 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
   };
   const dark = { color: "#fff" };
   const icons = [
-    <HomeIcon style={dark}/>,
-    <EditCalendarIcon style={dark}/>,
+    <HomeIcon style={dark} />,
+    <EditCalendarIcon style={dark} />,
     <GridView style={dark} />,
     <CalendarMonth style={dark} />,
     <Inventory2Outlined style={dark} />,
@@ -114,7 +113,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
     <SettingsOutlined style={dark} />,
     <PeopleOutline style={dark} />,
   ];
-  
+
   const cx = classNames.bind(styles);
   const [modal, setModal] = useState(false);
   const handleNav = (nav) => {
@@ -124,7 +123,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
     // if (pathname.split("/")[2] === nav) return;
     // navigate(`/home/${nav}`);
     if (nav === "create notes") {
-      setModal(true)
+      setModal(true);
     }
     if (nav === "home") {
       // Chuyển hướng đến trang màn hình home
@@ -184,7 +183,10 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                     borderRadius: "50%",
                     marginRight: "1rem",
                   }}
-                  src={user.Avarta}
+                  src={
+                    user.Avarta ||
+                    "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
+                  }
                 ></img>
               ) : (
                 <img
@@ -205,7 +207,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                 <ListItemText
                   primary={
                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
-                      {user.name}
+                      {user.name || "user"}
                     </span>
                   }
                 />
@@ -213,7 +215,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                 <ListItemText
                   primary={
                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
-                      {usergg.name ||"user" }
+                      {usergg.name || "user"}
                     </span>
                   }
                 />
@@ -296,29 +298,37 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
 
       <Box className='nav' sx={{ marginTop: 4 }}>
         <List>
-          {["Home","Create notes","Explore", "Calendar", "Archived", "Screenshot", "Deleted", "Settings", "Groups"].map(
-            (text, index) => (
-              <ListItem
-                key={text}
-                sx={{ color: "white" }}
-                disablePadding
-                onClick={() => {
-                  if (text.toLowerCase() === "screenshot") {
-                    setOpenLock2(true);
-                  } else {
-                    handleNav(text.toLowerCase());
-                  }
-                }}
+          {[
+            "Home",
+            "Create notes",
+            "Explore",
+            "Calendar",
+            "Archived",
+            "Screenshot",
+            "Deleted",
+            "Settings",
+            "Groups",
+          ].map((text, index) => (
+            <ListItem
+              key={text}
+              sx={{ color: "white" }}
+              disablePadding
+              onClick={() => {
+                if (text.toLowerCase() === "screenshot") {
+                  setOpenLock2(true);
+                } else {
+                  handleNav(text.toLowerCase());
+                }
+              }}
+            >
+              <ListItemButton
+                selected={pathname.split("/")[2] === text.toLowerCase() ? true : false}
               >
-                <ListItemButton
-                  selected={pathname.split("/")[2] === text.toLowerCase() ? true : false}
-                >
-                  <ListItemIcon>{icons[index]}</ListItemIcon>
-                  <ListItemText primary={<span style={{ fontWeight: 500 }}>{text}</span>} />
-                </ListItemButton>
-              </ListItem>
-            )
-          )}
+                <ListItemIcon>{icons[index]}</ListItemIcon>
+                <ListItemText primary={<span style={{ fontWeight: 500 }}>{text}</span>} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
       </Box>
       {modal && (

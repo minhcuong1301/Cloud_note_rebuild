@@ -27,3 +27,7 @@
 .none {
   display: none !important;
 }
+.boxUserOnline {
+  max-height: 470px;
+  overflow: auto;
+}

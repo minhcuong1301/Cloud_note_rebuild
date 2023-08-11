@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Box, createTheme, Typography, Button } from "@mui/material";
 import rectangleImage from "./img/Rectangle 1.png";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,6 @@ import { profileUser } from "../../features/Auth/userSlice";
 import { checkJWT } from "../../constants";
 import ListView from "../Archived/ListView/index";
 function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
- 
   const theme = createTheme({
     components: {
       MuiTypography: {
@@ -71,7 +70,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   };
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-console.log(user);
+  console.log(user);
   const [profile, setProfile] = useState([]);
   const [profileInfo, setProfileInfo] = useState([]);
   const [limitedData, setLimitedData] = useState([]);
@@ -114,9 +113,9 @@ console.log(user);
           <img
             style={{ width: "100%", marginLeft: "16px", height: "20rem" }}
             src={
-              user.AvtProfile||
+              user.AvtProfile ||
               usergg.picture ||
-              "https://quantrithcs.vinhphuc.edu.vn/UploadImages/thcstthoason/anh-phong-canh-dep-nhat-the-gioi.jpg" 
+              "https://quantrithcs.vinhphuc.edu.vn/UploadImages/thcstthoason/anh-phong-canh-dep-nhat-the-gioi.jpg"
             }
             alt='note'
           />
@@ -145,19 +144,21 @@ console.log(user);
                 borderRadius: "32px",
               }}
             >
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: "22px",
-                    fontWeight: "600",
-                    "&:hover": {
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  SAMNOTES
-                </Typography>
-              </Box>
+              <Link to={"/"}>
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: "22px",
+                      fontWeight: "600",
+                      "&:hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    SAMNOTES
+                  </Typography>
+                </Box>
+              </Link>
               <Box
                 sx={{
                   display: "flex",
@@ -217,7 +218,7 @@ console.log(user);
             <img
               style={{ borderRadius: "50%", height: "111px", width: "111px" }}
               src={
-                user.Avarta||
+                user.Avarta ||
                 usergg.picture ||
                 "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
                 profileInfo.Avarta
