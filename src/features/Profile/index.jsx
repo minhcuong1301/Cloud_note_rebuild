@@ -11,9 +11,10 @@ import userApi from "../../api/userApi";
 import { useSelector } from "react-redux";
 import Message from "../../components/Message/Message";
 import { profileUser } from "../../features/Auth/userSlice";
-
+import { checkJWT } from "../../constants";
 import ListView from "../Archived/ListView/index";
 function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
+ 
   const theme = createTheme({
     components: {
       MuiTypography: {
@@ -68,10 +69,9 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   const handle_message = () => {
     set_togle_Message(!togle_Message);
   };
-  console.log(usergg);
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-
+console.log(user);
   const [profile, setProfile] = useState([]);
   const [profileInfo, setProfileInfo] = useState([]);
   const [limitedData, setLimitedData] = useState([]);
@@ -114,9 +114,9 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
           <img
             style={{ width: "100%", marginLeft: "16px", height: "20rem" }}
             src={
+              user.AvtProfile||
               usergg.picture ||
-              "https://quantrithcs.vinhphuc.edu.vn/UploadImages/thcstthoason/anh-phong-canh-dep-nhat-the-gioi.jpg" ||
-              profileInfo.AvtProfile
+              "https://quantrithcs.vinhphuc.edu.vn/UploadImages/thcstthoason/anh-phong-canh-dep-nhat-the-gioi.jpg" 
             }
             alt='note'
           />
@@ -217,6 +217,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             <img
               style={{ borderRadius: "50%", height: "111px", width: "111px" }}
               src={
+                user.Avarta||
                 usergg.picture ||
                 "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
                 profileInfo.Avarta
@@ -224,7 +225,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             ></img>
             <Box>
               <Typography variant='h5' fontWeight={500}>
-                {usergg.name || profileInfo.name}
+                {user.name || usergg.name}
               </Typography>
               <Typography variant='h6' fontWeight={400}>
                 {usergg.email || profileInfo.createAccount}

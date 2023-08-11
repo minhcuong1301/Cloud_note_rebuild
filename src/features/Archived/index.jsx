@@ -22,6 +22,7 @@ Archived.propTypes = {
 Archived.defaultProps = {};
 
 function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
+   
     const [value, setValue] = useState("");
     const [dataFilter, setDataFilter] = useState([]);
     const [construct, setConstruct] = useState("List");

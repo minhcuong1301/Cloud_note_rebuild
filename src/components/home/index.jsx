@@ -24,6 +24,7 @@ import { io } from "socket.io-client";
 import { socketActions } from "../socketSlice";
 import StorageKeys from "../../constants/storage-keys";
 import jwtDecode from "jwt-decode";
+
 Home.propTypes = {};
 const theme = createTheme({
   palette: {
@@ -37,6 +38,7 @@ const theme = createTheme({
 export const ShareNoteContext = createContext(null);
 
 function Home(props) {
+ 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
@@ -44,7 +46,6 @@ function Home(props) {
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"))
   );
   const usergg = jwtDecode(localStorage.getItem(StorageKeys.TOKEN));
-  console.log(usergg);
   const [sharedNoteId, setSharedNoteId] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [colorNote, setColorNote] = useState(user.df_color);

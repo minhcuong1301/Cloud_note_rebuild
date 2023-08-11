@@ -8,6 +8,7 @@ import StorageKeys from "../../constants/storage-keys.js";export const register 
 export const login = createAsyncThunk("user/login", async (payload) => {
   const data = await userApi.login(payload);
   //save local storages
+  console.log(data);
   localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(data.jwt));
   localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
   return { ...data.user, jwt: data.jwt };
@@ -26,20 +27,21 @@ export const profileUser = createAsyncThunk('profileUser', async (userId) => {
   }
 );
 export const updateProfile = createAsyncThunk('user/updateProfile', async (payload) => {
-  console.log(111);
-  const { userId, updatedFields } = payload;
-
+  const { userId,Avarta,name,AvtProfile } = payload;
+ console.log(payload);
   // Gọi API để cập nhật thông tin user
-  const e= await userApi.updateProfile(userId, updatedFields);
-  // Lưu thông tin user mới vào local storage (nếu có)
+  const updatedData= await userApi.updateProfile(userId, {Avarta,name,AvtProfile});
+  console.log(updatedData);
   const user = JSON.parse(localStorage.getItem(StorageKeys.USER)) || {};
-console.log('ela',user);
- 
-  const updatedUser = { ...user, ...updatedFields };
-
-  localStorage.setItem(StorageKeys.USER, JSON.stringify(updatedUser));
-
-  return updatedUser;
+  try {
+    const updatedUser = { ...user,  ...updatedData };
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(updatedUser));
+    console.log('Dữ liệu đã được cập nhật và lưu vào local storage.',updatedUser);
+  } catch (error) {
+    console.error('Lỗi khi cập nhật và lưu dữ liệu vào local storage:', error);
+  }
+  
+  return updatedData;
 });
 export const refresh = createAsyncThunk("user/refresh", async () => {
 
@@ -72,10 +74,7 @@ const userSlice = createSlice({
       state.current = clone;
     },
     updateUser: (state, action) => {
-      // Cập nhật thông tin người dùng dựa trên payload nhận được từ action
-      // const avatar_profile=action.payload.
-   console.log(action.payload);
-  
+   console.log('ảnh khi cập nhật trên updateusser',action.payload);
       return { ...state, ...action.payload };
     },
   

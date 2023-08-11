@@ -144,6 +144,7 @@ function Login(props) {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               textFillColor: "transparent",
+              cursor: "pointer",
             }}
             onClick={() => navigate("/")}
           >
