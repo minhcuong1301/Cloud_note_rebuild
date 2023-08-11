@@ -13,7 +13,7 @@ import useWindowDimensions from "../../../customHook/WindowDimensions";
 import { login } from "../userSlice";
 
 import { profileUser } from "../userSlice";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import StorageKeys from "../../../constants/storage-keys";
@@ -59,18 +59,16 @@ function Login(props) {
       const action = login(values);
 
       const resultAction = await dispatch(action);
-      console.log("res1",resultAction);
+      console.log("res1", resultAction);
       unwrapResult(resultAction);
 
       enqueueSnackbar("Logged in successfully", { variant: "success" });
       setTimeout(() => {
         navigate("/home");
       }, 1000);
-
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
     }
-    
   };
   const handleSuccess = (credentialResponse) => {
     // Xử lý kết quả đăng nhập thành công
@@ -125,7 +123,7 @@ function Login(props) {
           sx={{
             height: "70px",
             width: "100%",
-
+            // cursor: "pointer",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -133,6 +131,7 @@ function Login(props) {
         >
           <Box
             sx={{
+              cursor: "pointer",
               fontWeight: "800",
               fontSize: "28px",
               lineHeight: "60px",
@@ -144,9 +143,11 @@ function Login(props) {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               textFillColor: "transparent",
+              alignItems: "center",
             }}
             onClick={() => navigate("/")}
           >
+            <ArrowBackIcon style={{ fontSize: 30 + "px" }} />
             CLOUD NOTE
           </Box>
           {window.width > 600 && (
@@ -242,12 +243,10 @@ function Login(props) {
          
             </Box> */}
 
-           
-            <Box  sx={{marginLeft:"25%"}}>
-
-            <GoogleOAuthProvider clientId='1092813439180-sbl9dbmjhu01po9vhmdltn4f8qbqiapf.apps.googleusercontent.com'>
-              <GoogleLogin className='google' onSuccess={handleSuccess} onError={handleFailure} />
-            </GoogleOAuthProvider>
+            <Box sx={{ marginLeft: "25%" }}>
+              <GoogleOAuthProvider clientId='1092813439180-sbl9dbmjhu01po9vhmdltn4f8qbqiapf.apps.googleusercontent.com'>
+                <GoogleLogin className='google' onSuccess={handleSuccess} onError={handleFailure} />
+              </GoogleOAuthProvider>
             </Box>
           </Box>
         </Box>
