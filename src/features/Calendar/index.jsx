@@ -109,7 +109,7 @@ const handleDateClick = (value) => {
                 },
             }}
         >
-            <Calendar cellRender={cellRender}/>
+            {/* <Calendar cellRender={cellRender}/> */}
             <Box>
       <Calendar cellRender={cellRender} onSelect={handleDateClick} />
       {toggleNote === true && (

@@ -34,6 +34,8 @@ import { profileUser, updateProfile } from "../Auth/userSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../Auth/userSlice";
+import StorageKeys from "../../constants/storage-keys";
+import { checkJWT } from "../../constants";
 Settings.propTypes = {
   setDf_nav: PropTypes.func.isRequired,
   setColorNote: PropTypes.func.isRequired,
@@ -59,18 +61,21 @@ function diff(color, otherColor) {
   }
   return true;
 }
+
+
 function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
-  const [selectedAvatarProfile, setSelectedAvatarProfile] = useState(null);
-  const [re, setRe] = useState([]);
+  
   const user =
-    useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-  console.log(user);
+  useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+
+  const [selectedAvatarProfile, setSelectedAvatarProfile] = useState(null);
+
   const [screen, setScreen] = useState(user.df_screen);
-  console.log(screen);
+
   const [color, setColor] = useState(() => {
     for (const key in colorBucket) {
       if (diff(colorBucket[key], user.df_color)) {
@@ -124,95 +129,106 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   const handleEditP2 = () => {
     return;
   };
-  const [infoUser, setInfoUser] = useState([]);
-  useEffect(() => {
-    (async () => {
-      const res = await dispatch(profileUser(user.id));
 
-      setInfoUser((res && res.payload) || "");
-    })();
-  }, []);
-  const [avatarURL, setAvatarURL] = useState(null);
-  const [avatarURL2, setAvatarURL2] = useState(null);
+  async function uploadToImgBB(imageData) {
+    const apiKey = '75a856b5b33ad8e19d09ffe21758a1cf';
+  
+    const formData = new FormData();
+    formData.append('image', imageData);
+  
+    const response = await fetch('https://api.imgbb.com/1/upload?key=' + apiKey, {
+      method: 'POST',
+      body: formData,
+    });
 
-  console.log("anh khi chon", selectedAvatar);
+    const data = await response.json();
+  
+    if (data && data.data && data.data.url) {
+      return data.data.url;
+    } else {
+      throw new Error('Failed to upload image to ImgBB');
+    }
+  }
+  const [editedName, setEditedName] = useState(user.name || usergg.name);
+ 
   const handleEditProfile = async () => {
-    const data = {
-      Avarta: selectedAvatar,
-      AvtProfile: selectedAvatarProfile,
-      name: editedName,
-    };
-    try {
-      // Gọi API updateProfile để gửi formData lên server và đợi kết quả
-      const response = await dispatch(updateProfile({ userId: user.id, updatedFields: data }));
-      console.log(response.payload);
-      setRe(response.payload);
-      if (response.payload) {
-        const avatarBlob = new Blob([response.payload.Avarta], {
-          type: response.payload.Avarta.type,
-        });
-        const avatarBlob2 = new Blob([response.payload.AvtProfile], {
-          type: response.payload.AvtProfile.type,
-        });
+    if (checkJWT()) {
+      return window.location.assign("/login");
+    }
+    const updatedData = {};
+    const formData = new FormData();
+    formData.append("Avarta", selectedAvatar)
+    formData.append("AvtProfile", selectedAvatarProfile)
+   
+   
+    
+    if (selectedAvatarProfile) {
+      const imgUrl = await uploadToImgBB(selectedAvatarProfile);
+      updatedData.AvtProfile = imgUrl;
+    }
+    if (selectedAvatar) {
+      const imgUrl2 = await uploadToImgBB(selectedAvatar);
+      updatedData.Avarta = imgUrl2;
+    }
+    if (editedName) {
+      updatedData.name = editedName;
+    }
+    if (Object.keys(updatedData).length === 0) {
+      // Không có trường nào được cập nhật
+      return;
+    }
+      const dataToUpdate = {
+        userId: user.id,
+        ...updatedData
+        
+      };
+    console.log(updatedData);
 
-        const avatarURL = URL.createObjectURL(avatarBlob);
-        const avatarURL2 = URL.createObjectURL(avatarBlob2);
-
-        dispatch(updateUser({ Avarta: avatarURL, AvtProfile: avatarURL2 }));
-        console.log("1", avatarURL, avatarURL2);
+      console.log('dataToUpdate', dataToUpdate);
+      const response = await dispatch(updateProfile(dataToUpdate))
+  
+     console.log(response);
+      if (response) {
+     
+        localStorage.setItem(StorageKeys.USER, JSON.stringify(response.payload));
+        console.log('Updated user profile:', response.payload);
+        dispatch(updateUser(response.payload));
+        console.log(response.payload);
         enqueueSnackbar("Profile update success", { variant: "success" });
       } else {
         console.log("sai");
         enqueueSnackbar("Profile update failed ", { variant: "error" });
       }
-    } catch (error) {
-      // Xử lý lỗi (nếu có)
-    }
+    
+
+
   };
   const handleChangeAvt = () => {
-    const inputFile = document.getElementById("input-file");
+    const inputFile = document.getElementById("input-file-avt");
     inputFile.click();
   };
   const handleFileChangeAvt = (event) => {
     const file = event.target.files[0];
-    const imageURL = URL.createObjectURL(file);
-    setAvatarURL(imageURL);
-    setSelectedAvatar(imageURL);
-    setInfoUser((prevState) => ({
-      ...prevState,
-      Avarta: imageURL,
-    }));
+    if (file) {
+      setSelectedAvatar(file);
+    }
   };
+
+
   const handleChangeAvtProfile = () => {
     const inputFileAvatar = document.getElementById("input-file-avtprofile");
     inputFileAvatar.click();
   };
   const handleFileChangeAvtProfile = (event) => {
     const file = event.target.files[0];
-    const imageURL = URL.createObjectURL(file);
-    setSelectedAvatarProfile(imageURL);
-    setAvatarURL2(imageURL);
-    setInfoUser((prevState) => ({
-      ...prevState,
-      AvtProfile: imageURL,
-    }));
+
+    if (file) {
+      setSelectedAvatarProfile(file);
+    }
+    
   };
-  useEffect(() => {
-    (async () => {
-      const res = await dispatch(profileUser(user.id));
-      if (res.payload && res.payload.Avarta) {
-        setInfoUser(res.payload);
-      }
-    })();
-  }, []);
-  const [editedName, setEditedName] = useState(infoUser.name);
-  const handleNameChange = (event) => {
-    setEditedName(event.target.value);
-    setInfoUser((e) => ({
-      ...e,
-      name: editedName,
-    }));
-  };
+
+  
   const handleOkLock2 = async () => {
     try {
       const res = await userApi.lock2(user.id, { password_2: valueLock2 });
@@ -360,21 +376,34 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
               content_1={<span style={{ fontWeight: 600 }}>Avatar:</span>}
               content_2={
                 <div className='avt'>
-                  {" "}
-                  <Image
-                    style={{ borderRadius: "50%" }}
-                    width={50}
-                    height={50}
-                    src={
-                      usergg.picture ||
-                      "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
-                      infoUser.Avarta
-                    }
-                  />{" "}
+                  {selectedAvatar  ? (
+                    <Image
+                      style={{ borderRadius: "50%" }}
+                      width={50}
+                      height={50}
+                      src={
+                       
+                        URL.createObjectURL(selectedAvatar) ||
+                        usergg.Avarta ||
+                        "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"}
+                      alt="Selected Avatar"
+                    />
+                  ):(
+                    <Image
+                      style={{ borderRadius: "50%" }}
+                      width={50}
+                      height={50}
+                      src={
+                        user.Avarta
+                       }
+                      alt="Selected Avatar"
+                    />
+                  )}
+                
                   <Button onClick={handleChangeAvt}>Choose</Button>
                   <input
                     type='file'
-                    id='input-file'
+                    id='input-file-avt'
                     style={{ display: "none" }}
                     onChange={handleFileChangeAvt}
                   />
@@ -388,8 +417,8 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                 <TextField
                   id='outlined-basic'
                   variant='outlined'
-                  value={usergg.name || infoUser.name}
-                  onChange={handleNameChange}
+                  value={editedName||usergg.name }
+                  onChange={(e) => setEditedName(e.target.value)}
                 />
               }
             />
@@ -397,17 +426,30 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
               content_1={<span style={{ fontWeight: 600 }}>Cover image:</span>}
               content_2={
                 <div className='avt'>
-                  {" "}
-                  <Image
-                    style={{ borderRadius: "50%" }}
-                    width={50}
-                    height={50}
-                    src={
-                      usergg.picture ||
-                      "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg" ||
-                      infoUser.AvtProfile
-                    }
-                  />{" "}
+                  {selectedAvatarProfile  ? (
+                    <Image
+                      style={{ borderRadius: "50%" }}
+                      width={50}
+                      height={50}
+                      src={
+                       
+                        URL.createObjectURL(selectedAvatarProfile) ||
+                        usergg.AvtProfile ||
+                        "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"}
+                      alt="Selected Avatar"
+                    />
+                  ):(
+                    <Image
+                      style={{ borderRadius: "50%" }}
+                      width={50}
+                      height={50}
+                      src={
+                        user.AvtProfile
+                       }
+                      alt="Selected Avatar"
+                    />
+                  )}
+                
                   <Button onClick={handleChangeAvtProfile}>Choose</Button>
                   <input
                     type='file'
@@ -448,18 +490,18 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                   Update Profile
                 </Button>
               }
-              // content_2={
-              //   <Button
-              //     variant='contained'
-              //     onClick={() => {
-              //       setOpenLock(true);
-              //     }}
-              //     size='small'
-              //     sx={{ marginTop: "15px" }}
-              //   >
-              //     Delete Account
-              //   </Button>
-              // }
+            // content_2={
+            //   <Button
+            //     variant='contained'
+            //     onClick={() => {
+            //       setOpenLock(true);
+            //     }}
+            //     size='small'
+            //     sx={{ marginTop: "15px" }}
+            //   >
+            //     Delete Account
+            //   </Button>
+            // }
             />
           </Box>
           <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />

@@ -11,6 +11,7 @@ import {
   Visibility,
   VisibilityOff,
   GridView,
+  
   DocumentScannerOutlined,
   AccountCircle,
 } from "@mui/icons-material";
@@ -41,6 +42,13 @@ import userApi from "../../api/userApi";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { checkJWT } from "../../constants";
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import HomeIcon from '@mui/icons-material/Home';
+import "../../pages/LandingPage/LandingPage.module.scss";
+import GuestCreateForm from "../GuestCreateForm";
+import classNames from "classnames/bind";
+import styles from "../../pages/LandingPage/LandingPage.module.scss";
+
 SideBar.propTypes = {
   handleOpenDrawer: PropTypes.func.isRequired,
   drawerNew: PropTypes.bool.isRequired,
@@ -66,7 +74,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
 
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-  console.log(user);
+
   const [showPassword2, setShowPassword2] = useState(false);
   const [valueLock2, setValueLock2] = useState("");
   const { enqueueSnackbar } = useSnackbar();
@@ -95,6 +103,8 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
   };
   const dark = { color: "#fff" };
   const icons = [
+    <HomeIcon style={dark}/>,
+    <EditCalendarIcon style={dark}/>,
     <GridView style={dark} />,
     <CalendarMonth style={dark} />,
     <Inventory2Outlined style={dark} />,
@@ -104,12 +114,24 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
     <SettingsOutlined style={dark} />,
     <PeopleOutline style={dark} />,
   ];
+  
+  const cx = classNames.bind(styles);
+  const [modal, setModal] = useState(false);
   const handleNav = (nav) => {
     if (checkJWT()) {
       return window.location.assign("/login");
     }
-    if (pathname.split("/")[2] === nav) return;
-    navigate(`/home/${nav}`);
+    // if (pathname.split("/")[2] === nav) return;
+    // navigate(`/home/${nav}`);
+    if (nav === "create notes") {
+      setModal(true)
+    }
+    if (nav === "home") {
+      // Chuyển hướng đến trang màn hình home
+      navigate("/");
+    } else {
+      navigate(`/home/${nav}`);
+    }
   };
 
   const handleProfileClick = (nav) => {
@@ -154,7 +176,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
         <List>
           <ListItem sx={{ color: "#fff" }} disablePadding>
             <ListItemButton onClick={handleProfileClick}>
-              {usergg ? (
+              {user ? (
                 <img
                   style={{
                     width: "40px",
@@ -162,7 +184,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                     borderRadius: "50%",
                     marginRight: "1rem",
                   }}
-                  src={usergg.picture}
+                  src={user.Avarta}
                 ></img>
               ) : (
                 <img
@@ -173,17 +195,17 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                     marginRight: "1rem",
                   }}
                   src={
-                    user.Avarta ||
+                    usergg.picture ||
                     "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
                   }
                 ></img>
               )}
 
-              {usergg ? (
+              {user ? (
                 <ListItemText
                   primary={
                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
-                      {usergg.name}
+                      {user.name}
                     </span>
                   }
                 />
@@ -191,7 +213,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                 <ListItemText
                   primary={
                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
-                      {user.name || "user"}
+                      {usergg.name ||"user" }
                     </span>
                   }
                 />
@@ -274,7 +296,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
 
       <Box className='nav' sx={{ marginTop: 4 }}>
         <List>
-          {["Explore", "Calendar", "Archived", "Screenshot", "Deleted", "Settings", "Groups"].map(
+          {["Home","Create notes","Explore", "Calendar", "Archived", "Screenshot", "Deleted", "Settings", "Groups"].map(
             (text, index) => (
               <ListItem
                 key={text}
@@ -299,6 +321,12 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
           )}
         </List>
       </Box>
+      {modal && (
+        <div className={cx("modal")}>
+          <div className={cx("overlay")} onClick={() => setModal(false)}></div>
+          <GuestCreateForm clear={() => setModal(false)} />
+        </div>
+      )}
       <Box
         sx={{
           display: "flex",

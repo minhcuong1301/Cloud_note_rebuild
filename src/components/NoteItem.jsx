@@ -123,6 +123,7 @@ function NoteItem({ dataItem, handleDelNote, setArchivedData, construct, full = 
         try {
             setIsSubmitting(true);
             const res = await noteApi.editNote(dataItem.idNote, configParam);
+            console.log(res);
             setIsSubmitting(false);
 
             enqueueSnackbar(res.message, { variant: "success" });
