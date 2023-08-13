@@ -1,12 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-
+import "./footer.css";
 Footer.propTypes = {};
 
 function Footer(props) {
   return (
     <div
+      className='FooterNote'
       style={{
         position: "absolute",
         bottom: 0,

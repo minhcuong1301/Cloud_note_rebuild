@@ -38,7 +38,6 @@ const theme = createTheme({
 export const ShareNoteContext = createContext(null);
 
 function Home(props) {
- 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 

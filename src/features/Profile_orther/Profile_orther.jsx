@@ -61,11 +61,11 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
                 SAMNOTES
               </li>
             </Link>
-            <li className={`${classes.wapper_profile_li}`}>Helps</li>
+            {/* <li className={`${classes.wapper_profile_li}`}>Helps</li> */}
             <li className={`${classes.wapper_profile_li}`}>Home</li>
-            <li className={`${classes.wapper_profile_li}`}>Contact Us</li>
+            <li className={`${classes.wapper_profile_li}`}>Contact</li>
             <li className={`${classes.wapper_profile_li}`}>Blog</li>
-            <li className={`${classes.wapper_profile_li}`}>Support Forum</li>
+            <li className={`${classes.wapper_profile_li}`}>Support</li>
           </ul>
         </div>
         <div
@@ -79,7 +79,7 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
             style={{
               gap: 98 + "px",
             }}
-            className={`${classes.wapper_content}`}
+            className={`${classes.wapper_content} ${classes.AvaUser} ${classes.colum}`}
           >
             <div
               style={{
@@ -116,7 +116,7 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
               style={{
                 gap: 24 + "px",
               }}
-              className={`${classes.wapper_content}`}
+              className={`${classes.wapper_content} ${classes.Gap} ${classes.colum2}`}
             >
               <div
                 style={{
@@ -124,7 +124,7 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
                   borderRadius: 12 + "px",
                   cursor: "pointer",
                 }}
-                className={`${classes.wapper_content}`}
+                className={`${classes.wapper_content} `}
               >
                 <img
                   style={{
@@ -136,6 +136,7 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
                   alt=''
                 />
                 <button
+                  className={`${classes.SizeButton}`}
                   style={{
                     backgroundColor: "#3644C7",
                     border: "none",
@@ -233,6 +234,7 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
                   alt=''
                 />
                 <button
+                  className={`${classes.SizeButton}`}
                   style={{
                     backgroundColor: "#3644C7",
                     border: "none",
@@ -361,6 +363,7 @@ function Profile_orther({ data, handleDelNote, setArchivedData, toolsNote }) {
                       </p>
                       <p className={`${classes.profile_text}`}>{"" + val.data}</p>
                       <div
+                        className={`${classes.none}`}
                         style={{
                           position: "absolute",
                           right: 170 + "px",

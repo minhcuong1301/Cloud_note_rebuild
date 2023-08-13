@@ -13,7 +13,7 @@ import {
 import ListItemIcon from "@mui/material/ListItemIcon";
 import KeyIcon from "@mui/icons-material/Key";
 import EditForm from "../EditForm";
-
+import "./ListView.css";
 import noteApi from "../../../api/noteApi";
 import { enqueueSnackbar } from "notistack";
 
@@ -51,6 +51,7 @@ function ListView({
 
   return (
     <Box
+      className='root'
       sx={{
         minWidth: "250px",
         width: "calc(40% - 250px)",
@@ -59,6 +60,7 @@ function ListView({
       }}
     >
       <Box
+        className='scroll'
         sx={{
           width: "100%",
           display: "flex",
@@ -96,7 +98,7 @@ function ListView({
                     </ListItemIcon>
                   )}
                   {item.type === "image" && (
-                    <ListItemIcon>
+                    <ListItemIcon className='none'>
                       <Photo fontSize='small' />
                     </ListItemIcon>
                   )}

@@ -20,3 +20,18 @@ input:focus {
     background-color: #dadada;
   }
 }
+@media only screen and (max-width: 739px) {
+  .boxMess {
+    width: 250px !important;
+    right: -20px !important;
+  }
+  .none {
+    display: none;
+  }
+}
+@media only screen and (min-width: 740px) and (max-width: 1024px) {
+  .boxMess {
+    width: 350px !important;
+    right: -20px !important;
+  }
+}

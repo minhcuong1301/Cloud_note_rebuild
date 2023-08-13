@@ -107,10 +107,11 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} RootProfile`}>
       <div className={classNames()}>
         <div className='i' style={{ position: "relative" }}>
           <img
+            className='avaProfle'
             style={{ width: "100%", marginLeft: "16px", height: "20rem" }}
             src={
               user.AvtProfile ||
@@ -120,6 +121,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             alt='note'
           />
           <Box
+            className='boxNav'
             sx={{
               display: "flex",
               alignItems: "center",
@@ -130,6 +132,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             }}
           >
             <Box
+              className='boxNav2'
               sx={{
                 height: "65px",
                 display: "flex",
@@ -160,6 +163,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                 </Box>
               </Link>
               <Box
+                className='BoxNav3'
                 sx={{
                   display: "flex",
                   justifyContent: "space-around",
@@ -206,6 +210,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
           }}
         >
           <Box
+            className='gapProfile'
             sx={{
               display: "flex",
               gap: "50px",
@@ -228,7 +233,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
               <Typography variant='h5' fontWeight={500}>
                 {user.name || usergg.name}
               </Typography>
-              <Typography variant='h6' fontWeight={400}>
+              <Typography className='none' variant='h6' fontWeight={400}>
                 {usergg.email || profileInfo.createAccount}
               </Typography>
             </Box>
@@ -257,6 +262,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
           ) : (
             <Box
               // className={toggleNote === true ? "box_note_hidden" : "box_note_diplay"}
+              className='NoteMoblie'
               sx={{
                 width: "72%",
                 marginRight: "14%",

@@ -13,7 +13,7 @@ const Message = ({ togle, listUserOnline }) => {
   };
   return (
     <Box
-      className={togle === true ? classes.display : classes.display_false}
+      className={`${togle === true ? classes.display : classes.display_false} ${classes.boxMess}`}
       sx={{
         border: 1 + "px",
         borderColor: "#DADADA",
@@ -112,6 +112,7 @@ const Message = ({ togle, listUserOnline }) => {
                 Anonymous
               </Typography>
               <p
+                className={classes.none}
                 style={{
                   fontSize: 16 + "px",
                 }}

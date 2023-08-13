@@ -1,8 +1,8 @@
-.app{
+.app {
   position: relative;
 }
 
-a{
+a {
   text-decoration: none;
   color: inherit;
 }
@@ -15,12 +15,11 @@ a{
 
 /* Track */
 .box-container::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
   border-radius: 8px;
-
 }
-.line{
-  flex:1 1;
+.line {
+  flex: 1 1;
   height: 1px;
   background-color: #ccc;
   margin: "0 5px";
@@ -28,14 +27,13 @@ a{
 
 /* Handle */
 .box-container::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
   border-radius: 8px;
-
 }
 
 /* Handle on hover */
 .box-container::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
 .nav .css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root.Mui-selected {
@@ -44,64 +42,67 @@ a{
 .nav .css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root.Mui-selected:hover {
   background-color: rgb(77 107 137 / 20%);
 }
-.stand-select .MuiInputBase-root:before{
+.stand-select .MuiInputBase-root:before {
   border-bottom: none !important;
-
 }
-.stand-select .MuiInputBase-root:after{
+.stand-select .MuiInputBase-root:after {
   border-bottom: none !important;
-
 }
 
-.btn-new .css-sghohy-MuiButtonBase-root-MuiButton-root.Mui-disabled{
-  color:white
+.btn-new .css-sghohy-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+  color: white;
 }
-.note-content .MuiInputBase-root:before{
+.note-content .MuiInputBase-root:before {
   border-bottom: none !important;
 }
-.note-content .MuiInputBase-root:after{
+.note-content .MuiInputBase-root:after {
   border-bottom: none !important;
 }
-.note-title .MuiInputBase-root{
-  padding:5px !important;
+.note-title .MuiInputBase-root {
+  padding: 5px !important;
   font-weight: bold;
   font-size: 18px;
 }
-.note-title .MuiInputBase-root:after{
+.note-title .MuiInputBase-root:after {
   border-bottom: none !important;
-
 }
-.note-title .MuiInputBase-root:hover:before{
+.note-title .MuiInputBase-root:hover:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42) !important;
 }
-.note-content .MuiInputBase-root{
-  padding: 5px!important;
+.note-content .MuiInputBase-root {
+  padding: 5px !important;
   font-size: 14px;
-
 }
-.box-tool 	.MuiListItem-padding{
-  padding:4px !important
+.box-tool .MuiListItem-padding {
+  padding: 4px !important;
 }
-.note-list .MuiListItem-padding{
+.note-list .MuiListItem-padding {
   padding: 3px 5px 3px 0px !important;
 }
 
-.note-list .css-518kzi-MuiListItemSecondaryAction-root{
-  right:5px !important;
+.note-list .css-518kzi-MuiListItemSecondaryAction-root {
+  right: 5px !important;
 }
-.note-title .note-create{
+.note-title .note-create {
   position: absolute;
-  top:50%;
-  right:0;
+  top: 50%;
+  right: 0;
   transform: translateY(-50%);
 }
-.note-title{
+.note-title {
   position: relative;
   padding: 4px 70px 2px 2px !important;
 }
-.pg-load{
+.pg-load {
   position: fixed !important;
   top: 0;
   left: 0;
   width: 100% !important;
+}
+@media only screen and (max-width: 739px) {
+  .note-title {
+    position: relative;
+    padding: 4px 70px 2px 2px !important;
+    margin-top: 10px !important;
+  }
 }
