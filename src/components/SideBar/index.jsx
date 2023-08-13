@@ -205,6 +205,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
 
               {user ? (
                 <ListItemText
+                  className={classes.none}
                   primary={
                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
                       {user.name || "user"}
@@ -213,6 +214,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                 />
               ) : (
                 <ListItemText
+                  className={classes.none}
                   primary={
                     <span style={{ fontWeight: 500, width: "200px", textTransform: "capitalize" }}>
                       {usergg.name || "user"}
@@ -221,7 +223,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
                 />
               )}
 
-              <ListItemIcon>
+              <ListItemIcon className={classes.settingIcon}>
                 <SettingsOutlined sx={{ color: "#fff", fontSize: "30px", marginLeft: "20px" }} />
               </ListItemIcon>
             </ListItemButton>
@@ -324,8 +326,11 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
               <ListItemButton
                 selected={pathname.split("/")[2] === text.toLowerCase() ? true : false}
               >
-                <ListItemIcon>{icons[index]}</ListItemIcon>
-                <ListItemText primary={<span style={{ fontWeight: 500 }}>{text}</span>} />
+                <ListItemIcon className={classes.HomeIcon}>{icons[index]}</ListItemIcon>
+                <ListItemText
+                  className={classes.none}
+                  primary={<span style={{ fontWeight: 500 }}>{text}</span>}
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -338,6 +343,7 @@ function SideBar({ usergg, handleOpenDrawer, drawerNew }) {
         </div>
       )}
       <Box
+        className={classes.none}
         sx={{
           display: "flex",
           justifyContent: "center",

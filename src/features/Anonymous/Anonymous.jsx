@@ -99,6 +99,7 @@ const Anonymous = () => {
       }}
     >
       <Box
+        className='SideBarAy'
         sx={{
           maxWidth: 470 + "px",
           backgroundColor: "#000000",
@@ -118,7 +119,7 @@ const Anonymous = () => {
                 }}
                 src={`${process.env.PUBLIC_URL + "/assets/andanh.png"}`}
               ></img>
-              <My_text mr={20} variant='h5'>
+              <My_text className='marginAnoy' mr={20} variant='h5'>
                 Anonymous
               </My_text>
               <SettingsIcon
@@ -237,7 +238,7 @@ const Anonymous = () => {
                     </Link>
                     <Stack direction='row' alignItems='center'>
                       <DeleteIcon
-                        className='deleteUser'
+                        className='deleteUser hiddle'
                         data={index}
                         onClick={handle_delete}
                         style={{
@@ -247,7 +248,7 @@ const Anonymous = () => {
                         }}
                       />
                       <MessageIcon
-                        className='messageAnoymous'
+                        className='messageAnoymous hiddle'
                         data-id={user.id}
                         onClick={HandleMessage}
                         style={{
@@ -416,11 +417,11 @@ const Anonymous = () => {
       </Box>
 
       <Box
+        className='input_mea'
         mt={5}
         sx={{
           position: "absolute",
           bottom: 0,
-
           left: 45 + "%",
         }}
       >

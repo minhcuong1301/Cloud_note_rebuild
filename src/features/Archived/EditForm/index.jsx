@@ -10,7 +10,7 @@ import CheckListBox from "../../../components/FieldNote/CheckListFieldBox";
 import TextFieldBox from "../../../components/FieldNote/TextFieldBox";
 import ImageFieldBox from "../../../components/FieldNote/ImageFieldBox";
 import ToolsNote from "../../../components/ToolsNote";
-
+import "./EditForm.css";
 EditForm.propTypes = {
   dataItem: PropTypes.object.isRequired,
   handleDelNote: PropTypes.func.isRequired,
@@ -96,6 +96,7 @@ export default function EditForm({
         flexShrink: 0,
 
         [`& .MuiDrawer-paper`]: {
+          display: "block",
           width: "calc(100% - 550px)",
           boxSizing: "border-box",
           height: toggleNote ? 100 + "%" : "calc(100% - 65px)",
@@ -144,7 +145,7 @@ export default function EditForm({
           </span>
         </Box>
         <Box
-          className='box-container'
+          className='box-container boxEdit'
           sx={{
             position: "relative",
             // height: "calc((100% - 100px)/2)",
@@ -169,6 +170,7 @@ export default function EditForm({
                 if (dataItem) {
                   return (
                     <TextFieldBox
+                      className='margin'
                       isSubmitting={isSubmitting}
                       handleNoteForm={handleNoteForm}
                       bg={colorNote || {}}

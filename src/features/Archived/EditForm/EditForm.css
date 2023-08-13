@@ -1,0 +1,17 @@
+/* Mobile */
+@media only screen and (max-width: 739px) {
+  .css-12r3w90-MuiDrawer-docked .MuiDrawer-paper {
+    display: block;
+    min-width: calc(100% - 70px) !important;
+  }
+  .boxEdit {
+    padding: 0 !important;
+  }
+}
+/* //tablet */
+@media only screen and (min-width: 740px) and (max-width: 1024px) {
+  .css-12r3w90-MuiDrawer-docked .MuiDrawer-paper {
+    display: block;
+    width: calc(100% - 210px) !important;
+  }
+}

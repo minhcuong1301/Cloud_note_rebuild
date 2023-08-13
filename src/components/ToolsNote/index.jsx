@@ -33,7 +33,7 @@ import { useSnackbar } from "notistack";
 import { ShareNoteContext } from "../home";
 import noteApi from "../../api/noteApi";
 import { useNavigate } from "react-router-dom";
-
+import "./ToolNote.css";
 ToolsNote.propTypes = {
   handleChangeNote: PropTypes.func.isRequired,
   handleOptionsNote: PropTypes.func.isRequired,
@@ -142,7 +142,6 @@ function ToolsNote({
       console.log("hello world", dataItem);
       // navigate("/home");
       window.location.reload();
-
     } catch (error) {
       enqueueSnackbar(error.message, { variant: "error" });
     }
@@ -175,6 +174,7 @@ function ToolsNote({
         <ColorBox handleClick={handleChangeNote} color={colorBucket.color_8} sx={configColorBox} />
       </Box>
       <List
+        className='dislayToolNote'
         sx={{
           overflow: "hidden auto",
           height: "calc(100% - 44px)",
