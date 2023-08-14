@@ -21,8 +21,7 @@ Archived.propTypes = {
 };
 Archived.defaultProps = {};
 
-function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear}) {
-  
+function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   const [value, setValue] = useState("");
   const [dataFilter, setDataFilter] = useState([]);
   const [construct, setConstruct] = useState("List");
@@ -118,7 +117,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear}) {
           setArchivedData={setArchivedData}
           handleDelNote={handleDelNote}
           toolsNote={toolsNote}
-          clear={clear}
+          clears={clear}
         />
       ) : (
         <div
