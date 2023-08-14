@@ -37,10 +37,7 @@ export default function EditForm({
   toggleNote,
   limitedData,
 }) {
-  // console.log("dataitem", dataItem);
-  // console.log("typeofData", typeof dataItem);
-  // console.log(selectedNote);
-  console.log(dataItem);
+
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));
@@ -228,6 +225,7 @@ export default function EditForm({
             options={options}
             handleChangeNote={handleChangeNote}
             handleOptionsNote={handleOptionsNote}
+            handleDelNote={handleDelNote}
             handleNoteForm={handleNoteForm}
             dataItem={dataItem}
           />

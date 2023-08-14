@@ -207,7 +207,6 @@ export default function LandingPage() {
             <div className={cx("title")}>Online</div>
             <div className={cx("list")}>
               {listUserOnline.map((user, index) => {
-                console.log(user.id);
                 return (
                   <Link to={`/profile/${user.id}`}>
                     <div className={cx("list-item")} key={index}>

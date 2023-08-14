@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 
-import { CalendarMonth, Lock, Public, Share, Visibility, VisibilityOff } from "@mui/icons-material";
+import { CalendarMonth, DeleteOutline, Lock, Public, Share, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -50,6 +50,7 @@ const TransparentTooltip = styled(({ className, ...props }) => (
 function ToolsNote({
   handleNoteForm,
   handleChangeNote,
+  handleDelNote,
   handleOptionsNote,
   options,
   dataItem,
@@ -93,6 +94,7 @@ function ToolsNote({
   const handleCloseLock = () => {
     setOpenLock(false);
   };
+
   const handleOkLock = () => {
     setOpenLock(false);
     if (valueLock.length > 0) {
@@ -141,7 +143,7 @@ function ToolsNote({
       enqueueSnackbar("Note updated successfully", { variant: "success" });
       console.log("hello world", dataItem);
       // navigate("/home");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       enqueueSnackbar(error.message, { variant: "error" });
     }
@@ -469,6 +471,21 @@ function ToolsNote({
           >
             <ListItemIcon>{notePublic ? <Public /> : <Lock />}</ListItemIcon>
             <ListItemText primary={notePublic ? "Public" : "Private"} />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem>
+          <ListItemButton
+            sx={{
+              borderRadius: "10px",
+              "& .Mui-selected": {
+                borderRadius: "10px",
+              },
+            }}
+            onClick={() => {handleDelNote(dataItem.idNote, "move"); window.location.reload()}}
+          >
+            <ListItemIcon>{<DeleteOutline />}</ListItemIcon>
+            <ListItemText primary={"Delete"} />
           </ListItemButton>
         </ListItem>
 
