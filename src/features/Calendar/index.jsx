@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, selectClasses } from "@mui/material";
 import { Badge, Calendar } from "antd";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
-import { convertColor } from "../../constants";
+import { checkJWT, convertColor } from "../../constants";
 import EditForm from "../Archived/EditForm";
 import ListView from "../Archived/ListView/index";
 import Archived from "../Archived";
@@ -53,25 +53,38 @@ const getMonthData = (value, data) => {
 };
 
 function CalendarTable({ data, handleDelNote, setArchivedData, toolsNote }) {
+
   const [toggleNote, setToggleNote] = useState(false);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [limitedData, setLimitedData] = useState([]);
+
   const handleNote = () => {
     setToggleNote(!toggleNote);
   };
+  
   const handleDateClick = (value) => {
     const selectedDate = dayjs(value).format("DD/MM/YYYY");
+    // if(checkJWT()) {
+      
+    // }
     const eventsInSelectedDate = data.filter(
       (event) => dayjs(event.createAt).format("DD/MM/YYYY") === selectedDate
-    );
-    setSelectedDateEvents(eventsInSelectedDate);
-    setSelectedEvent(null);
+    );  
+    if(eventsInSelectedDate.length !== 0) {
+      setSelectedDateEvents(eventsInSelectedDate);
+      setSelectedEvent(eventsInSelectedDate);      
+    }
+    else {
+      setSelectedDateEvents(null);
+      setSelectedEvent(null); 
+    }
+
   };
 
   const handleEventClick = (event) => {
-    console.log(111);
     setSelectedEvent(event);
+    // handleNote();
   };
   const cellRender = (value) => {
     const num = getMonthData(value, data);
@@ -121,7 +134,7 @@ function CalendarTable({ data, handleDelNote, setArchivedData, toolsNote }) {
         )}
         {selectedEvent && (
           <Archived
-            dataItem={selectedEvent}
+            data={selectedEvent}
             handleDelNote={handleDelNote}
             setArchivedData={setArchivedData}
             construct='List'

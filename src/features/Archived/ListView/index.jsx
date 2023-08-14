@@ -16,23 +16,32 @@ import EditForm from "../EditForm";
 import "./ListView.css";
 import noteApi from "../../../api/noteApi";
 import { enqueueSnackbar } from "notistack";
+import { useLocation } from "react-router-dom/dist";
 
 function ListView({
   construct = "Grid",
   data,
   setArchivedData,
   handleDelNote,
+  defaultSelect,
   toolsNote,
   toggleNote,
   limitedData,
+  clear,
 }) {
-  console.log(limitedData);
-  const [selected, setSelected] = useState(0);
+
+  const location = useLocation();
+  const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);
   const [dialog, setDialog] = useState(true);
   const [password, setPassword] = useState("");
   const [lockData, setLockData] = useState(new Array(data.length));
-  const clear = () => setSelected(null);
+  const clearA = () => {
+    if(location.pathname !== "/home/archived") clear();
+    else{
+      setSelected(null); 
+    }
+}
 
   const unlockNote = async () => {
     try {
@@ -125,7 +134,7 @@ function ListView({
                 </Button>
               </div>
             ))
-          : data.map((item, index) => (
+          : data.slice(0.50).map((item, index) => (
               <div key={index}>
                 {}
                 <Button
@@ -139,7 +148,8 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-                    setSelected(item.idNote);
+                    setSelected(index);
+                    // setSelected(item.idNote);
                     setDialog(true);
                   }}
                 >
@@ -192,7 +202,7 @@ function ListView({
             handleDelNote={handleDelNote}
             setArchivedData={setArchivedData}
             construct={construct}
-            clear={clear}
+            clear={clearA}
             toggleNote={toggleNote}
           />
         ) : (
@@ -203,7 +213,7 @@ function ListView({
               handleDelNote={handleDelNote}
               setArchivedData={setArchivedData}
               construct={construct}
-              clear={clear}
+              clear={clearA}
             />
           )
         ))}
