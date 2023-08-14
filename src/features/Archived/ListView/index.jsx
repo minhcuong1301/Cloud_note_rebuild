@@ -21,7 +21,6 @@ import { checkJWT } from "../../../constants";
 
 import { useLocation } from "react-router-dom/dist";
 
-
 function ListView({
   construct = "Grid",
   data,
@@ -33,10 +32,6 @@ function ListView({
   limitedData,
   clear,
 }) {
-
-  const [selected, setSelected] = useState(0);
-
-
   const location = useLocation();
   const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);
@@ -44,14 +39,14 @@ function ListView({
   const [password, setPassword] = useState("");
   const [lockData, setLockData] = useState(new Array(data.length));
 
-  const clear = () => setSelected(null);
+  // const clear = () => setSelected(null);
 
   const clearA = () => {
-    if(location.pathname !== "/home/archived") clear();
-    else{
-      setSelected(null); 
+    if (location.pathname !== "/home/archived") clear();
+    else {
+      setSelected(null);
     }
-}
+  };
 
   const unlockNote = async () => {
     try {
@@ -91,7 +86,6 @@ function ListView({
       >
         {toggleNote === true
           ? limitedData.map((item, index) => (
-            
               <div key={index}>
                 <Button
                   sx={{
@@ -104,7 +98,6 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-        
                     setSelected(item.idNote);
 
                     setDialog(true);
@@ -149,11 +142,8 @@ function ListView({
                 </Button>
               </div>
             ))
-
-
-          : data.slice(0,50).map((item, index) => (
+          : data.slice(0, 50).map((item, index) => (
               <div key={index}>
-           
                 <Button
                   sx={{
                     backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
@@ -172,8 +162,6 @@ function ListView({
                     }
                     // setSelected(item.idNote);
                     setSelected(index);
-
-
 
                     setDialog(true);
                     if (item.notePublic === 1) {
