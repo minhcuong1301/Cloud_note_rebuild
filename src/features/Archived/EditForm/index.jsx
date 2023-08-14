@@ -29,6 +29,7 @@ function getList(list, type) {
 }
 
 export default function EditForm({
+  datas,
   dataItem,
   handleDelNote,
   setArchivedData,
