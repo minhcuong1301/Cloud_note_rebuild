@@ -70,7 +70,8 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   };
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-  console.log(user);
+
+  const [selected, setSelected] = useState(0);
   const [profile, setProfile] = useState([]);
   const [profileInfo, setProfileInfo] = useState([]);
   const [limitedData, setLimitedData] = useState([]);
@@ -78,7 +79,9 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   const [togle_Message, set_togle_Message] = useState(false);
   const [userOnline, setUserOnline] = useState([]);
   const [toggleNote, setToggleNote] = useState(false);
-  const handleNote = () => {
+
+  const handleNote = (id) => {
+    setSelected(id);
     setToggleNote(!toggleNote);
   };
   useEffect(() => {
@@ -255,9 +258,11 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
               limitedData={limitedData}
               toggleNote={toggleNote}
               data={data}
+              defaultSelect={selected}
               setArchivedData={setArchivedData}
               handleDelNote={handleDelNote}
               toolsNote={toolsNote}
+              clear={() => setToggleNote(false)}
             />
           ) : (
             <Box
@@ -291,7 +296,10 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                           style={{ cursor: "pointer" }}
                           className='record'
                           key={index}
-                          onClick={handleNote}
+                          onClick={ () => {
+                            handleNote(limitedData.idNote);
+                            console.log(limitedData.title, limitedData.idNote);
+                          }}
                         >
                           <p style={{ width: "50px" }} className='number'>
                             {index + 1}

@@ -21,7 +21,8 @@ Archived.propTypes = {
 };
 Archived.defaultProps = {};
 
-function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
+function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear}) {
+  
   const [value, setValue] = useState("");
   const [dataFilter, setDataFilter] = useState([]);
   const [construct, setConstruct] = useState("List");
@@ -29,16 +30,19 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
   const [selectedNote, setSelectedNote] = useState(null);
   const [drawerEdit, setDrawerEdit] = useState(false);
   // const [selectedNote, setSelectedNote] = useState(null);
+
   const handleSearchItemClick = (noteData) => {
     setSelectedNote(noteData);
-    console.log("Before setDrawerEdit:", drawerEdit);
     setDrawerEdit((prevState) => true);
-    console.log("After setDrawerEdit:", drawerEdit);
   };
+
   const user =
     useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+
   const [infoUser, setInfoUser] = useState([]);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     (async () => {
       const res = await dispatch(profileUser(user.id));
@@ -48,6 +52,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
       }
     })();
   }, []);
+
   useEffect(() => {
     if (value.trim() === "") {
       setDataFilter(data);
@@ -64,12 +69,11 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
+
   useEffect(() => {
     setDataFilter(data);
   }, [data]);
-  useEffect(() => {
-    console.log("DrawerEdit has been updated:", drawerEdit);
-  }, [drawerEdit]);
+
   return (
     <div className={classes.root}>
       <div className={classes.headerFeature}>
@@ -79,7 +83,9 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
             handleDelNote={handleDelNote}
             setArchivedData={setArchivedData}
             construct='List'
-            clear={() => setSelectedNote(null)}
+            clear={() => {
+              setSelectedNote(null);
+            }}
             selectedNote={selectedNote}
           />
         )}
@@ -112,6 +118,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote }) {
           setArchivedData={setArchivedData}
           handleDelNote={handleDelNote}
           toolsNote={toolsNote}
+          clear={clear}
         />
       ) : (
         <div
