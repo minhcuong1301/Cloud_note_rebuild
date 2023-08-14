@@ -16,7 +16,7 @@ import EditForm from "../EditForm";
 import "./ListView.css";
 import noteApi from "../../../api/noteApi";
 import { enqueueSnackbar } from "notistack";
-
+import { checkJWT } from "../../../constants";
 function ListView({
   construct = "Grid",
   data,
@@ -26,7 +26,7 @@ function ListView({
   toggleNote,
   limitedData,
 }) {
-  console.log(limitedData);
+  // console.log(limitedData);
   const [selected, setSelected] = useState(0);
   const [selectedID, setSelectedID] = useState(0);
   const [dialog, setDialog] = useState(true);
@@ -71,6 +71,7 @@ function ListView({
       >
         {toggleNote === true
           ? limitedData.map((item, index) => (
+            
               <div key={index}>
                 <Button
                   sx={{
@@ -83,6 +84,7 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
+                   
                     setSelected(item.idNote);
                     setDialog(true);
                   }}
@@ -125,9 +127,9 @@ function ListView({
                 </Button>
               </div>
             ))
-          : data.map((item, index) => (
+          : data.slice(0,50).map((item, index) => (
               <div key={index}>
-                {}
+           
                 <Button
                   sx={{
                     backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
@@ -139,7 +141,12 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-                    setSelected(item.idNote);
+                    if (checkJWT()) {
+                      return window.location.assign("/login");
+                    }
+                    // setSelected(item.idNote);
+                    setSelected(index);
+
                     setDialog(true);
                   }}
                 >
