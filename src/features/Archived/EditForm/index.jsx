@@ -29,6 +29,7 @@ function getList(list, type) {
 }
 
 export default function EditForm({
+  datas,
   dataItem,
   handleDelNote,
   setArchivedData,
@@ -39,7 +40,7 @@ export default function EditForm({
   // console.log("dataitem", dataItem);
   // console.log("typeofData", typeof dataItem);
   // console.log(selectedNote);
-  console.log(limitedData);
+  console.log(dataItem);
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));

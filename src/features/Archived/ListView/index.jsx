@@ -26,20 +26,19 @@ function ListView({
   toggleNote,
   limitedData,
 }) {
-  console.log(limitedData);
   const [selected, setSelected] = useState(0);
   const [selectedID, setSelectedID] = useState(0);
   const [dialog, setDialog] = useState(true);
   const [password, setPassword] = useState("");
   const [lockData, setLockData] = useState(new Array(data.length));
   const clear = () => setSelected(null);
-
   const unlockNote = async () => {
     try {
       const lockNote = await noteApi.openNote(data[selected].idNote, { pass_lock: password });
       console.log("data-select", data[selected].idNote);
       setLockData((prev) => {
         const newData = [...prev];
+        console.log(newData);
         newData[selected] = lockNote;
         return newData;
       });
@@ -83,8 +82,9 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-                    setSelected(item.idNote);
+                    console.log(1);
                     setDialog(true);
+                    window.history.pushState({}, "", `/note/${item.idNote}`);
                   }}
                 >
                   {item.type === "text" && (
@@ -125,7 +125,7 @@ function ListView({
                 </Button>
               </div>
             ))
-          : data.map((item, index) => (
+          : data.slice(0, 50).map((item, index) => (
               <div key={index}>
                 {}
                 <Button
@@ -139,8 +139,11 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-                    setSelected(item.idNote);
+                    setSelected(index);
                     setDialog(true);
+                    if (item.notePublic === 1) {
+                      window.history.pushState({}, "", `/note/${item.idNote}`);
+                    }
                   }}
                 >
                   {item.type === "text" && (
@@ -199,6 +202,7 @@ function ListView({
           lockData[selected] && (
             <EditForm
               key={selected}
+              datas={data}
               dataItem={lockData[selected].note}
               handleDelNote={handleDelNote}
               setArchivedData={setArchivedData}
