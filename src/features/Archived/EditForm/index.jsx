@@ -224,6 +224,7 @@ export default function EditForm({
             options={options}
             handleChangeNote={handleChangeNote}
             handleOptionsNote={handleOptionsNote}
+            handleDelNote={handleDelNote}
             handleNoteForm={handleNoteForm}
             dataItem={dataItem}
           />
