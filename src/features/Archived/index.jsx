@@ -113,7 +113,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
       </div>
       {view === "Side" && construct === "List" ? (
         <ListView
-          data={data}
+          data={data.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt))}
           setArchivedData={setArchivedData}
           handleDelNote={handleDelNote}
           toolsNote={toolsNote}
@@ -136,7 +136,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
             }}
             spacing={{ xs: 1, sm: 2, md: 2, lg: 2 }}
           >
-            {dataFilter.map((item) => (
+            {dataFilter.slice(-50).map((item) => (
               <>
                 {item.type !== "screenshot" && (
                   <Grid

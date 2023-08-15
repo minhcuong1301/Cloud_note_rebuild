@@ -81,13 +81,13 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   const [toggleNote, setToggleNote] = useState(false);
 
   const handleNote = (id) => {
-    setSelected(id);
+    
+    setSelected(limitedData.findIndex(e => e.idNote === id));
     setToggleNote(!toggleNote);
   };
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
-      console.log(res);
       // const res = await dispatch(profileUser(user.id))
 
       setProfileInfo(res.user);
@@ -98,7 +98,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
       setUserOnline(status);
     });
   }, []);
-  console.log(profileInfo.AvtProfile);
+
   const handleShowMore = () => {
     const newRecordsToShow = maxRecordsToShow + 4;
 
@@ -106,7 +106,6 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
       setMaxRecordsToShow(newRecordsToShow);
       setLimitedData(profile.slice(1, newRecordsToShow));
     }
-    console.log(maxRecordsToShow);
   };
 
   return (
@@ -257,7 +256,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             <ListView
               limitedData={limitedData}
               toggleNote={toggleNote}
-              data={data}
+              data={limitedData}
               defaultSelect={selected}
               setArchivedData={setArchivedData}
               handleDelNote={handleDelNote}
@@ -298,7 +297,6 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                           key={index}
                           onClick={ () => {
                             handleNote(limitedData.idNote);
-                            console.log(limitedData.title, limitedData.idNote);
                           }}
                         >
                           <p style={{ width: "50px" }} className='number'>

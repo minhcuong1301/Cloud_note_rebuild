@@ -482,7 +482,7 @@ function ToolsNote({
                 borderRadius: "10px",
               },
             }}
-            onClick={() => {handleDelNote(dataItem.idNote, "move"); window.location.reload()}}
+            onClick={() => {handleDelNote(dataItem.idNote, "move")}}
           >
             <ListItemIcon>{<DeleteOutline />}</ListItemIcon>
             <ListItemText primary={"Delete"} />

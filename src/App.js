@@ -12,6 +12,7 @@ import Note from "./components/Note";
 import Anonymous from "./features/Anonymous/Anonymous";
 import Profile_orther from "./features/Profile_orther/Profile_orther";
 function App() {
+
   if (localStorage.getItem("show") !== "false") {
     localStorage.setItem("show", true);
   }
