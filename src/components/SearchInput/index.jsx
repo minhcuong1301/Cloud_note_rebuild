@@ -3,7 +3,7 @@ import userApi from "../../api/userApi";
 import "./styles.css";
 import "./search.scss";
 
-
+import Cookies from 'js-cookie';
 import unorm from "unorm";
 
 function SearchInput({ onSearchItemClick }) {
@@ -14,11 +14,20 @@ function SearchInput({ onSearchItemClick }) {
         setSelectedNoteData(noteData);
     };
     const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
-
+    const [searchHistory, setSearchHistory] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
-
+    const [isInitialSearch, setIsInitialSearch] = useState(true);
+    const [showSearchHistory, setShowSearchHistory] = useState(false);
+    const [isInputFocused, setIsInputFocused] = useState(false);
+    // Lấy lịch sử tìm kiếm từ cookie khi component được tạo
+    useEffect(() => {
+        const savedHistory = Cookies.get('searchHistory');
+        if (savedHistory) {
+            setSearchHistory(JSON.parse(savedHistory));
+        }
+    }, []);
     const normalizeString = (str) => {
         const normalizedStr = unorm.nfkd(str).replace(/[\u0300-\u036F]/g, '').toLowerCase();
         return encodeURIComponent(normalizedStr);
@@ -26,7 +35,7 @@ function SearchInput({ onSearchItemClick }) {
     const handleNoteForm = (note) => {
         // Xử lý cập nhật ghi chú tại đây (có thể gọi API hoặc lưu vào state,...)
         console.log("Updating note:", note);
-      };
+    };
     useEffect(() => {
         if (shouldTriggerSearch) {
             handleSearch();
@@ -40,10 +49,17 @@ function SearchInput({ onSearchItemClick }) {
                 return;
             }
             setErrorMessage('');
+            setIsInitialSearch(false);
             const normalizedQuery = normalizeString(searchQuery);
             const response = await userApi.search(normalizedQuery);
-           
+
             setSearchResults(response.search_note);
+            if (!searchHistory.includes(searchQuery)) {
+                const updatedHistory = [searchQuery, ...searchHistory];
+                setSearchHistory(updatedHistory);
+                // Lưu lịch sử tìm kiếm vào cookie
+                const save = Cookies.set('searchHistory', JSON.stringify(updatedHistory));
+            }
         } catch (error) {
             console.error('Lỗi khi tải kết quả tìm kiếm:', error);
         }
@@ -82,20 +98,62 @@ function SearchInput({ onSearchItemClick }) {
             <p>{index + 1}</p>
             <p className="title">{highlightText(result.title, searchQuery)}</p>
             <p className='content'>{highlightText(result.content, searchQuery)}</p>
+
         </div>
     ));
-
+    const handleDeleteSearchHistory = (historyItem) => {
+        const updatedHistory = searchHistory.filter(item => item !== historyItem);
+        setSearchHistory(updatedHistory);
+        // Lưu lại lịch sử tìm kiếm mới vào cookie
+        Cookies.set('searchHistory', JSON.stringify(updatedHistory));
+        setShowSearchHistory(updatedHistory.length > 0);
+    };
     return (
-        
+
         <div className='wrap'>
             <div className='search'>
-                <input
-                    type='text'
-                    className='searchTerm'
-                    placeholder="Type content or title to find?"
-                    onChange={e => setSearchQuery(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                />
+                <div className="search-box">
+                    <input
+                        type='text'
+                        className='searchTerm'
+                        placeholder="Type content or title to find?"
+
+                        onChange={e => {
+                            setSearchQuery(e.target.value);
+                            setShowSearchHistory(e.target.value === '' || isInputFocused);
+                        }}
+                        onKeyPress={handleKeyPress}
+                        onFocus={() => {
+                            setIsInputFocused(true);
+                            // setShowSearchHistory(searchQuery === '' || isInputFocused);
+                            setShowSearchHistory(true);
+                        }}
+                        onBlur={() => {
+                            setIsInputFocused(false);
+                            // setShowSearchHistory(false);
+                            setTimeout(() => {
+                                setShowSearchHistory(false);
+                            }, 200);
+                        }}
+                    />
+                    {showSearchHistory && searchHistory.length > 0 ? (
+                        <div className="search-history">
+                            {searchHistory.map((historyItem, index) => (
+                                <div className="del">
+                                    <span key={index} onClick={() => setSearchQuery(historyItem)}>
+                                        {historyItem}
+                                    </span>
+                                    <button className="delete-history-button"
+                                        onClick={() => handleDeleteSearchHistory(historyItem)}>X</button>
+                                </div>
+
+
+                            ))}
+
+                        </div>
+                    ) : null}
+                </div>
+
                 <button type='submit' className='searchButton' onClick={handleSearch}>
                     <svg
                         width='24'
@@ -112,14 +170,15 @@ function SearchInput({ onSearchItemClick }) {
                 </button>
 
                 <div className="search_Results">
-                {errorMessage ? <p>{errorMessage}</p> : displayResults.length > 0 ? displayResults : <p>Xin lỗi: không tìm thấy kết quả!</p>}
-                </div>   
-                
+
+                    {errorMessage ? <p>{errorMessage}</p> : (isInitialSearch ? null : displayResults.length > 0 ? displayResults : <p>Xin lỗi: không tìm thấy kết quả!</p>)}
+                </div>
+
             </div>
-                    
-        
+
+
         </div>
-       
+
 
 
     );

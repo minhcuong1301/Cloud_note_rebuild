@@ -19,6 +19,9 @@ const Anonymous = () => {
   const [UserOnlineId, setUserOnlineId] = useState(10);
   const [UserIdSend, setUserIdSend] = useState([]);
   const [statusMess, setstatusMess] = useState();
+  const [inputUser, setInputUser] = useState("");
+  const [togglSearch, setTogglSearch] = useState(true);
+  const [listInputUser, setListInputUser] = useState([]);
   const My_button = styled(Button)({ backgroundColor: "#5BE260", color: "#fff" });
   const My_text = styled(Typography)({
     color: "#fff",
@@ -36,6 +39,19 @@ const Anonymous = () => {
     });
   };
 
+  useEffect(() => {
+    listUserOnline.forEach((user, index) => {
+      // const display = document.querySelector("#BoxBtnQuit");
+      if (user.name.startsWith(inputUser) == true) {
+        setListInputUser((pre) => [user]);
+        document.querySelector("#BoxBtnQuit").style.display = "block";
+        setTogglSearch(!togglSearch);
+      } else {
+        document.querySelector("#BoxBtnQuit").style.display = "none";
+      }
+    });
+    console.log(listInputUser);
+  }, [inputUser]);
   const HandleMessage = () => {
     const messageAnoymous = document.querySelectorAll(".messageAnoymous");
     messageAnoymous.forEach((el, index) => {
@@ -133,6 +149,10 @@ const Anonymous = () => {
         </Link>
         <Stack>
           <TextField
+            onChange={(e) => {
+              setInputUser(e.target.value);
+            }}
+            value={inputUser}
             sx={{
               borderRadius: 30 + "px",
               backgroundColor: "#DADADA",
@@ -145,6 +165,7 @@ const Anonymous = () => {
         </Stack>
         <Box
           className='box_anoymous'
+          id='BoxBtnQuit'
           sx={{
             width: 100 + "%",
             height: 220 + "px",
@@ -209,7 +230,126 @@ const Anonymous = () => {
             />
           </Stack>
           <Box>
-            {listUserOnline.map((user, index) => {
+            {togglSearch == true
+              ? listUserOnline.map((user, index) => {
+                  return (
+                    users.id != user.id && (
+                      <Stack
+                        className='User_mess'
+                        key={index}
+                        direction='row'
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <Link to={`/profile/${user.id}`}>
+                          <Stack
+                            direction='row'
+                            alignItems='center'
+                            mt={2}
+                            mb={1}
+                            style={{ cursor: "pointer", position: "relative" }}
+                            className='anonymos_img'
+                          >
+                            <img
+                              style={{
+                                width: 60 + "px",
+                                height: 60 + "px",
+                                borderRadius: 50 + "px",
+                              }}
+                              src={user.img}
+                              alt=''
+                            />
+                            <My_text ml={1}>{user.name}</My_text>
+                          </Stack>
+                        </Link>
+                        <Stack direction='row' alignItems='center'>
+                          <DeleteIcon
+                            className='deleteUser hiddle'
+                            data={index}
+                            onClick={handle_delete}
+                            style={{
+                              fontSize: 30 + "px",
+                              cursor: "pointer",
+                              color: "#fff",
+                            }}
+                          />
+                          <MessageIcon
+                            className='messageAnoymous hiddle'
+                            data-id={user.id}
+                            onClick={HandleMessage}
+                            style={{
+                              color: "#fff",
+                              padding: 4 + "px",
+                              fontSize: 35 + "px",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </Stack>
+                      </Stack>
+                    )
+                  );
+                })
+              : listInputUser &&
+                listInputUser.map((user, index) => {
+                  console.log(user);
+                  return (
+                    users.id != user.id && (
+                      <Stack
+                        className='User_mess'
+                        key={index}
+                        direction='row'
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <Link to={`/profile/${user.id}`}>
+                          <Stack
+                            direction='row'
+                            alignItems='center'
+                            mt={2}
+                            mb={1}
+                            style={{ cursor: "pointer", position: "relative" }}
+                            className='anonymos_img'
+                          >
+                            <img
+                              style={{
+                                width: 60 + "px",
+                                height: 60 + "px",
+                                borderRadius: 50 + "px",
+                              }}
+                              src={user.img}
+                              alt=''
+                            />
+                            <My_text ml={1}>{user.name}</My_text>
+                          </Stack>
+                        </Link>
+                        <Stack direction='row' alignItems='center'>
+                          <DeleteIcon
+                            className='deleteUser hiddle'
+                            data={index}
+                            onClick={handle_delete}
+                            style={{
+                              fontSize: 30 + "px",
+                              cursor: "pointer",
+                              color: "#fff",
+                            }}
+                          />
+                          <MessageIcon
+                            className='messageAnoymous hiddle'
+                            data-id={user.id}
+                            onClick={HandleMessage}
+                            style={{
+                              color: "#fff",
+                              padding: 4 + "px",
+                              fontSize: 35 + "px",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </Stack>
+                      </Stack>
+                    )
+                  );
+                })}
+            {/* {listUserOnline.map((user, index) => {
               return (
                 users.id != user.id && (
                   <Stack
@@ -262,7 +402,7 @@ const Anonymous = () => {
                   </Stack>
                 )
               );
-            })}
+            })} */}
           </Box>
         </Stack>
       </Box>

@@ -16,6 +16,9 @@ import EditForm from "../EditForm";
 import "./ListView.css";
 import noteApi from "../../../api/noteApi";
 import { enqueueSnackbar } from "notistack";
+
+import { checkJWT } from "../../../constants";
+
 import { useLocation } from "react-router-dom/dist";
 
 function ListView({
@@ -29,19 +32,21 @@ function ListView({
   limitedData,
   clear,
 }) {
-
   const location = useLocation();
   const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);
   const [dialog, setDialog] = useState(true);
   const [password, setPassword] = useState("");
   const [lockData, setLockData] = useState(new Array(data.length));
+
+  // const clear = () => setSelected(null);
+
   const clearA = () => {
-    if(location.pathname !== "/home/archived") clear();
-    else{
-      setSelected(null); 
+    if (location.pathname !== "/home/archived") clear();
+    else {
+      setSelected(null);
     }
-}
+  };
 
   const unlockNote = async () => {
     try {
@@ -49,6 +54,7 @@ function ListView({
       console.log("data-select", data[selected].idNote);
       setLockData((prev) => {
         const newData = [...prev];
+        console.log(newData);
         newData[selected] = lockNote;
         return newData;
       });
@@ -93,7 +99,9 @@ function ListView({
                   }}
                   onClick={() => {
                     setSelected(item.idNote);
+
                     setDialog(true);
+                    window.history.pushState({}, "", `/note/${item.idNote}`);
                   }}
                 >
                   {item.type === "text" && (
@@ -134,9 +142,8 @@ function ListView({
                 </Button>
               </div>
             ))
-          : data.slice(0.50).map((item, index) => (
+          : data.slice(0, 50).map((item, index) => (
               <div key={index}>
-                {}
                 <Button
                   sx={{
                     backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
@@ -149,8 +156,17 @@ function ListView({
                   }}
                   onClick={() => {
                     setSelected(index);
+
+                    if (checkJWT()) {
+                      return window.location.assign("/login");
+                    }
                     // setSelected(item.idNote);
+                    setSelected(index);
+
                     setDialog(true);
+                    if (item.notePublic === 1) {
+                      window.history.pushState({}, "", `/note/${item.idNote}`);
+                    }
                   }}
                 >
                   {item.type === "text" && (
@@ -209,6 +225,7 @@ function ListView({
           lockData[selected] && (
             <EditForm
               key={selected}
+              datas={data}
               dataItem={lockData[selected].note}
               handleDelNote={handleDelNote}
               setArchivedData={setArchivedData}
