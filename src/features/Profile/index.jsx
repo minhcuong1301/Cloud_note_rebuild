@@ -91,7 +91,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
       // const res = await dispatch(profileUser(user.id))
 
       setProfileInfo(res.user);
-      setLimitedData(res.note.slice(2, maxRecordsToShow));
+      setLimitedData(res.note.sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).slice(2, maxRecordsToShow));
     })();
     userApi.userOnline().then((res) => {
       const status = res.users.filter((user) => user.statesLogin === 1);
@@ -255,7 +255,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
           {toggleNote === true ? (
             <ListView
               limitedData={limitedData}
-              data={limitedData.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt))}
+              data={limitedData}
               defaultSelect={selected}
               setArchivedData={setArchivedData}
               handleDelNote={handleDelNote}
@@ -287,7 +287,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                 style={{ height: maxRecordsToShow <= 50 ? "auto" : "477px" }}
               >
                 {limitedData &&
-                  limitedData.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).map((limitedData, index) => {
+                  limitedData.map((limitedData, index) => {
                     return (
                       <>
                         <div
