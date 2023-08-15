@@ -10,9 +10,9 @@ function SearchInput({ onSearchItemClick }) {
     const [selectedNoteData, setSelectedNoteData] = useState(null);
     const handleItemClick = (noteData) => {
         onSearchItemClick(noteData);
-        console.log("Bản ghi được click:", noteData);
         setSelectedNoteData(noteData);
     };
+
     const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
     const [searchHistory, setSearchHistory] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -21,6 +21,13 @@ function SearchInput({ onSearchItemClick }) {
     const [isInitialSearch, setIsInitialSearch] = useState(true);
     const [showSearchHistory, setShowSearchHistory] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false);
+
+    const handleClickHistory = (historyText) => {
+        handleDeleteSearchHistory(historyText);
+        setSearchQuery(historyText);
+        setSearchHistory(history => history.filter((e, i) => e !== historyText ));
+    }
+
     // Lấy lịch sử tìm kiếm từ cookie khi component được tạo
     useEffect(() => {
         const savedHistory = Cookies.get('searchHistory');
@@ -103,7 +110,7 @@ function SearchInput({ onSearchItemClick }) {
     ));
     const handleDeleteSearchHistory = (historyItem) => {
         const updatedHistory = searchHistory.filter(item => item !== historyItem);
-        setSearchHistory(updatedHistory);
+        setSearchHistory(updatedHistory =>  searchHistory.filter(item => item !== historyItem));
         // Lưu lại lịch sử tìm kiếm mới vào cookie
         Cookies.set('searchHistory', JSON.stringify(updatedHistory));
         setShowSearchHistory(updatedHistory.length > 0);
@@ -117,7 +124,7 @@ function SearchInput({ onSearchItemClick }) {
                         type='text'
                         className='searchTerm'
                         placeholder="Type content or title to find?"
-
+                        value={searchQuery}
                         onChange={e => {
                             setSearchQuery(e.target.value);
                             setShowSearchHistory(e.target.value === '' || isInputFocused);
@@ -139,7 +146,9 @@ function SearchInput({ onSearchItemClick }) {
                     {showSearchHistory && searchHistory.length > 0 ? (
                         <div className="search-history">
                             {searchHistory.map((historyItem, index) => (
-                                <div className="del">
+                                <div className="del"
+                                onClick={() => handleClickHistory(historyItem)}
+                                >
                                     <span key={index} onClick={() => setSearchQuery(historyItem)}>
                                         {historyItem}
                                     </span>

@@ -74,24 +74,69 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
   const [selected, setSelected] = useState(0);
   const [profile, setProfile] = useState([]);
   const [profileInfo, setProfileInfo] = useState([]);
-  const [limitedData, setLimitedData] = useState([]);
+  const [limitedDataPrv, setLimitedDataPrv] =  useState([]);
+  const [limitedDataPbl, setLimitedDataPbl] = useState([]);
+  const [toggleData, setToggleData] = useState([]);
   const [maxRecordsToShow, setMaxRecordsToShow] = useState(12);
   const [togle_Message, set_togle_Message] = useState(false);
   const [userOnline, setUserOnline] = useState([]);
   const [toggleNote, setToggleNote] = useState(false);
 
-  const handleNote = (id) => {
-    
-    setSelected(limitedData.findIndex(e => e.idNote === id));
+  const ConvertTypeNoteToComponent = ({note}) => {
+    switch(note.type) {
+      case "screenshot": 
+        return(
+          <div
+          style={{height: "70%", width: "30%", overflow: "hidden", display:"grid", placeItems: "center", position:"relative"}}
+          ><img 
+           style={{objectFit: "cover", height: "80%", width: "80%"}}
+          src={note.metaData} alt="note img"/></div>
+        )
+      case "text": 
+          return(
+          <p className="content">{note.data}</p>
+          )
+      case "checkList":
+        return (
+          note.data.map(e => (
+            <div>
+              <p
+              style={{
+                fontSize: "22px",
+                fontWeight: "600",
+                width: "200px",
+              }}
+              key={e.id}
+              >
+                {e.content}
+              </p>              
+            </div>
+
+          ))
+        )
+      default :
+      return (
+        <></>
+      )
+    }
+  }
+
+  const handleNote = (id, noteArr) => {
+    setToggleData(noteArr);
+    setSelected(noteArr.findIndex(e => e.idNote === id));
     setToggleNote(!toggleNote);
   };
   useEffect(() => {
     (async () => {
       const res = await userApi.profile(user.id);
       // const res = await dispatch(profileUser(user.id))
-
+      let sorted = res.note.sort((a,b) => new Date(b.createAt) - new Date(a.createAt));
+      
       setProfileInfo(res.user);
-      setLimitedData(res.note.sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).slice(0, maxRecordsToShow));
+
+      setLimitedDataPrv(sorted.filter(e => !Boolean(e.notePublic)).slice(0, maxRecordsToShow))
+      setLimitedDataPbl(sorted.filter(e => Boolean(e.notePublic)).slice(0, maxRecordsToShow));
+
     })();
     userApi.userOnline().then((res) => {
       const status = res.users.filter((user) => user.statesLogin === 1);
@@ -104,7 +149,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
 
     if (newRecordsToShow <= 50) {
       setMaxRecordsToShow(newRecordsToShow);
-      setLimitedData(profile.slice(1, newRecordsToShow));
+      setLimitedDataPbl(profile.slice(1, newRecordsToShow));
     }
   };
 
@@ -211,6 +256,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             top: "-67px",
           }}
         >
+
           <Box
             className='gapProfile'
             sx={{
@@ -252,17 +298,25 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                             Create Group
                         </Button> */}
           </Box>
-          {toggleNote === true ? (
+
+          <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)"
+          }}
+          >
+
+         {toggleNote === true ? (
             <ListView
-              limitedData={limitedData}
-              data={limitedData}
+              limitedData={toggleData}
+              data={toggleData}
               defaultSelect={selected}
               setArchivedData={setArchivedData}
               handleDelNote={handleDelNote}
               toolsNote={toolsNote}
               clear={() => setToggleNote(false)}
             />
-          ) : (
+          ) : (<>
             <Box
               // className={toggleNote === true ? "box_note_hidden" : "box_note_diplay"}
               className='NoteMoblie'
@@ -286,16 +340,16 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                 className='wrap-record'
                 style={{ height: maxRecordsToShow <= 50 ? "auto" : "477px" }}
               >
-                {limitedData &&
-                  limitedData.map((limitedData, index) => {
+                {limitedDataPbl &&
+                  limitedDataPbl.map((limitedData, index) => {
                     return (
                       <>
                         <div
-                          style={{ cursor: "pointer" }}
+                          style={{ cursor: "pointer", maxHeight: "150px"}}
                           className='record'
                           key={index}
                           onClick={ () => {
-                            handleNote(limitedData.idNote);
+                            handleNote(limitedData.idNote, limitedDataPbl);
                           }}
                         >
                           <p style={{ width: "50px" }} className='number'>
@@ -303,24 +357,8 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                           </p>
                           <p className='title'>{limitedData.title} </p>
 
-                          {typeof limitedData.data === "string" ? (
-                            <p className='content'>{limitedData.data}</p>
-                          ) : (
-                            <div>
-                              {limitedData.data.map((dataItem, i) => (
-                                <p
-                                  style={{
-                                    fontSize: "22px",
-                                    fontWeight: "600",
-                                    width: "200px",
-                                  }}
-                                  key={i}
-                                >
-                                  {dataItem.content}
-                                </p>
-                              ))}
-                            </div>
-                          )}
+                          <ConvertTypeNoteToComponent note={limitedData}/>
+
                           <p className='date-post'>{limitedData.createAt}</p>
                         </div>
                       </>
@@ -334,8 +372,70 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                 </Button>
               )}
             </Box>
-          )}
+
+            <Box
+              // className={toggleNote === true ? "box_note_hidden" : "box_note_diplay"}
+              className='NoteMoblie'
+              sx={{
+                width: "72%",
+                marginRight: "14%",
+                minHeight: "630px",
+                backgroundColor: "rgba(162, 221, 159, 1)",
+                backgroundImage:
+                  "linear-gradient(90deg, rgba(162, 221, 159, 1), rgba(238, 146, 196, 1))",
+                borderRadius: "32px",
+                marginLeft: "14%",
+                padding: "57px 44px",
+              }}
+            >
+              <Typography sx={{ color: "#fff", fontSize: "24px", fontWeight: "600" }}>
+                Latest Private Note
+              </Typography>
+
+              <div
+                className='wrap-record'
+                style={{ height: maxRecordsToShow <= 50 ? "auto" : "477px" }}
+              >
+                {limitedDataPrv &&
+                  limitedDataPrv.map((limitedData, index) => {
+                    return (
+                      <>
+                        <div
+                          style={{ cursor: "pointer", maxHeight: "150px"}}
+                          className='record'
+                          key={index}
+                          onClick={ () => {
+                            handleNote(limitedData.idNote, limitedDataPrv);
+                          }}
+                        >
+                          <p style={{ width: "50px" }} className='number'>
+                            {index + 1}
+                          </p>
+                          <p className='title'>{limitedData.title.length !== 0 ? limitedData.title : "No title"} </p>
+
+                          <ConvertTypeNoteToComponent note={limitedData}/>
+
+                          <p className='date-post'>{limitedData.createAt}</p>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+
+              {profile.length > maxRecordsToShow && (
+                <Button sx={{ marginLeft: "40%" }} variant='text' onClick={handleShowMore}>
+                  View more
+                </Button>
+              )}
+            </Box>            
+            </>)}   
+
+          </Box>
+
+ 
         </Box>
+
+        
       </div>
     </div>
   );

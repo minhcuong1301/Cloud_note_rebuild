@@ -1,9 +1,11 @@
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Checkbox, FormControlLabel, Link, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSnackbar } from "notistack";
-import React, { useState } from "react";
+import React, { useState} from "react";
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
@@ -23,6 +25,7 @@ import "./index.css";
 Login.propTypes = {};
 
 function Login(props) {
+  const location = useLocation();
   const [userGoogle, setUserGoogle] = useState(null);
   const window = useWindowDimensions();
   const dispatch = useDispatch();
@@ -63,7 +66,8 @@ function Login(props) {
 
       enqueueSnackbar("Logged in successfully", { variant: "success" });
       setTimeout(() => {
-        document.location.reload();
+        if(location.pathname === "/login") navigate("/home")
+        else document.location.reload();
       }, 1000);
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
