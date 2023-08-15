@@ -117,7 +117,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
           setArchivedData={setArchivedData}
           handleDelNote={handleDelNote}
           toolsNote={toolsNote}
-          clears={clear}
+          clear={clear}
         />
       ) : (
         <div
