@@ -36,10 +36,15 @@ export default function EditForm({
   toggleNote,
   limitedData,
 }) {
+<<<<<<< Updated upstream
   // console.log("dataitem", dataItem);
   // console.log("typeofData", typeof dataItem);
   // console.log(selectedNote);
   console.log(limitedData, dataItem);
+=======
+  // console.log("typeofData", typeof dataItem);
+  // console.log(selectedNote);
+>>>>>>> Stashed changes
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));
