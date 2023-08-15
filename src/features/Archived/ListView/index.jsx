@@ -32,7 +32,7 @@ function ListView({
   limitedData,
   clear,
 }) {
-  console.log(data);
+
   const location = useLocation();
   const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);

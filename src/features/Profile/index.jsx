@@ -91,7 +91,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
       // const res = await dispatch(profileUser(user.id))
 
       setProfileInfo(res.user);
-      setLimitedData(res.note.sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).slice(2, maxRecordsToShow));
+      setLimitedData(res.note.sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).slice(0, maxRecordsToShow));
     })();
     userApi.userOnline().then((res) => {
       const status = res.users.filter((user) => user.statesLogin === 1);
