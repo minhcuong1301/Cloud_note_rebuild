@@ -23,7 +23,7 @@ import {
   styled,
   tooltipClasses,
 } from "@mui/material";
-import { MobileDateTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { colorBucket } from "../../constants";
 
@@ -252,40 +252,41 @@ function ToolsNote({
               <ListItemText primary='Reminder' />
             </ListItemButton>
           )}
-          <MobileDateTimePicker
-            open={popRemind}
-            onAccept={() => {
-              setPopRemind(false);
-              handleOptionsNote({
-                remindAt: remindAt ? dayjs(remindAt).format("DD/MM/YYYY hh:mm A Z") : null,
-              });
-            }}
-            format={remindAt ? "DD/MM/YYYY hh:mm A" : ""}
-            onClose={() => {
-              setPopRemind(false);
-            }}
-            value={remindAt}
-            sx={{
-              "& .MuiInputBase-input": {
-                padding: "0 !important",
-                border: "none",
-                outline: "none",
-              },
-              "& fieldset": {
-                border: "none",
-              },
-              "& *": {
-                cursor: "pointer",
-              },
-              cursor: "pointer",
-              position: "absolute",
-              top: "50%",
-              transform: "translateY(-50%)",
-              right: "15px",
-            }}
-            onChange={(newValue) => {
-              setRemindAt(newValue);
-            }}
+            <DateTimePicker
+              open={popRemind}
+              onAccept={() => {
+                setPopRemind(false);
+                handleOptionsNote({
+                  remindAt: remindAt ? dayjs(remindAt).format("DD/MM/YYYY hh:mm A") : null,
+                });
+              }}
+              format="DD/MM/YYYY hh:mm"
+              onClose={() => {
+                setPopRemind(false);
+              }}
+              defaultValue="DD/MM/YYYY hh:mm"
+              value={remindAt}
+              // sx={{
+              //   "& .MuiInputBase-input": {
+              //     padding: "0 !important",
+              //     border: "none",
+              //     outline: "none",
+              //   },
+              //   "& fieldset": {
+              //     border: "none",
+              //   },
+              //   "& *": {
+              //     cursor: "pointer",
+              //   },
+              //   cursor: "pointer",
+              //   position: "absolute",
+              //   top: "50%",
+              //   transform: "translateY(-50%)",
+              //   right: "15px",
+              // }}
+              onChange={(newValue) => {
+                setRemindAt(newValue);
+              }}
           />
         </ListItem>
         <ListItem>
@@ -422,7 +423,7 @@ function ToolsNote({
             </ListItemButton>
           )}
 
-          <MobileDateTimePicker
+          <DateTimePicker
             open={popDate}
             onAccept={() => {
               setPopDate(false);

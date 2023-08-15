@@ -32,7 +32,6 @@ function ListView({
   limitedData,
   clear,
 }) {
-  console.log(data);
   const location = useLocation();
   const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);
@@ -40,10 +39,8 @@ function ListView({
   const [password, setPassword] = useState("");
   const [lockData, setLockData] = useState(new Array(data.length));
 
-  // const clear = () => setSelected(null);
-
   const clearA = () => {
-    if (location.pathname !== "/home/archived") clear();
+    if (location.pathname !== "/home/archived") clear()
     else {
       setSelected(null);
     }
@@ -129,7 +126,7 @@ function ListView({
                     title={item.title}
                   >
                     {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                    {item.title}
+                    {item.title.length === 0? "No title" : item.title}
                   </span>
                   {item.type === "image" && (
                     <img
@@ -193,7 +190,7 @@ function ListView({
                     title={item.title}
                   >
                     {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                    {item.title}
+                    {item.title.length === 0? "No title" : item.title}
                   </span>
                   {item.type === "image" && (
                     <img

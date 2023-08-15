@@ -1,5 +1,6 @@
 .search{
-  margin-top: 78px;
+  height: 100%;
+  width: 100%;
   .search_Results {
     position: absolute;
     left: -39vw;
@@ -61,15 +62,26 @@
   }
   
     .search-box{
+      width: 90%;
+      height: 100%;
       .search-history{
-        width: 200px;
+        z-index: 1000;
+        width: 100%;
         background-color: #f5f5f5;
         margin-top: 5px;
         padding: 10px;
         color: rgb(96, 93, 89);
         border-radius: 12px;
         .del{
+          width: 100%;
+          border-bottom: 1px solid grey;
+          cursor: pointer ;
+          height: 50px;
+          width: 100%;
+          padding: 5px 10px;
+          box-sizing: border-box;
           display: flex;
+          align-items: center;
           justify-content: space-between;
           
           .delete-history-button {
