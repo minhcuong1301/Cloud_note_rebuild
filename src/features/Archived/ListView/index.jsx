@@ -32,6 +32,7 @@ function ListView({
   limitedData,
   clear,
 }) {
+  console.log(data);
   const location = useLocation();
   const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);
@@ -51,10 +52,8 @@ function ListView({
   const unlockNote = async () => {
     try {
       const lockNote = await noteApi.openNote(data[selected].idNote, { pass_lock: password });
-      console.log("data-select", data[selected].idNote);
       setLockData((prev) => {
         const newData = [...prev];
-        console.log(newData);
         newData[selected] = lockNote;
         return newData;
       });
@@ -155,7 +154,6 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-                    setSelected(index);
 
                     if (checkJWT()) {
                       return window.location.assign("/login");

@@ -136,7 +136,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
             }}
             spacing={{ xs: 1, sm: 2, md: 2, lg: 2 }}
           >
-            {dataFilter.slice(-50).map((item) => (
+            {dataFilter.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).map((item) => (
               <>
                 {item.type !== "screenshot" && (
                   <Grid
