@@ -255,8 +255,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
           {toggleNote === true ? (
             <ListView
               limitedData={limitedData}
-              toggleNote={toggleNote}
-              data={limitedData}
+              data={limitedData.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt))}
               defaultSelect={selected}
               setArchivedData={setArchivedData}
               handleDelNote={handleDelNote}
@@ -288,7 +287,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
                 style={{ height: maxRecordsToShow <= 50 ? "auto" : "477px" }}
               >
                 {limitedData &&
-                  limitedData.map((limitedData, index) => {
+                  limitedData.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).map((limitedData, index) => {
                     return (
                       <>
                         <div

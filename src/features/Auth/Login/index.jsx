@@ -64,7 +64,7 @@ function Login(props) {
 
       enqueueSnackbar("Logged in successfully", { variant: "success" });
       setTimeout(() => {
-        navigate("/home");
+        document.location.reload();
       }, 1000);
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });
