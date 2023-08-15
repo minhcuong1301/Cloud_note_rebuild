@@ -133,8 +133,10 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
       let sorted = res.note.sort((a,b) => new Date(b.createAt) - new Date(a.createAt));
       
       setProfileInfo(res.user);
+
       setLimitedDataPrv(sorted.filter(e => !Boolean(e.notePublic)).slice(0, maxRecordsToShow))
       setLimitedDataPbl(sorted.filter(e => Boolean(e.notePublic)).slice(0, maxRecordsToShow));
+
     })();
     userApi.userOnline().then((res) => {
       const status = res.users.filter((user) => user.statesLogin === 1);
