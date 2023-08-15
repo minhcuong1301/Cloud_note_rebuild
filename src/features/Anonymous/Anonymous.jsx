@@ -6,10 +6,12 @@ import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MessageIcon from "@mui/icons-material/Message";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import "./index.css";
 import userApi from "../../api/userApi";
 import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { useSelector } from "react-redux";
 const Anonymous = () => {
@@ -21,6 +23,7 @@ const Anonymous = () => {
   const [statusMess, setstatusMess] = useState();
   const [inputUser, setInputUser] = useState("");
   const [togglSearch, setTogglSearch] = useState(true);
+  const [file, setFile] = useState(null);
   const [listInputUser, setListInputUser] = useState([]);
   const My_button = styled(Button)({ backgroundColor: "#5BE260", color: "#fff" });
   const My_text = styled(Typography)({
@@ -108,6 +111,18 @@ const Anonymous = () => {
       }
     });
   });
+
+  //// xu ly file
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(file);
+    };
+  }, [file]);
+  const onDrop = useCallback((acceptedFiles) => {
+    setFile(acceptedFiles[0]);
+  });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
   return (
     <Box
       sx={{
@@ -552,7 +567,7 @@ const Anonymous = () => {
                 ""
               );
             })}
-          ;
+          ;{file && <img style={{ marginTop: 15 + "px" }} src={URL.createObjectURL(file)} alt='' />}
         </Box>
       </Box>
 
@@ -571,6 +586,28 @@ const Anonymous = () => {
             src={`${process.env.PUBLIC_URL + "/assets/anoymous.png"}`}
             alt=''
           />
+          <div {...getRootProps()}>
+            {isDragActive ? (
+              <AttachFileIcon
+                {...getInputProps()}
+                className='File'
+                style={{
+                  fontSize: 35 + "px",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              />
+            ) : (
+              <AttachFileIcon
+                className='File'
+                style={{
+                  fontSize: 35 + "px",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              />
+            )}
+          </div>
           <TextField
             className={"inputMessageAnoymous"}
             style={{
