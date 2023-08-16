@@ -66,7 +66,6 @@ export default function EditForm({
       pinned: pinned,
       type: dataItem.type,
     };
-
     try {
       setIsSubmitting(true);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
