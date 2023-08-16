@@ -6,22 +6,33 @@ import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MessageIcon from "@mui/icons-material/Message";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import "./index.css";
 import userApi from "../../api/userApi";
 import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useSnackbar } from "notistack";
+import SearchIcon from "@mui/icons-material/Search";
 const Anonymous = () => {
   const [getMessage, setGetMessageuser] = useState([]);
   const [messageContent, setMessageContent] = useState("");
+  const [searchContent, setSearchContent] = useState("");
   const [listUserOnline, setlistUserOnline] = useState([]);
   const [UserOnlineId, setUserOnlineId] = useState(10);
   const [UserIdSend, setUserIdSend] = useState([]);
   const [statusMess, setstatusMess] = useState();
   const [inputUser, setInputUser] = useState("");
   const [togglSearch, setTogglSearch] = useState(true);
+  const [toggleOption, setToggleOption] = useState(false);
+  const [toggleBlock, setToggleBlock] = useState(true);
+  const [toggleRemoveBlock, setToggleRemoveBlock] = useState(true);
+  const [file, setFile] = useState(null);
   const [listInputUser, setListInputUser] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+
   const My_button = styled(Button)({ backgroundColor: "#5BE260", color: "#fff" });
   const My_text = styled(Typography)({
     color: "#fff",
@@ -108,6 +119,44 @@ const Anonymous = () => {
       }
     });
   });
+
+  //// xu ly file
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(file);
+    };
+  }, [file]);
+  const onDrop = useCallback((acceptedFiles) => {
+    setFile(acceptedFiles[0]);
+    console.log(URL.createObjectURL(file));
+  });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  /// block message
+  const handleBlock = () => {
+    if (UserOnlineId && !UserOnlineId.id) {
+      return enqueueSnackbar("vui lòng chọn user", { variant: "error" });
+    }
+    setToggleBlock(!toggleBlock);
+    const input = document.querySelector(".ChatMessage");
+    const notifityBlock = document.querySelector(".notifityBlock");
+    input.style.display = "none";
+    notifityBlock.style.display = "block";
+    enqueueSnackbar("Chặn tin nhắn thành công", { variant: "success" });
+  };
+  /// hủy block
+  const handleRemoveBlock = () => {
+    if (UserOnlineId && !UserOnlineId.id) {
+      return enqueueSnackbar("vui lòng chọn user", { variant: "error" });
+    }
+    setToggleRemoveBlock(!toggleRemoveBlock);
+    const input = document.querySelector(".ChatMessage");
+    const notifityBlock = document.querySelector(".notifityBlock");
+    input.style.display = "block";
+    notifityBlock.style.display = "none";
+    enqueueSnackbar(" Hủy chặn tin nhắn thành công", { variant: "success" });
+  };
+  ///search messge
+  useEffect(() => {}, []);
   return (
     <Box
       sx={{
@@ -291,7 +340,6 @@ const Anonymous = () => {
                 })
               : listInputUser &&
                 listInputUser.map((user, index) => {
-                  console.log(user);
                   return (
                     users.id != user.id && (
                       <Stack
@@ -349,60 +397,6 @@ const Anonymous = () => {
                     )
                   );
                 })}
-            {/* {listUserOnline.map((user, index) => {
-              return (
-                users.id != user.id && (
-                  <Stack
-                    className='User_mess'
-                    key={index}
-                    direction='row'
-                    alignItems='center'
-                    justifyContent='space-between'
-                  >
-                    <Link to={`/profile/${user.id}`}>
-                      <Stack
-                        direction='row'
-                        alignItems='center'
-                        mt={2}
-                        mb={1}
-                        style={{ cursor: "pointer", position: "relative" }}
-                        className='anonymos_img'
-                      >
-                        <img
-                          style={{ width: 60 + "px", height: 60 + "px", borderRadius: 50 + "px" }}
-                          src={user.img}
-                          alt=''
-                        />
-                        <My_text ml={1}>{user.name}</My_text>
-                      </Stack>
-                    </Link>
-                    <Stack direction='row' alignItems='center'>
-                      <DeleteIcon
-                        className='deleteUser hiddle'
-                        data={index}
-                        onClick={handle_delete}
-                        style={{
-                          fontSize: 30 + "px",
-                          cursor: "pointer",
-                          color: "#fff",
-                        }}
-                      />
-                      <MessageIcon
-                        className='messageAnoymous hiddle'
-                        data-id={user.id}
-                        onClick={HandleMessage}
-                        style={{
-                          color: "#fff",
-                          padding: 4 + "px",
-                          fontSize: 35 + "px",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </Stack>
-                  </Stack>
-                )
-              );
-            })} */}
           </Box>
         </Stack>
       </Box>
@@ -420,6 +414,7 @@ const Anonymous = () => {
           src={"https://haycafe.vn/wp-content/uploads/2021/12/hinh-nen-pc-hacker-cuc-chat.jpg"}
           alt=''
         />
+        {/*  */}
         <Box>
           <header
             className='box_anoymous'
@@ -450,12 +445,106 @@ const Anonymous = () => {
               <My_text>{(UserOnlineId && UserOnlineId.name) || "User Name"}</My_text>
             </Stack>
             <MoreHorizIcon
+              onClick={() => {
+                setToggleOption(!toggleOption);
+              }}
               style={{
+                position: "relative",
                 color: "#fff",
               }}
             />
+            <Stack
+              style={{
+                display: `${toggleOption ? "block" : "none"}`,
+                minWidth: 150 + "px",
+                zIndex: 100,
+                height: 100 + "%",
+                borderRadius: 12 + "px",
+                padding: 10 + "px",
+                backgroundColor: "#fff",
+                position: "absolute",
+                top: 60,
+                right: 30,
+                color: "#000",
+              }}
+              direction={"column"}
+            >
+              <p
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                Tìm kiếm
+              </p>
+              <p
+                style={{
+                  cursor: "pointer",
+                  marginTop: 4 + "px",
+                }}
+                onClick={handleBlock}
+              >
+                Chặn tin nhắn
+              </p>
+              <p
+                onClick={handleRemoveBlock}
+                style={{
+                  cursor: "pointer",
+                  marginTop: 4 + "px",
+                }}
+              >
+                Hủy chặn tin nhắn
+              </p>
+            </Stack>
           </header>
         </Box>
+
+        {/*  */}
+        <Box
+          sx={{
+            color: "#fff",
+          }}
+        >
+          <header
+            className='box_anoymous'
+            style={{
+              position: "absolute",
+              width: 65 + "%",
+              display: "flex",
+              height: 80 + "px",
+              alignItems: "center",
+              justifyContent: "space-between",
+              top: 81,
+              color: "#fff",
+            }}
+          >
+            <Stack
+              style={{
+                width: 100 + "%",
+              }}
+              direction='row'
+              alignItems='center'
+            >
+              <SearchIcon
+                style={{
+                  fontSize: 35 + "px",
+                }}
+              />
+              <TextField
+                value={searchContent}
+                onChange={(e) => setSearchContent(e.target.value)}
+                style={{
+                  width: 100 + "%",
+                  borderStyle: "solid",
+                  borderWidth: 1 + "px",
+                  borderColor: "#fff",
+                  color: "#fff !important",
+                  outline: "none",
+                }}
+              />
+            </Stack>
+          </header>
+        </Box>
+        {/*  */}
         <Box
           className='Box_message box_anoymous'
           sx={{
@@ -553,11 +642,27 @@ const Anonymous = () => {
               );
             })}
           ;
+          {file && (
+            <div>
+              <img style={{ marginTop: 15 + "px" }} src={URL.createObjectURL(file)} alt='' />
+              <My_text>{file.name}</My_text>
+              <a
+                style={{
+                  color: "#fff",
+                }}
+                href={URL.createObjectURL(file)}
+                download
+              >
+                {" "}
+                Download
+              </a>
+            </div>
+          )}
         </Box>
       </Box>
 
       <Box
-        className='input_mea'
+        className='ChatMessage input_mea '
         mt={5}
         sx={{
           position: "absolute",
@@ -571,6 +676,28 @@ const Anonymous = () => {
             src={`${process.env.PUBLIC_URL + "/assets/anoymous.png"}`}
             alt=''
           />
+          <div {...getRootProps()}>
+            {isDragActive ? (
+              <AttachFileIcon
+                {...getInputProps()}
+                className='File'
+                style={{
+                  fontSize: 35 + "px",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              />
+            ) : (
+              <AttachFileIcon
+                className='File'
+                style={{
+                  fontSize: 35 + "px",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              />
+            )}
+          </div>
           <TextField
             className={"inputMessageAnoymous"}
             style={{
@@ -590,6 +717,20 @@ const Anonymous = () => {
           />
         </Stack>
       </Box>
+      <Typography
+        className='notifityBlock'
+        mt={1}
+        sx={{
+          display: "none",
+          position: "absolute",
+          bottom: 0,
+          left: 45 + "%",
+          color: "#fff",
+          fontSize: 22 + "px",
+        }}
+      >
+        Người này đã đang bị chặn , Bạn không thể liên lạc
+      </Typography>
     </Box>
   );
 };

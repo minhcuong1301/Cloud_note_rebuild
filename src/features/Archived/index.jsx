@@ -19,6 +19,7 @@ import { Tab } from "@mui/material";
 import { TabContext,TabList,TabPanel } from "@mui/lab";
 import noteApi from "../../api/noteApi";
 
+import "./style.scss"
 Archived.propTypes = {
   data: PropTypes.array.isRequired,
   handleDelNote: PropTypes.func.isRequired,
@@ -78,7 +79,17 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   useEffect(() => {
     setDataFilter(data);
   }, [data]);
+  const [isTabsOpen, setIsTabsOpen] = useState(false);
+  const [tabValue, setTabValue] = useState("1");
 
+  const handleChange = (event, newValue) => {
+    console.log(1);
+    setTabValue(newValue);
+  };
+
+  const toggleTabs = () => {
+    setIsTabsOpen(!isTabsOpen);
+  };
   return (
     <div className={classes.root}>
       <div className={classes.headerFeature}>
@@ -104,22 +115,58 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               textTransform: "capitalize",
               borderRadius: "10px",
               borderColor: "black",
-              width: view && construct === "List" ? "200px" : "auto",
+              width: view && construct === "List" ? "100px" : "auto",
               "&:hover": { borderColor: "black" },
             }}
             startIcon={construct === "Grid" ? <GridViewOutlined /> : <FormatListBulleted />}
+
             onClick={() => {
               construct === "Grid" ? setConstruct("List") : setConstruct("Grid");
             }}
           >
             {construct}
           </Button>
+          <Button
+            className={classes.List}
+            variant='outlined'
+            sx={{
+              color: "black",
+              textTransform: "capitalize",
+              borderRadius: "10px",
+              borderColor: "black",
+              marginLeft: "15px",
+              width: view && construct === "Sort By" ? "100px" : "auto",
+              "&:hover": { borderColor: "black" },
+            }}
+            startIcon={construct === "Sort By" ? <FilterListIcon /> : <FilterListIcon />}
+
+            onClick={toggleTabs}
+          >
+
+          </Button>
+          {isTabsOpen && (
+            <div className="overlay">
+              
+              <TabContext  value={tabValue}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList className="tabbb" onChange={handleChange} aria-label="lab API tabs example" centered>
+                    <Tab label="Color" value="1" />
+                    <Tab label="SORT" value="2" />
+                    <Tab label="View" value="3" />
+                  </TabList>
+                </Box>
+                <TabPanel  value="1">Item One</TabPanel>
+                <TabPanel  value="2">Item Two</TabPanel>
+                <TabPanel  value="3">Item Three</TabPanel>
+              </TabContext>
+            </div>
+          )}
         </Box>
         <SearchInput setValue={setValue} onSearchItemClick={handleSearchItemClick} />
       </div>
       {view === "Side" && construct === "List" ? (
         <ListView
-          data={data.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt))}
+          data={data.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt))}
           setArchivedData={setArchivedData}
           handleDelNote={handleDelNote}
           toolsNote={toolsNote}
@@ -142,7 +189,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
             }}
             spacing={{ xs: 1, sm: 2, md: 2, lg: 2 }}
           >
-            {dataFilter.slice(-50).sort((a,b) => new Date(b.createAt) - new Date(a.createAt)).map((item) => (
+            {dataFilter.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt)).map((item) => (
               <>
                 {item.type !== "screenshot" && (
                   <Grid

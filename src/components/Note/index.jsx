@@ -55,7 +55,7 @@ const Note = () => {
     });
   }, []);
 
-  console.log(data);
+
   console.log(profile);
   return (
     <>

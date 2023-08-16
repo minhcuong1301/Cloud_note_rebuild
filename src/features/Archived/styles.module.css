@@ -30,6 +30,7 @@
   display: grid;
   grid-template-columns: 1fr 2fr;
 }
+
 @media only screen and (max-width: 739px) {
   .root {
     width: calc(100vw - 70px);
