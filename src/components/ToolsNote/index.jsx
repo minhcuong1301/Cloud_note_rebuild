@@ -289,7 +289,6 @@ function ToolsNote({
             }}
             onClick={() => {
               shareNoteId(dataItem.idNote);
-              console.log(dataItem.idNote);
             }}
           >
             <ListItemIcon>
@@ -482,7 +481,20 @@ function ToolsNote({
         </ListItem>
 
         <ListItem>
-          <Button sx={{ marginLeft: "20px" }} variant='contained' onClick={handleUpdateNote}>
+          <Button sx={{ marginLeft: "20px" }} variant='contained' onClick={() => {
+            handleNoteForm({      
+              ...options,
+              dueAt:
+                typeof dueAt === "object" && dueAt
+                  ? dayjs(dueAt).format("DD/MM/YYYY hh:mm A Z")
+                  : dueAt,
+              remindAt:
+                typeof remindAt === "object" && remindAt
+                  ? dayjs(remindAt).format("DD/MM/YYYY hh:mm A Z")
+                  : remindAt,
+              notePublic: notePublic
+            });
+          }}>
             Update Note
           </Button>
         </ListItem>

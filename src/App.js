@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, Outlet } from "react-router-dom";
+import { Navigate, Route, Routes, Outlet, useLocation } from "react-router-dom";
 import "./App.css";
 import { LandingPage } from "./pages/LandingPage";
 import Home from "./components/home";
