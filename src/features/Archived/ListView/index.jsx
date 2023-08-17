@@ -32,7 +32,6 @@ function ListView({
   limitedData,
   clear,
 }) {
-
   const location = useLocation();
   const [selected, setSelected] = useState(defaultSelect || 0);
   const [selectedID, setSelectedID] = useState(0);
@@ -41,7 +40,7 @@ function ListView({
   const [lockData, setLockData] = useState(new Array(data.length));
 
   const clearA = () => {
-    if (location.pathname !== "/home/archived") clear()
+    if (location.pathname !== "/home/archived") clear();
     else {
       setSelected(null);
     }
@@ -127,7 +126,7 @@ function ListView({
                     title={item.title}
                   >
                     {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                    {item.title.length === 0? "No title" : item.title}
+                    {item.title.length === 0 ? "No title" : item.title}
                   </span>
                   {item.type === "image" && (
                     <img
@@ -152,7 +151,6 @@ function ListView({
                     textAlign: "left",
                   }}
                   onClick={() => {
-
                     if (checkJWT()) {
                       return window.location.assign("/login");
                     }
@@ -161,8 +159,9 @@ function ListView({
 
                     setDialog(true);
                     if (item.notePublic === 1) {
-                      window.history.pushState({}, "", `/note/${item.idNote}`);
+                      return window.history.pushState({}, "", `/note/${item.idNote}`);
                     }
+                    window.history.pushState({}, "", "/home/archived");
                   }}
                 >
                   {item.type === "text" && (
@@ -191,7 +190,7 @@ function ListView({
                     title={item.title}
                   >
                     {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                    {item.title.length === 0? "No title" : item.title}
+                    {item.title.length === 0 ? "No title" : item.title}
                   </span>
                   {item.type === "image" && (
                     <img

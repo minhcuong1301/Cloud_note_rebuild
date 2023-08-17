@@ -35,6 +35,10 @@ const userApi = {
     const url = "/lastUser";
     return axiosClient.get(url);
   },
+  getSearchUsers(param) {
+    const url = `/profiles_search/user?key=${param}`;
+    return axiosClient.get(url);
+  },
   profile(id) {
     const url = "/profile/" + id;
     return axiosClient.get(url);
@@ -48,8 +52,8 @@ const userApi = {
     return axiosClient.get(url);
   },
 
-  updateProfile(userId,data) {
-    console.log('data in APIupdateProfile:', data); 
+  updateProfile(userId, data) {
+    console.log("data in APIupdateProfile:", data);
     const url = `/profile/change_Profile/${userId}`;
     return axiosClient.patch(url, data);
   },
@@ -58,7 +62,6 @@ const userApi = {
     const url = `/message/chat-unknown/${id}`;
     return axiosClient.get(url);
   },
-
 };
 
 export default userApi;
