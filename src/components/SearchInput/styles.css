@@ -1,6 +1,6 @@
 .search {
   width: 100%;
-  position: relative;
+  /* position: relative; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,7 +43,7 @@
   width: 600px;
   height: 50px;
   min-width:200px;
-  position: absolute;
+  /* position: absolute;
   right: 30px;
-  top: 30px;
+  top: 30px; */
 }

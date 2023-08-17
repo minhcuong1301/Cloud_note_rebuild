@@ -1,6 +1,7 @@
 import { KeyboardArrowRight } from "@mui/icons-material";
 import { Box, Drawer, IconButton, LinearProgress } from "@mui/material";
 import dayjs from "dayjs";
+import { DateTime } from "luxon";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import React, { useEffect, useMemo, useState } from "react";
@@ -37,14 +38,13 @@ export default function EditForm({
   toggleNote,
   limitedData,
 }) {
-
+  const [currentDateTime, setCurrentDateTime] = useState("");
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
   const [data, setData] = useState(getList(dataItem.data, dataItem.type));
   const [colorNote, setColorNote] = useState(dataItem.color);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-
   const [options, setOptions] = useState({
     dueAt: typeof dataItem.dueAt !== "object" ? dayjs(dataItem.dueAt) : dataItem.dueAt,
     remindAt: typeof dataItem.remindAt !== "object" ? dayjs(dataItem.remindAt) : dataItem.remindAt,
@@ -52,7 +52,25 @@ export default function EditForm({
     share: dataItem.share,
     notePublic: dataItem.notePublic,
   });
+  //pined
+  const handlePined = () => {
+    setPinned(!pinned);
+    // const currentDateTime = DateTime.now()
+    //   .setZone("Asia/Ho_Chi_Minh")
+    //   .toLocaleString(DateTime.DATETIME_FULL);
+    // setCurrentDateTime(currentDateTime);
+    // console.log(currentDateTime);
+    pinned == false
+      ? enqueueSnackbar("select pinned success", { variant: "success" })
+      : enqueueSnackbar("remove pinned success", { variant: "success" });
 
+    noteApi
+      .editNote(dataItem.idNote, { ...dataItem, pinned: !pinned, type: dataItem.type })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  };
   const handleChangeNote = (color) => {
     setColorNote(color);
   };

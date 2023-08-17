@@ -3,11 +3,13 @@
   width: 100%;
   .search_Results {
     position: absolute;
-    left: -29vw;
+    left: 21vw;
     top: 8vh;
     height: 69vh;
     overflow-y: auto;
     overflow-x: hidden;
+
+
     .custom-item {
       display: flex;
       padding: 30px;
@@ -108,5 +110,8 @@
 @media only screen and (min-width: 740px) and (max-width: 1024px) {
   .search_Results {
     display: none;
+  }
+  .search{
+    width: 400px;
   }
 }
