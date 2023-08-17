@@ -28,7 +28,6 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 import DetailsIcon from '@mui/icons-material/Details';
 import "./style.scss"
-=======
 import noteApi from "../../api/noteApi";
 Archived.propTypes = {
   data: PropTypes.array.isRequired,
