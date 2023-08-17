@@ -16,7 +16,10 @@ import { useDispatch } from "react-redux";
 import FilterListIcon from "@mui/icons-material/FilterList";
 // import { TabContext } from "@mui/material";
 import { Tab } from "@mui/material";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+
+import { TabContext,TabList,TabPanel } from "@mui/lab";
+import noteApi from "../../api/noteApi";
+
 
 import "./style.scss";
 Archived.propTypes = {
@@ -35,9 +38,10 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   const [drawerEdit, setDrawerEdit] = useState(false);
   // const [selectedNote, setSelectedNote] = useState(null);
 
-  const handleSearchItemClick = (noteData) => {
-    setSelectedNote(noteData);
-    setDrawerEdit((prevState) => true);
+  const handleSearchItemClick = async (noteId) => {
+    let getNote = data.filter(e => e.idNote === noteId)[0];
+    setSelectedNote(getNote);
+    // setDrawerEdit((prevState) => true);
   };
 
   const user =
