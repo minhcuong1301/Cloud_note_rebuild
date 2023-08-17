@@ -74,17 +74,6 @@ function ToolsNote({
   //   setValueLock(options.lock);
   // }, [options.dueAt, options.remindAt, options.lock]);
 
-  useEffect(() => {
-    if (
-      type === "Edit" &&
-      (remindAt !== options.remindAt ||
-        dueAt !== options.dueAt ||
-        notePublic !== options.notePublic)
-    )
-      handleNoteForm(dataItem);
-    return;
-  }, [remindAt, dueAt, notePublic]);
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -128,20 +117,19 @@ function ToolsNote({
     const data = {
       ...options,
       dueAt:
-        typeof options.dueAt === "object" && options.dueAt
-          ? dayjs(options.dueAt).format("DD/MM/YYYY hh:mm A Z")
-          : options.dueAt,
+        typeof dueAt === "object" && dueAt
+          ? dayjs(dueAt).format("DD/MM/YYYY hh:mm A Z")
+          : dueAt,
       remindAt:
-        typeof options.remindAt === "object" && options.remindAt
-          ? dayjs(options.remindAt).format("DD/MM/YYYY hh:mm A Z")
-          : options.remindAt,
-      notePublic: options.notePublic ? 1 : 0,
+        typeof remindAt === "object" && remindAt
+          ? dayjs(remindAt).format("DD/MM/YYYY hh:mm A Z")
+          : remindAt,
+      notePublic: notePublic,
     };
-
     try {
       const res = await noteApi.editNote(dataItem.idNote, data);
+      console.log(res.note)
       enqueueSnackbar("Note updated successfully", { variant: "success" });
-      console.log("hello world", dataItem);
       // navigate("/home");
       // window.location.reload();
     } catch (error) {
@@ -252,42 +240,44 @@ function ToolsNote({
               <ListItemText primary='Reminder' />
             </ListItemButton>
           )}
-            <DateTimePicker
-              open={popRemind}
-              onAccept={() => {
-                setPopRemind(false);
-                handleOptionsNote({
-                  remindAt: remindAt ? dayjs(remindAt).format("DD/MM/YYYY hh:mm A") : null,
-                });
-              }}
-              format="DD/MM/YYYY hh:mm"
-              onClose={() => {
-                setPopRemind(false);
-              }}
-              defaultValue="DD/MM/YYYY hh:mm"
-              value={remindAt}
-              // sx={{
-              //   "& .MuiInputBase-input": {
-              //     padding: "0 !important",
-              //     border: "none",
-              //     outline: "none",
-              //   },
-              //   "& fieldset": {
-              //     border: "none",
-              //   },
-              //   "& *": {
-              //     cursor: "pointer",
-              //   },
-              //   cursor: "pointer",
-              //   position: "absolute",
-              //   top: "50%",
-              //   transform: "translateY(-50%)",
-              //   right: "15px",
-              // }}
-              onChange={(newValue) => {
-                setRemindAt(newValue);
-              }}
-          />
+              <DateTimePicker
+                open={popRemind}
+                minDateTime={dayjs().set('hour', new Date().getHours() ).set('minute', new Date().getMinutes() + 30).startOf("minute")}
+                onAccept={() => {
+                  setPopRemind(false);
+                  handleOptionsNote({
+                    remindAt: remindAt ? dayjs(remindAt).format("DD/MM/YYYY hh:mm A Z") : null,
+                  });
+                }}
+                format="DD/MM/YYYY hh:mm A"
+                onClose={() => {
+                  setPopRemind(false);
+                }}
+                value={dayjs(remindAt)}
+
+                sx={{
+                  "& .MuiInputBase-input": {
+                    padding: "0 !important",
+                    border: "none",
+                    outline: "none",
+                  },
+                  "& fieldset": {
+                    border: "none",
+                  },
+                  "& *": {
+                    cursor: "pointer",
+                  },
+                  cursor: "pointer",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  right: "15px",
+                }}
+                onChange={(newValue) => {
+                  if(( new Date(new Date().getTime() + (30 * 60)) ) < new Date(dayjs(newValue))) setRemindAt(newValue);
+                }}
+              />
+
         </ListItem>
         <ListItem>
           <ListItemButton
@@ -425,6 +415,7 @@ function ToolsNote({
 
           <DateTimePicker
             open={popDate}
+            minDateTime={dayjs().set('hour', new Date().getHours()).set('minute', new Date().getMinutes()).startOf("minute")}
             onAccept={() => {
               setPopDate(false);
               handleOptionsNote({
@@ -435,7 +426,7 @@ function ToolsNote({
             onClose={() => {
               setPopDate(false);
             }}
-            value={dueAt}
+            value={dayjs(dueAt)}
             sx={{
               "& .MuiInputBase-input": {
                 padding: "0 !important",
@@ -455,7 +446,7 @@ function ToolsNote({
               right: "15px",
             }}
             onChange={(newValue) => {
-              setDueAt(newValue);
+              if( new Date()  < new Date(dayjs(newValue))) setDueAt(newValue);
             }}
           />
         </ListItem>

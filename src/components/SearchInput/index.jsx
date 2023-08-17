@@ -5,12 +5,11 @@ import "./search.scss";
 
 import Cookies from 'js-cookie';
 import unorm from "unorm";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 function SearchInput({ onSearchItemClick }) {
-    const [selectedNoteData, setSelectedNoteData] = useState(null);
-    const handleItemClick = (noteData) => {
-        onSearchItemClick(noteData);
-        setSelectedNoteData(noteData);
+    const handleItemClick = (idNote) => {
+        onSearchItemClick(idNote);
     };
 
     const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
@@ -60,7 +59,24 @@ function SearchInput({ onSearchItemClick }) {
             const normalizedQuery = normalizeString(searchQuery);
             const response = await userApi.search(normalizedQuery);
 
-            setSearchResults(response.search_note);
+            setSearchResults(Object.values(response.search_note.reduce((init, curr) => {
+                //convert
+                //from {idNote: {content: ["str", ...], type: "str", title: ""}, ...} 
+                //to   [idNote: {content: ["str", ...], type: "str", title: ""}, ...]
+                if(init[curr.idNote]) {
+                    init[curr.idNote].content.push(curr.content);
+                }
+                else init[curr.idNote] = {
+                    type: curr.type,
+                    idNote: curr.idNote,
+                    title: curr.title,
+                    content: [curr.content]
+                }
+
+                return init;
+
+            }, {})) );
+
             if (!searchHistory.includes(searchQuery)) {
                 const updatedHistory = [searchQuery, ...searchHistory];
                 setSearchHistory(updatedHistory);
@@ -101,10 +117,18 @@ function SearchInput({ onSearchItemClick }) {
         return sortedResults;
     };
     const displayResults = rearrangeSearchResults(searchResults).map((result, index) => (
-        <div key={index} className="custom-item" onClick={() => handleItemClick(result)}>
+        <div key={index} className="custom-item" onClick={() => handleItemClick(result.idNote)}>
             <p>{index + 1}</p>
-            <p className="title">{highlightText(result.title, searchQuery)}</p>
-            <p className='content'>{highlightText(result.content, searchQuery)}</p>
+            <div>
+                <p className="title">{highlightText(result.title, searchQuery)}</p>
+            </div>
+
+            <div>
+                {result.content.map(e => (
+                    <p className='content'>{highlightText(e, searchQuery)}</p>
+                ))}
+            </div>
+
 
         </div>
     ));

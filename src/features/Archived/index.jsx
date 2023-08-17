@@ -12,10 +12,14 @@ import classes from "./styles.module.css";
 import EditForm from "./EditForm";
 import { profileUser, updateProfile } from "../Auth/userSlice";
 import { useDispatch } from "react-redux";
+
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 import { Tab } from "@mui/material";
+
 import { TabContext,TabList,TabPanel } from "@mui/lab";
+
 import React, { useEffect, useState, useRef } from "react";
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
@@ -24,6 +28,8 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 import DetailsIcon from '@mui/icons-material/Details';
 import "./style.scss"
+=======
+import noteApi from "../../api/noteApi";
 Archived.propTypes = {
   data: PropTypes.array.isRequired,
   handleDelNote: PropTypes.func.isRequired,
@@ -41,9 +47,10 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   const [originalData, setOriginalData] = useState([]);
 
 
-  const handleSearchItemClick = (noteData) => {
-    setSelectedNote(noteData);
-    setDrawerEdit((prevState) => true);
+  const handleSearchItemClick = async (noteId) => {
+    let getNote = data.filter(e => e.idNote === noteId)[0];
+    setSelectedNote(getNote);
+    // setDrawerEdit((prevState) => true);
   };
 
   const user =
@@ -240,7 +247,6 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               "&:hover": { borderColor: "black" },
             }}
             startIcon={construct === "Grid" ? <GridViewOutlined /> : <FormatListBulleted />}
-
             onClick={() => {
               construct === "Grid" ? setConstruct("List") : setConstruct("Grid");
             }}
@@ -259,6 +265,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               width: view && construct === "Sort By" ? "100px" : "auto",
               "&:hover": { borderColor: "black" },
             }}
+
             startIcon={construct === "Sort By" ? <FilterListIcon  onClick={(event) => {
               event.stopPropagation(); 
               toggleTabs();
@@ -308,6 +315,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
 
                 </TabPanel>
                 </Box>
+
               </TabContext>
          
             </div>
@@ -340,6 +348,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
             }}
             spacing={{ xs: 1, sm: 2, md: 2, lg: 2 }}
           >
+
             {sortedAndFilteredData.map((item) => (
               <>
               {console.log(item)}
@@ -403,6 +412,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
                 )}
               </>
             ))}
+
           </Grid>
         </div>
       )}
