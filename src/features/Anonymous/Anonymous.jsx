@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import SearchIcon from "@mui/icons-material/Search";
 const Anonymous = () => {
+  const [currentMessageId, setCurrentMessageId] = useState(null);
   const [getMessage, setGetMessageuser] = useState([]);
   const [messageContent, setMessageContent] = useState("");
   const [searchContent, setSearchContent] = useState("");
@@ -25,10 +26,11 @@ const Anonymous = () => {
   const [UserIdSend, setUserIdSend] = useState([]);
   const [statusMess, setstatusMess] = useState();
   const [inputUser, setInputUser] = useState("");
-  const [togglSearch, setTogglSearch] = useState(true);
+  const [togglSearch, setTogglSearch] = useState(false);
   const [toggleOption, setToggleOption] = useState(false);
   const [toggleBlock, setToggleBlock] = useState(true);
   const [toggleRemoveBlock, setToggleRemoveBlock] = useState(true);
+  const [toggleSearchContext, setToggleSearchContext] = useState(false);
   const [file, setFile] = useState(null);
   const [listInputUser, setListInputUser] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -51,17 +53,27 @@ const Anonymous = () => {
   };
 
   useEffect(() => {
-    listUserOnline.forEach((user, index) => {
-      // const display = document.querySelector("#BoxBtnQuit");
-      if (user.name.startsWith(inputUser) == true) {
-        setListInputUser((pre) => [user]);
-        document.querySelector("#BoxBtnQuit").style.display = "block";
-        setTogglSearch(!togglSearch);
-      } else {
-        document.querySelector("#BoxBtnQuit").style.display = "none";
-      }
-    });
-    console.log(listInputUser);
+    const check = listUserOnline.filter((user, index) => user.name.includes(inputUser));
+    setListInputUser(check);
+    if (check.length >= 1) {
+      setTogglSearch(!togglSearch);
+      // document.querySelector("#BoxBtnQuit").style.display = "block";
+    }
+    // check
+    //   ? (document.querySelector("#BoxBtnQuit").style.display = "block")
+    //   : (document.querySelector("#BoxBtnQuit").style.display = "none");
+
+    // listUserOnline.forEach((user, index) => {
+    //   // const display = document.querySelector("#BoxBtnQuit");
+
+    //   if (user.name.includes(inputUser)) {
+    //     setListInputUser(user);
+    //     document.querySelector("#BoxBtnQuit").style.display = "block";
+    //     setTogglSearch(!togglSearch);
+    //   } else {
+    //     document.querySelector("#BoxBtnQuit").style.display = "none";
+    //   }
+    // });
   }, [inputUser]);
   const HandleMessage = () => {
     const messageAnoymous = document.querySelectorAll(".messageAnoymous");
@@ -114,12 +126,41 @@ const Anonymous = () => {
   useEffect(() => {
     document.querySelector(".inputMessageAnoymous").addEventListener("keydown", function (e) {
       if (e.keyCode === 13) {
-        console.log(1);
+        // console.log(1);
         // sendMessage();
       }
     });
   });
+  ///serach
+  useEffect(() => {
+    document.querySelector(".seachAnoymours").addEventListener("keydown", function (e) {
+      if (e.keyCode === 13) {
+        if (getMessage.length >= 1) {
+          const Content = getMessage.filter((mess) => mess.content == searchContent);
+          Content.forEach((message, index) => {
+            document.querySelector(".HylinkSearch").setAttribute("href", `#${+message.id}`);
+            const idContentSearch = document.querySelector(".HylinkSearch").getAttribute("href");
+            setCurrentMessageId(idContentSearch);
+          });
+        } else if (getMessage == null) {
+          console.log("null");
+        } else {
+          console.log("err");
+        }
+        const idContent = document.querySelectorAll(".contentMessage");
+        idContent.forEach((id, index) => {
+          const test = id.getAttribute("id");
 
+          if (currentMessageId == `#${test}`) {
+            id.style.backgroundColor = "#000";
+            id.style.color = "#fff";
+          } else {
+            console.log("lỗi");
+          }
+        });
+      }
+    });
+  }, [searchContent]);
   //// xu ly file
   useEffect(() => {
     return () => {
@@ -156,7 +197,13 @@ const Anonymous = () => {
     enqueueSnackbar(" Hủy chặn tin nhắn thành công", { variant: "success" });
   };
   ///search messge
-  useEffect(() => {}, []);
+
+  const handleSearch = () => {
+    const search = document.querySelector(".seachAnoymours");
+    setToggleSearchContext(!toggleSearchContext);
+    search.style.display = `${toggleSearchContext ? "none" : "block"}`;
+  };
+
   return (
     <Box
       sx={{
@@ -279,7 +326,7 @@ const Anonymous = () => {
             />
           </Stack>
           <Box>
-            {togglSearch == true
+            {togglSearch == false
               ? listUserOnline.map((user, index) => {
                   return (
                     users.id != user.id && (
@@ -470,6 +517,7 @@ const Anonymous = () => {
               direction={"column"}
             >
               <p
+                onClick={handleSearch}
                 style={{
                   cursor: "pointer",
                 }}
@@ -500,8 +548,11 @@ const Anonymous = () => {
 
         {/*  */}
         <Box
+          className='seachAnoymours'
           sx={{
             color: "#fff",
+            display: "none",
+            zIndex: 1300,
           }}
         >
           <header
@@ -529,6 +580,9 @@ const Anonymous = () => {
                   fontSize: 35 + "px",
                 }}
               />
+              <a className='HylinkSearch' style={{ color: "#fff", cursor: "pointer" }}>
+                Tìm kiếm
+              </a>
               <TextField
                 value={searchContent}
                 onChange={(e) => setSearchContent(e.target.value)}
@@ -553,7 +607,7 @@ const Anonymous = () => {
             borderRadius: 32 + "px",
             marginBottom: 30 + "px",
             right: 0,
-            top: 100,
+            top: 200,
           }}
         >
           {UserOnlineId &&
@@ -588,7 +642,9 @@ const Anonymous = () => {
                         }}
                       >
                         <div>
-                          <p style={{ fontWeight: 600 }}> {message.content}</p>
+                          <p className='contentMessage' id={message.id} style={{ fontWeight: 600 }}>
+                            {message.content}
+                          </p>
                           <p>Đã gửi:{message.sendAt} </p>
                         </div>
                       </Box>
@@ -630,7 +686,9 @@ const Anonymous = () => {
                         }}
                       >
                         <div>
-                          <p style={{ fontWeight: 600 }}>{message.content}</p>
+                          <p id={message.id} className='contentMessage' style={{ fontWeight: 600 }}>
+                            {message.content}
+                          </p>
                           <p>Đã gửi:{message.sendAt} </p>
                         </div>
                       </Box>
@@ -666,7 +724,7 @@ const Anonymous = () => {
         mt={5}
         sx={{
           position: "absolute",
-          bottom: 0,
+          bottom: -100,
           left: 45 + "%",
         }}
       >

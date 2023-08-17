@@ -82,7 +82,38 @@
 .box_note_hidden {
   display: none;
 }
-
+.SearchName {
+  margin-left: 546px;
+  padding: 5px;
+  border-radius: 12px;
+  width: 303px;
+  background-color: #ddd;
+  margin-top: -40px;
+  margin-bottom: 10px;
+}
+.textSearch {
+  padding: 3px;
+  font-size: 17px;
+  :hover {
+    background-color: #1d1d1d;
+    padding: 2px;
+    border-radius: 10px;
+    color: #fff;
+  }
+}
+.sicon {
+  position: absolute;
+  top: 15;
+  bottom: 34px;
+  right: 402px;
+}
+.inputSearchName {
+  min-width: 300px !important;
+  padding: 12px !important;
+  font-size: 17px;
+  border-radius: 12px;
+  position: relative;
+}
 @media only screen and (max-width: 739px) {
   .NoteMoblie {
     width: 80% !important;

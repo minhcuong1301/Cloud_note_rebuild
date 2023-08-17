@@ -12,14 +12,9 @@ import Note from "./components/Note";
 import Anonymous from "./features/Anonymous/Anonymous";
 import Profile_orther from "./features/Profile_orther/Profile_orther";
 function App() {
-
   const RequireLogin = () => {
-    return !checkJWT() ? (
-        <Outlet/>
-    ) : (
-        <Login/>
-    )
-  }
+    return !checkJWT() ? <Outlet /> : <Login />;
+  };
 
   if (localStorage.getItem("show") !== "false") {
     localStorage.setItem("show", true);
@@ -33,10 +28,9 @@ function App() {
           path='/'
           element={checkJWT() ? <Navigate to='/login' replace /> : <Navigate to='/home' replace />}
         /> */}
-        <Route element={<RequireLogin/>}> 
-          <Route path='/profile/:id' element={<Profile_orther />} />
-
-          <Route exact path='/explore' element={<Explore />} />
+        <Route path='/profile/:id' element={<Profile_orther />} />
+        <Route element={<RequireLogin />}>
+          <Route exact path='/home/explore' element={<Explore />} />
           <Route path='/home/*' element={<Home />} />
           <Route path='/upload' element={<ImageUploader />} />
           <Route path='/group/:idGroup/*' element={<GroupDetail />} />
@@ -50,7 +44,6 @@ function App() {
           path='/register'
           element={checkJWT() ? <Register /> : <Navigate to='/home' replace />}
         />
-
       </Routes>
     </div>
   );

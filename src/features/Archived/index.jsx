@@ -13,12 +13,12 @@ import classes from "./styles.module.css";
 import EditForm from "./EditForm";
 import { profileUser, updateProfile } from "../Auth/userSlice";
 import { useDispatch } from "react-redux";
-import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListIcon from "@mui/icons-material/FilterList";
 // import { TabContext } from "@mui/material";
 import { Tab } from "@mui/material";
-import { TabContext,TabList,TabPanel } from "@mui/lab";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
-import "./style.scss"
+import "./style.scss";
 Archived.propTypes = {
   data: PropTypes.array.isRequired,
   handleDelNote: PropTypes.func.isRequired,
@@ -117,7 +117,6 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               "&:hover": { borderColor: "black" },
             }}
             startIcon={construct === "Grid" ? <GridViewOutlined /> : <FormatListBulleted />}
-
             onClick={() => {
               construct === "Grid" ? setConstruct("List") : setConstruct("Grid");
             }}
@@ -137,25 +136,26 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               "&:hover": { borderColor: "black" },
             }}
             startIcon={construct === "Sort By" ? <FilterListIcon /> : <FilterListIcon />}
-
             onClick={toggleTabs}
-          >
-
-          </Button>
+          ></Button>
           {isTabsOpen && (
-            <div className="overlay">
-              
-              <TabContext  value={tabValue}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <TabList className="tabbb" onChange={handleChange} aria-label="lab API tabs example" centered>
-                    <Tab label="Color" value="1" />
-                    <Tab label="SORT" value="2" />
-                    <Tab label="View" value="3" />
+            <div className='overlay'>
+              <TabContext value={tabValue}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <TabList
+                    className='tabbb'
+                    onChange={handleChange}
+                    aria-label='lab API tabs example'
+                    centered
+                  >
+                    <Tab label='Color' value='1' />
+                    <Tab label='SORT' value='2' />
+                    <Tab label='View' value='3' />
                   </TabList>
                 </Box>
-                <TabPanel  value="1">Item One</TabPanel>
-                <TabPanel  value="2">Item Two</TabPanel>
-                <TabPanel  value="3">Item Three</TabPanel>
+                <TabPanel value='1'>Item One</TabPanel>
+                <TabPanel value='2'>Item Two</TabPanel>
+                <TabPanel value='3'>Item Three</TabPanel>
               </TabContext>
             </div>
           )}
@@ -187,68 +187,71 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
             }}
             spacing={{ xs: 1, sm: 2, md: 2, lg: 2 }}
           >
-            {dataFilter.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt)).map((item) => (
-              <>
-                {item.type !== "screenshot" && (
-                  <Grid
-                    key={item.idNote}
-                    item
-                    xs={24}
-                    sm={12}
-                    md={4}
-                    lg={construct === "Grid" ? 3 : 4}
-                  >
-                    {item.lock ? (
-                      <>
-                        {item?.flag === true ? (
-                          <>
-                            {item.type === "image" ? (
-                              <NoteImage
-                                construct={construct}
-                                dataItem={item}
-                                setArchivedData={setArchivedData}
-                                handleDelNote={handleDelNote}
-                              />
-                            ) : (
-                              <NoteItem
-                                construct={construct}
-                                dataItem={item}
-                                setArchivedData={setArchivedData}
-                                handleDelNote={handleDelNote}
-                              />
-                            )}
-                          </>
-                        ) : (
-                          <NoteItemLock
-                            construct={construct}
-                            handle={setArchivedData}
-                            dataItem={item}
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {item.type === "image" ? (
-                          <NoteImage
-                            construct={construct}
-                            dataItem={item}
-                            setArchivedData={setArchivedData}
-                            handleDelNote={handleDelNote}
-                          />
-                        ) : (
-                          <NoteItem
-                            construct={construct}
-                            dataItem={item}
-                            setArchivedData={setArchivedData}
-                            handleDelNote={handleDelNote}
-                          />
-                        )}
-                      </>
-                    )}
-                  </Grid>
-                )}
-              </>
-            ))}
+            {dataFilter
+              .slice(0, 50)
+              .sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+              .map((item) => (
+                <>
+                  {item.type !== "screenshot" && (
+                    <Grid
+                      key={item.idNote}
+                      item
+                      xs={24}
+                      sm={12}
+                      md={4}
+                      lg={construct === "Grid" ? 3 : 4}
+                    >
+                      {item.lock ? (
+                        <>
+                          {item?.flag === true ? (
+                            <>
+                              {item.type === "image" ? (
+                                <NoteImage
+                                  construct={construct}
+                                  dataItem={item}
+                                  setArchivedData={setArchivedData}
+                                  handleDelNote={handleDelNote}
+                                />
+                              ) : (
+                                <NoteItem
+                                  construct={construct}
+                                  dataItem={item}
+                                  setArchivedData={setArchivedData}
+                                  handleDelNote={handleDelNote}
+                                />
+                              )}
+                            </>
+                          ) : (
+                            <NoteItemLock
+                              construct={construct}
+                              handle={setArchivedData}
+                              dataItem={item}
+                            />
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {item.type === "image" ? (
+                            <NoteImage
+                              construct={construct}
+                              dataItem={item}
+                              setArchivedData={setArchivedData}
+                              handleDelNote={handleDelNote}
+                            />
+                          ) : (
+                            <NoteItem
+                              construct={construct}
+                              dataItem={item}
+                              setArchivedData={setArchivedData}
+                              handleDelNote={handleDelNote}
+                            />
+                          )}
+                        </>
+                      )}
+                    </Grid>
+                  )}
+                </>
+              ))}
           </Grid>
         </div>
       )}
