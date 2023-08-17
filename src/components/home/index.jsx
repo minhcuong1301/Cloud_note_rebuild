@@ -89,9 +89,6 @@ function Home(props) {
     setDrawerNew(false);
   };
   useEffect(() => {
-    if (checkJWT()) {
-      navigate("/login");
-    } else {
       setIsLogin(true);
       (async () => {
         try {
@@ -101,7 +98,6 @@ function Home(props) {
           setDataTrash(response2.notes || []);
         } catch (error) {}
       })();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [files, setFiles] = useState([]);

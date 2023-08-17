@@ -3,7 +3,7 @@ import { Box, Drawer, IconButton, LinearProgress } from "@mui/material";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import noteApi from "../../../api/noteApi";
 import PinnedIcon from "../../../components/CustomIcons/PinnedIcon";
 import CheckListBox from "../../../components/FieldNote/CheckListFieldBox";
@@ -61,13 +61,11 @@ export default function EditForm({
   };
   const handleNoteForm = async (value) => {
     const configParam = {
-      ...value,
-
-      pinned: pinned,
-      type: dataItem.type,
+      ...value
     };
     try {
       setIsSubmitting(true);
+      console.log(configParam);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
 
       setIsSubmitting(false);
@@ -80,7 +78,12 @@ export default function EditForm({
       setIsSubmitting(false);
       enqueueSnackbar(error.message, { variant: "error" });
     }
+    
   };
+
+  useMemo(() => {
+    handleNoteForm({pinned: !pinned})
+  }, [pinned]);
 
   return (
     <Drawer
@@ -151,7 +154,7 @@ export default function EditForm({
         >
           <span
             onClick={() => {
-              setPinned(!pinned);
+              setPinned(!pinned)
             }}
             style={{
               cursor: "pointer",

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, Outlet } from "react-router-dom";
+import { Navigate, Route, Routes, Outlet, useLocation } from "react-router-dom";
 import "./App.css";
 import { LandingPage } from "./pages/LandingPage";
 import Home from "./components/home";
@@ -33,8 +33,8 @@ function App() {
           path='/'
           element={checkJWT() ? <Navigate to='/login' replace /> : <Navigate to='/home' replace />}
         /> */}
-        <Route element={<RequireLogin/>}> 
-          <Route path='/profile/:id' element={<Profile_orther />} />
+        <Route path='/profile/:id' element={<Profile_orther />} />
+        <Route element={<RequireLogin/>}>
 
           <Route exact path='/explore' element={<Explore />} />
           <Route path='/home/*' element={<Home />} />
