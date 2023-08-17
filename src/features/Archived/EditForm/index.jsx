@@ -38,6 +38,7 @@ export default function EditForm({
   toggleNote,
   limitedData,
 }) {
+  const [loadedPage, setLoadedPage] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState("");
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [pinned, setPinned] = useState(dataItem.pinned);
@@ -83,7 +84,6 @@ export default function EditForm({
     };
     try {
       setIsSubmitting(true);
-      console.log(configParam);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
 
       setIsSubmitting(false);
@@ -100,7 +100,8 @@ export default function EditForm({
   };
 
   useMemo(() => {
-    handleNoteForm({pinned: !pinned})
+    if(loadedPage) handleNoteForm({pinned: pinned})
+    else setLoadedPage(true);
   }, [pinned]);
 
   return (
