@@ -24,7 +24,6 @@ function SearchInput({ onSearchItemClick }) {
     const handleClickHistory = (historyText) => {
         handleDeleteSearchHistory(historyText);
         setSearchQuery(historyText);
-        setSearchHistory(history => history.filter((e, i) => e !== historyText ));
     }
 
     // Lấy lịch sử tìm kiếm từ cookie khi component được tạo
@@ -34,6 +33,7 @@ function SearchInput({ onSearchItemClick }) {
             setSearchHistory(JSON.parse(savedHistory));
         }
     }, []);
+
     const normalizeString = (str) => {
         const normalizedStr = unorm.nfkd(str).replace(/[\u0300-\u036F]/g, '').toLowerCase();
         return encodeURIComponent(normalizedStr);
@@ -42,12 +42,15 @@ function SearchInput({ onSearchItemClick }) {
         // Xử lý cập nhật ghi chú tại đây (có thể gọi API hoặc lưu vào state,...)
         console.log("Updating note:", note);
     };
+
     useEffect(() => {
+
         if (shouldTriggerSearch) {
             handleSearch();
             setShouldTriggerSearch(false);
         }
     }, [shouldTriggerSearch]);
+
     const handleSearch = async () => {
         try {
             if (searchQuery.trim() === '') {
@@ -97,15 +100,21 @@ function SearchInput({ onSearchItemClick }) {
         }
     };
     const highlightText = (text, searchQuery) => {
-        const regex = new RegExp(`(${searchQuery})`, 'gi');
-        const parts = text.split(regex);
-        return parts.map((part, index) => (
-            regex.test(part) ? (
-                <span key={index} style={{ backgroundColor: 'yellow' }}>{part}</span>
-            ) : (
-                <React.Fragment key={index}>{part}</React.Fragment>
-            )
-        ));
+        if(searchQuery.trim().length !== 0) {
+            const regex = new RegExp(`(${searchQuery})`, 'gi');
+            const parts = text.split(regex);
+            return parts.map((part, index) => (
+                regex.test(part) ? (
+                    <span key={index} style={{ backgroundColor: 'yellow' }}>{part}</span>
+                ) : (
+                    <React.Fragment key={index}>{part}</React.Fragment>
+                )
+            ));            
+        }
+        else {
+            return <React.Fragment>{text}</React.Fragment>
+        }
+
     };
     const rearrangeSearchResults = (results) => {
         const sortedResults = results.sort((a, b) => {
@@ -150,8 +159,13 @@ function SearchInput({ onSearchItemClick }) {
                         placeholder="Type content or title to find?"
                         value={searchQuery}
                         onChange={e => {
-                            setSearchQuery(e.target.value);
-                            setShowSearchHistory(e.target.value === '' || isInputFocused);
+                            setShowSearchHistory(e.target.value.trim().length !== 0 || isInputFocused);        
+                            setSearchQuery(e.target.value);  
+
+                            // tu dong an ket qua khi co input moi
+                            setSearchResults([]);    
+                            //
+
                         }}
                         onKeyPress={handleKeyPress}
                         onFocus={() => {
@@ -167,11 +181,15 @@ function SearchInput({ onSearchItemClick }) {
                             }, 200);
                         }}
                     />
-                    {showSearchHistory && searchHistory.length > 0 ? (
+                    {showSearchHistory && searchHistory.length > 0 && (
                         <div className="search-history">
                             {searchHistory.map((historyItem, index) => (
                                 <div className="del"
-                                onClick={() => handleClickHistory(historyItem)}
+                                onClick={(e) => {
+                                    if(e.target === e.currentTarget) {
+                                        handleClickHistory(historyItem);
+                                    }
+                                }}
                                 >
                                     <span key={index} onClick={() => setSearchQuery(historyItem)}>
                                         {historyItem}
@@ -184,7 +202,7 @@ function SearchInput({ onSearchItemClick }) {
                             ))}
 
                         </div>
-                    ) : null}
+                    )}
                 </div>
 
                 <button type='submit' className='searchButton' onClick={handleSearch}>

@@ -120,6 +120,8 @@ function NoteItem({ dataItem, handleDelNote, setArchivedData, construct, full = 
             type: dataItem.type,
         };
 
+        console.log(configParam)
+
         try {
             setIsSubmitting(true);
             const res = await noteApi.editNote(dataItem.idNote, configParam);
