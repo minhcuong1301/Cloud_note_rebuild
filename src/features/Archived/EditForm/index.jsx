@@ -80,7 +80,8 @@ export default function EditForm({
   };
   const handleNoteForm = async (value) => {
     const configParam = {
-      ...value
+      ...value,
+      color: colorNote
     };
     try {
       setIsSubmitting(true);

@@ -54,13 +54,16 @@ const diffTime = (lastDate) => {
 };
 
 export default function LandingPage() {
+
   const [menu, setMenu] = useState(false);
+  const [listUserMostNote, setUserMostNote] = useState([]);
   const [newUsers, setNewUsers] = useState([]);
   const [newNotes, setNewNotes] = useState([]);
   const [modal, setModal] = useState(false);
   const [largeNote, setLargeNote] = useState(-1);
   const [theme, setTheme] = useState(true);
   const [listUserOnline, setlistUserOnline] = useState([]);
+
   useEffect(() => {
     userApi.getNewUsers().then((res) => setNewUsers(res.data.slice(0, 5)));
     userApi.userOnline().then((res) => {
