@@ -1,7 +1,8 @@
 /* Mobile */
+
 @media only screen and (max-width: 739px) {
-  .css-12r3w90-MuiDrawer-docked .MuiDrawer-paper {
-    display: block;
+  .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorRight.MuiDrawer-paperAnchorDockedRight.css-18sg6k4-MuiPaper-root-MuiDrawer-paper {
+    display: block !important;
     min-width: calc(100% - 70px) !important;
   }
   .boxEdit {
@@ -10,8 +11,8 @@
 }
 /* //tablet */
 @media only screen and (min-width: 740px) and (max-width: 1024px) {
-  .css-12r3w90-MuiDrawer-docked .MuiDrawer-paper {
-    display: block;
-    width: calc(100% - 210px) !important;
+  .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorRight.MuiDrawer-paperAnchorDockedRight.css-18sg6k4-MuiPaper-root-MuiDrawer-paper {
+    display: block !important;
+    width: calc(100vw - 210px) !important;
   }
 }

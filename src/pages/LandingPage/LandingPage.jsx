@@ -54,7 +54,6 @@ const diffTime = (lastDate) => {
 };
 
 export default function LandingPage() {
-
   const [menu, setMenu] = useState(false);
   const [listUserMostNote, setUserMostNote] = useState([]);
   const [newUsers, setNewUsers] = useState([]);
@@ -114,7 +113,7 @@ export default function LandingPage() {
           </div> */}
           <div className={cx("item")}>Contact Us</div>
           <div className={cx("item")}>Help</div>
-          <div className={cx("item")}>Blog</div> 
+          <div className={cx("item")}>Blog</div>
           <div className={cx("item")}>Support Forum</div>
           {!checkJWT() || (
             <>
@@ -186,22 +185,24 @@ export default function LandingPage() {
               {newUsers &&
                 [...newUsers].map((user, index) => {
                   return (
-                    <div
-                      className={cx("user")}
-                      key={index}
-                      style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}
-                    >
+                    <Link to={`profile/${user.id}`}>
                       <div
-                        className={cx("avatar")}
-                        style={{ display: "flex", alignItems: "center" }}
+                        className={cx("user")}
+                        key={index}
+                        style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}
                       >
-                        <img src={user.linkAvatar} alt='' width={40} height={40} />
-                        {index}
+                        <div
+                          className={cx("avatar")}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <img src={user.linkAvatar} alt='' width={40} height={40} />
+                          {index}
+                        </div>
+                        <div className={cx("name")}>{user.name}</div>
+                        <div className={cx("date")}>{diffTime(user.createAt)}</div>
+                        <div className={cx("mail")}>{user.user_name}</div>
                       </div>
-                      <div className={cx("name")}>{user.name}</div>
-                      <div className={cx("date")}>{diffTime(user.createAt)}</div>
-                      <div className={cx("mail")}>{user.user_name}</div>
-                    </div>
+                    </Link>
                   );
                 })}
             </div>
@@ -461,6 +462,25 @@ function Note({ note, active, index, large = false, clearLarge }) {
       >
         Share
       </Button>
+      {console.log(note)}
+      {note.username && (
+        <Link to={`/profile/${note.idUser}`}>
+          <p
+            style={{
+              position: "absolute",
+              color: "#fff",
+              right: 25 + "px",
+              bottom: 25 + "px",
+              background: "#1976d2",
+              padding: 7 + "px",
+              cursor: "pointer",
+              borderRadius: 8 + "px",
+            }}
+          >
+            {note.username}
+          </p>
+        </Link>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Share</DialogTitle>
         <DialogContent>
