@@ -13,21 +13,21 @@ import EditForm from "./EditForm";
 import { profileUser, updateProfile } from "../Auth/userSlice";
 import { useDispatch } from "react-redux";
 
-import FilterListIcon from '@mui/icons-material/FilterList';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import FilterListIcon from "@mui/icons-material/FilterList";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import { Tab } from "@mui/material";
 
-import { TabContext,TabList,TabPanel } from "@mui/lab";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import React, { useEffect, useState, useRef } from "react";
-import MoreTimeIcon from '@mui/icons-material/MoreTime';
-import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
-import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
-import DetailsIcon from '@mui/icons-material/Details';
-import "./style.scss"
+import MoreTimeIcon from "@mui/icons-material/MoreTime";
+import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
+import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl";
+import DetailsIcon from "@mui/icons-material/Details";
+import "./style.scss";
 import noteApi from "../../api/noteApi";
 Archived.propTypes = {
   data: PropTypes.array.isRequired,
@@ -45,9 +45,8 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [originalData, setOriginalData] = useState([]);
 
-
   const handleSearchItemClick = async (noteId) => {
-    let getNote = data.filter(e => e.idNote === noteId)[0];
+    let getNote = data.filter((e) => e.idNote === noteId)[0];
     setSelectedNote(getNote);
     // setDrawerEdit((prevState) => true);
   };
@@ -93,26 +92,24 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   const [tabValue, setTabValue] = useState("1");
 
   const handleChange = (event, newValue) => {
-
     setTabValue(newValue);
   };
-
 
   const overlayRef = useRef(null);
 
   const toggleTabs = () => {
     setIsTabsOpen(!isTabsOpen);
   };
-  
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (isTabsOpen && overlayRef.current && !overlayRef.current.contains(event.target)) {
         setIsTabsOpen(false);
       }
     };
-  
+
     document.addEventListener("click", handleOutsideClick);
-  
+
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
@@ -121,24 +118,24 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
     return colorMapping[colorName] || null;
   }
   const [filteredData, setFilteredData] = useState(dataFilter);
-  const [sortByLatest, setSortByLatest] = useState(true); 
+  const [sortByLatest, setSortByLatest] = useState(true);
   console.log(filteredData);
   const handleOverlayClick = (event) => {
-    const isInsideTabContext = event.target.closest('.tabbb');
-    const isInsideTabPanel = event.target.closest('.MuiTabPanel-root');
+    const isInsideTabContext = event.target.closest(".tabbb");
+    const isInsideTabPanel = event.target.closest(".MuiTabPanel-root");
     if (!isInsideTabContext && !isInsideTabPanel) {
       setIsTabsOpen(false);
     }
-    const selectedColorElement = event.target.closest('.color');
- 
+    const selectedColorElement = event.target.closest(".color");
+
     if (selectedColorElement) {
       const colorName = selectedColorElement.classList[1];
-      const clickedColor  = getColorObjectFromColorName(colorName);
-      const filteredData = filterDataByColor(clickedColor );
-      console.log('danh sach loc:',filteredData);
+      const clickedColor = getColorObjectFromColorName(colorName);
+      const filteredData = filterDataByColor(clickedColor);
+      console.log("danh sach loc:", filteredData);
 
-      setFilteredData(filteredData); 
-      
+      setFilteredData(filteredData);
+
       setIsTabsOpen(false); // Đóng menu khi chọn màu
     }
   };
@@ -152,54 +149,52 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
     green5: { r: 143, g: 210, b: 239, a: 0.87 },
     purple: { r: 130, g: 147, b: 239, a: 1 },
   };
-   const compareColors=(color1, color2) =>{
-
+  const compareColors = (color1, color2) => {
     return (
       color1.r === color2.r &&
       color1.g === color2.g &&
       color1.b === color2.b &&
       color1.a === color2.a
     );
-  }
+  };
   const filterDataByColor = (clickedColor) => {
     if (!clickedColor) {
-      console.log(1)
+      console.log(1);
       return dataFilter; // Trả về danh sách ban đầu nếu không có màu được chọn
     }
-    return dataFilter.filter(item => {
-     return compareColors(item.color, clickedColor)
+    return dataFilter.filter((item) => {
+      return compareColors(item.color, clickedColor);
     }); // Lọc danh sách theo màu
-    
   };
 
   const handleSortByLatest = () => {
-    const sortedData = [...dataFilter].slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
-    setFilteredData(sortedData); 
+    const sortedData = [...dataFilter]
+      .slice(-50)
+      .sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
+    setFilteredData(sortedData);
     console.log(filteredData);
-    setIsTabsOpen(false); 
+    setIsTabsOpen(false);
   };
   const handleSortByOldest = () => {
-    const sortedData = [...dataFilter].slice(0, 50).sort(
-      (a, b) => new Date(a.createAt) - new Date(b.createAt)
-    );
+    const sortedData = [...dataFilter]
+      .slice(0, 50)
+      .sort((a, b) => new Date(a.createAt) - new Date(b.createAt));
     console.log(sortedData.reverse());
-    setFilteredData(sortedData.reverse()); 
-    setIsTabsOpen(false); // 
+    setFilteredData(sortedData.reverse());
+    setIsTabsOpen(false); //
   };
   const [sortAscending, setSortAscending] = useState(true);
   const handleSortByAlphabetically = () => {
     const dataToSort = [...filteredData];
 
-  
     const sortedData = dataToSort.sort((a, b) => {
       if (sortAscending) {
-
         return a.title.localeCompare(b.title);
       } else {
         return b.title.localeCompare(a.title);
       }
     });
-  
+
     setFilteredData(sortedData);
 
     setIsTabsOpen(false);
@@ -207,16 +202,17 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   };
   const handleToggleView = (newView) => {
     setIsTabsOpen(false); // Đóng menu khi chọn chế độ
-    
+
     if (newView === "Grid" && construct !== "Grid") {
       setConstruct("Grid");
     } else if (newView === "List" && construct !== "List") {
       setConstruct("List");
     }
   };
-  const sortedAndFilteredData = filteredData.length > 0
-  ? filteredData.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
-  : dataFilter.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
+  const sortedAndFilteredData =
+    filteredData.length > 0
+      ? filteredData.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+      : dataFilter.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
   return (
     <div className={classes.root}>
       <div className={classes.headerFeature}>
@@ -264,59 +260,73 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               width: view && construct === "Sort By" ? "100px" : "auto",
               "&:hover": { borderColor: "black" },
             }}
-
-            startIcon={construct === "Sort By" ? <FilterListIcon  onClick={(event) => {
-              event.stopPropagation(); 
-              toggleTabs();
-            }} /> : <FilterListIcon />}
-
-            onClick={(e)=>{
-              e.stopPropagation();
-              toggleTabs()
+            startIcon={
+              construct === "Sort By" ? (
+                <FilterListIcon
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleTabs();
+                  }}
+                />
+              ) : (
+                <FilterListIcon />
+              )
             }
-          }
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleTabs();
+            }}
           >
             Sort By
           </Button>
           {isTabsOpen && (
-            <div className="overlay"ref={overlayRef} onClick={handleOverlayClick}>
-             
-              
-              <TabContext  value={tabValue} >
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <TabList className="tabbb" onChange={handleChange} aria-label="lab API tabs example" centered>
-                    <Tab label="Color" value="1" />
-                    <Tab label="SORT" value="2" />
-                    <Tab label="View" value="3" />
+            <div className='overlay' ref={overlayRef} onClick={handleOverlayClick}>
+              <TabContext value={tabValue}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <TabList
+                    className='tabbb'
+                    onChange={handleChange}
+                    aria-label='lab API tabs example'
+                    centered
+                  >
+                    <Tab label='Color' value='1' />
+                    <Tab label='SORT' value='2' />
+                    <Tab label='View' value='3' />
                   </TabList>
                 </Box>
-                <Box className="bb">
-
-                <TabPanel className="flex-color" value="1">
-                  <div className="color pink"></div>
-                  <div className="color orange"></div>
-                  <div className="color green1"></div>
-                  <div className="color green2"></div>
-                  <div className="color green3"></div>
-                  <div className="color green4"></div>
-                  <div className="color green5"></div>
-                  <div className="color purple"></div>
+                <Box className='bb'>
+                  <TabPanel className='flex-color' value='1'>
+                    <div className='color pink'></div>
+                    <div className='color orange'></div>
+                    <div className='color green1'></div>
+                    <div className='color green2'></div>
+                    <div className='color green3'></div>
+                    <div className='color green4'></div>
+                    <div className='color green5'></div>
+                    <div className='color purple'></div>
                   </TabPanel>
-                <TabPanel className="nn" value="2">
-                  <div className="custom-tab" onClick={handleSortByLatest}><AccessTimeIcon/> By lastest record</div>
-                  <div className="custom-tab" onClick={handleSortByOldest}><MoreTimeIcon/> By oldest record</div>
-                  <div className="custom-tab" onClick={handleSortByAlphabetically}><SortByAlphaIcon/> By alphabetically</div>
-                  {/* <div className="custom-tab"><NotificationsActiveIcon/> By reminder time</div> */}
-                </TabPanel>
-                <TabPanel className="nn"  value="3">
-                <div className="custom-tab" onClick={() => handleToggleView("List")}><FormatListNumberedRtlIcon/> List</div>
-                <div className="custom-tab" onClick={() => handleToggleView("Grid")}><GridViewOutlined /> Grid</div>
-
-                </TabPanel>
+                  <TabPanel className='nn' value='2'>
+                    <div className='custom-tab' onClick={handleSortByLatest}>
+                      <AccessTimeIcon /> By lastest record
+                    </div>
+                    <div className='custom-tab' onClick={handleSortByOldest}>
+                      <MoreTimeIcon /> By oldest record
+                    </div>
+                    <div className='custom-tab' onClick={handleSortByAlphabetically}>
+                      <SortByAlphaIcon /> By alphabetically
+                    </div>
+                    {/* <div className="custom-tab"><NotificationsActiveIcon/> By reminder time</div> */}
+                  </TabPanel>
+                  <TabPanel className='nn' value='3'>
+                    <div className='custom-tab' onClick={() => handleToggleView("List")}>
+                      <FormatListNumberedRtlIcon /> List
+                    </div>
+                    <div className='custom-tab' onClick={() => handleToggleView("Grid")}>
+                      <GridViewOutlined /> Grid
+                    </div>
+                  </TabPanel>
                 </Box>
-
               </TabContext>
-         
             </div>
           )}
         </Box>
@@ -347,10 +357,9 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
             }}
             spacing={{ xs: 1, sm: 2, md: 2, lg: 2 }}
           >
-
             {sortedAndFilteredData.map((item) => (
               <>
-              {console.log(item)}
+                {console.log(item)}
                 {item.type !== "screenshot" && (
                   <Grid
                     key={item.idNote}
@@ -411,7 +420,6 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
                 )}
               </>
             ))}
-
           </Grid>
         </div>
       )}
@@ -420,4 +428,3 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
 }
 
 export default Archived;
-

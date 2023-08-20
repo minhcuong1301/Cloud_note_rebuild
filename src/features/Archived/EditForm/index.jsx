@@ -81,7 +81,7 @@ export default function EditForm({
   const handleNoteForm = async (value) => {
     const configParam = {
       ...value,
-      color: colorNote
+      color: colorNote,
     };
     try {
       setIsSubmitting(true);
@@ -97,11 +97,10 @@ export default function EditForm({
       setIsSubmitting(false);
       enqueueSnackbar(error.message, { variant: "error" });
     }
-    
   };
 
   useMemo(() => {
-    if(loadedPage) handleNoteForm({pinned: pinned})
+    if (loadedPage) handleNoteForm({ pinned: pinned });
     else setLoadedPage(true);
   }, [pinned]);
 
@@ -109,6 +108,7 @@ export default function EditForm({
     <Drawer
       variant='persistent'
       className='box-container'
+      id='wapperEditNote'
       anchor='right'
       open={drawerEdit}
       sx={{
@@ -174,7 +174,7 @@ export default function EditForm({
         >
           <span
             onClick={() => {
-              setPinned(!pinned)
+              setPinned(!pinned);
             }}
             style={{
               cursor: "pointer",

@@ -17,6 +17,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import SearchIcon from "@mui/icons-material/Search";
+
+import { FaSmile, FaSadTear, FaGrin, FaDizzy, FaAngry, FaMeh } from "react-icons/fa";
 const Anonymous = () => {
   const [currentMessageId, setCurrentMessageId] = useState(null);
   const [getMessage, setGetMessageuser] = useState([]);
@@ -35,6 +37,7 @@ const Anonymous = () => {
   const [file, setFile] = useState(null);
   const [listInputUser, setListInputUser] = useState([]);
   const [listSearchUser, setListSearchUser] = useState([]);
+  const [toggleIcon, setToggleIcon] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const My_button = styled(Button)({ backgroundColor: "#5BE260", color: "#fff" });
@@ -818,6 +821,35 @@ const Anonymous = () => {
               />
             )}
           </div>
+          <div
+            onClick={() => {
+              setToggleIcon(!toggleIcon);
+            }}
+            style={{ cursor: "pointer", marginRight: 2 + "px", position: "relative" }}
+          >
+            <FaSmile size={35} color='#FFF' />
+          </div>
+          <Stack
+            direction={"row"}
+            a
+            sx={{
+              display: "flex",
+              display: `${toggleIcon ? "block" : "none"}`,
+              position: "absolute",
+              top: -205 + "px",
+              flexWrap: "wrap",
+              width: 200 + "px",
+              height: 200 + "px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <FaSmile size={32} color='yellow' />
+            <FaSadTear size={32} color='blue' />
+            <FaGrin size={32} color='green' />
+            <FaDizzy size={32} color='purple' />
+            <FaAngry size={32} color='red' />
+            <FaMeh size={32} color='orange' />
+          </Stack>
           <TextField
             className={"inputMessageAnoymous"}
             style={{
