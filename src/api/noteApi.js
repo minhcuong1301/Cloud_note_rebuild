@@ -49,6 +49,10 @@ const noteApi = {
     const url = `/notes/${idNote}`;
     return axiosClient.post(url, data);
   },
+  getNumberNote() {
+    const url = "/numbernote";
+    return axiosClient.get(url);
+  },
 };
 
 export default noteApi;
