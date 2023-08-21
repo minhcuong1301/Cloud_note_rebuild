@@ -62,6 +62,7 @@ function Login(props) {
       const action = login(values);
 
       const resultAction = await dispatch(action);
+      console.log(resultAction);
       unwrapResult(resultAction);
 
       enqueueSnackbar("Logged in successfully", { variant: "success" });

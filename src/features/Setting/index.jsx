@@ -36,6 +36,7 @@ import { useDispatch } from "react-redux";
 import { updateUser } from "../Auth/userSlice";
 import StorageKeys from "../../constants/storage-keys";
 import { checkJWT } from "../../constants";
+import { logoutUser } from "../Auth/userSlice";
 Settings.propTypes = {
   setDf_nav: PropTypes.func.isRequired,
   setColorNote: PropTypes.func.isRequired,
@@ -85,10 +86,21 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
 
   const handleLogOut = async () => {
     try {
-      const action = logOut();
-      await dispatch(action);
+    //   const action = logOut();
+    //   await dispatch(action);
 
-      enqueueSnackbar("You will log out after 1s", { variant: "success" });
+    //   // enqueueSnackbar("You will log out after 1s", { variant: "success" });
+    //   // setTimeout(() => {
+    //   //   // window.location.reload(true);
+    //   //   window.location.assign("/");
+    //   // }, 1000);
+    // } catch {
+    //   enqueueSnackbar("error", { variant: "error" });
+    // }
+   const a= await dispatch(logoutUser());
+   console.log(a);
+
+     enqueueSnackbar("You will log out after 1s", { variant: "success" });
       setTimeout(() => {
         // window.location.reload(true);
         window.location.assign("/");

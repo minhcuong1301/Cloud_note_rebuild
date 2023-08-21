@@ -83,6 +83,9 @@
     .bb{
         width: 30vh !important;
     }
+    .sort-button-text {
+        display: none;
+      }
   }
   /* // tablet */
   @media only screen and (min-width: 740px) and (max-width: 1024px) {
@@ -92,6 +95,9 @@
     .bb{
         width: 25vh !important;
     }
+    .sort-button-text {
+        display: none;
+      }
   }
   @media only screen and (min-width: 375px) and (max-width: 413px) {
     .tabbb{
@@ -100,6 +106,9 @@
     .bb{
         width: 30vh !important;
     }
+    .sort-button-text {
+        display: none;
+      }
   }
   @media only screen and (min-width: 414px) and (max-width: 600px) {
     .tabbb{
@@ -108,4 +117,7 @@
     .bb{
         width: 30vh !important;
     }
+    .sort-button-text {
+        display: none;
+      }
   }

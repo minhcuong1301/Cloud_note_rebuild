@@ -37,6 +37,7 @@ function TextFieldBox({ bg, handleNoteForm, isSubmitting, cx = "", tt = "", acti
       enqueueSnackbar("Please fill in note!", { variant: "error" });
       return;
     }
+   
     const note = {
       title: ttDebounce,
       color: bg,
