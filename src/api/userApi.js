@@ -66,6 +66,10 @@ const userApi = {
     const url = `/login/change_password/${id}`;
     return axiosClient.post(url, payload);
   },
+  logout(id){
+    const url=`logout/${id}`;
+    return axiosClient.post(url)
+  }
 };
 
 export default userApi;

@@ -86,7 +86,7 @@ export default function EditForm({
     try {
       setIsSubmitting(true);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
-
+console.log(res);
       setIsSubmitting(false);
 
       enqueueSnackbar(res.message, { variant: "success" });

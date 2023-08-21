@@ -75,6 +75,7 @@ function ListView({
         sx={{
           width: "100%",
           display: "flex",
+     
           flexDirection: "column",
           gap: "8px",
           padding: "0 20px",
@@ -83,15 +84,18 @@ function ListView({
         {toggleNote === true
           ? limitedData.map((item, index) => (
               <div key={index}>
+             
                 <Button
                   sx={{
                     backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
                     color: "#000",
                     padding: "10px 16px",
+                
                     width: "100%",
                     display: "grid",
                     gridTemplateColumns: "50px 1fr",
                     textAlign: "left",
+                    
                   }}
                   onClick={() => {
                     setSelected(item.idNote);
@@ -99,7 +103,9 @@ function ListView({
                     setDialog(true);
                     window.history.pushState({}, "", `/note/${item.idNote}`);
                   }}
+                  
                 >
+                  
                   {item.type === "text" && (
                     <ListItemIcon>
                       <TextSnippetOutlined fontSize='small' />
@@ -164,6 +170,7 @@ function ListView({
                     window.history.pushState({}, "", "/home/archived");
                   }}
                 >
+                  
                   {item.type === "text" && (
                     <ListItemIcon>
                       <TextSnippetOutlined fontSize='small' />
@@ -179,6 +186,7 @@ function ListView({
                       <Photo fontSize='small' />
                     </ListItemIcon>
                   )}
+                  
                   <span
                     style={{
                       whiteSpace: "nowrap",
@@ -199,6 +207,23 @@ function ListView({
                       style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
                     />
                   )}
+                   <div
+                style={{
+                    fontWeight: 500,
+                    fontSize: "14px",
+                    background:  "rgba(255, 255, 255, 0.160784)" ,
+                    borderRadius: "3px",
+                    display: "inline-block",
+                    color:  "rgb(79 73 73 / 80%)",
+                    padding:  "5px 8px" ,
+                    position: "relative",
+                    width:"100%",
+                    marginRight: "15px",
+                }}
+            >
+                Create at: 
+                {/* {dayjs(dataItem.createAt).format("DD/MM/YYYY hh:mm A")} */}
+            </div>
                 </Button>
               </div>
             ))}

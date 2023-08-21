@@ -52,7 +52,19 @@ export const refresh = createAsyncThunk("user/refresh", async () => {
 
   return rs.access_token;
 });
-
+export const logoutUser = createAsyncThunk("user/logout", async (_, { getState }) => {
+  try {
+    const userId = getState().user.current.id; 
+    console.log(userId);
+   const a= await userApi.logout(userId); // Gọi API logout
+    console.log(a);
+    localStorage.removeItem(StorageKeys.USER);
+    localStorage.removeItem(StorageKeys.TOKEN);
+    return { id: 10 }; // Cập nhật trạng thái người dùng sau khi logout
+  } catch (error) {
+    throw new Error("Error logging out");
+  }
+});
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -62,11 +74,12 @@ const userSlice = createSlice({
   reducers: {
     logOut(state) {
       // clear local storage
+     
       localStorage.removeItem(StorageKeys.USER);
       localStorage.removeItem(StorageKeys.TOKEN);
+      state.current = { id: 10 };
 
       // set state
-      state.current = { id: 10 };
     },
     Update(state, action) {
       const clone = { ...state.current, ...action.payload };
@@ -95,6 +108,9 @@ const userSlice = createSlice({
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.current = { ...state.current, ...action.payload };
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.current = action.payload;
       });
   },
 });
