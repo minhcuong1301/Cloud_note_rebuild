@@ -7,6 +7,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MessageIcon from "@mui/icons-material/Message";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import "./index.css";
 import userApi from "../../api/userApi";
 import { useEffect } from "react";
@@ -16,6 +17,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import SearchIcon from "@mui/icons-material/Search";
+
+import { FaSmile, FaSadTear, FaGrin, FaDizzy, FaAngry, FaMeh } from "react-icons/fa";
 const Anonymous = () => {
   const [currentMessageId, setCurrentMessageId] = useState(null);
   const [getMessage, setGetMessageuser] = useState([]);
@@ -33,6 +36,8 @@ const Anonymous = () => {
   const [toggleSearchContext, setToggleSearchContext] = useState(false);
   const [file, setFile] = useState(null);
   const [listInputUser, setListInputUser] = useState([]);
+  const [listSearchUser, setListSearchUser] = useState([]);
+  const [toggleIcon, setToggleIcon] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const My_button = styled(Button)({ backgroundColor: "#5BE260", color: "#fff" });
@@ -79,8 +84,11 @@ const Anonymous = () => {
     const messageAnoymous = document.querySelectorAll(".messageAnoymous");
     messageAnoymous.forEach((el, index) => {
       el.addEventListener("click", (e) => {
-        const dataId = e.target.getAttribute("data-id");
+        console.log(el.getAttribute("data-id"));
+        const dataId = el.getAttribute("data-id");
+        console.log(dataId);
         const [checkUser] = listUserOnline.filter((user) => user.id == dataId);
+        console.log(checkUser);
         setUserOnlineId(checkUser);
       });
     });
@@ -133,33 +141,46 @@ const Anonymous = () => {
   });
   ///serach
   useEffect(() => {
-    document.querySelector(".seachAnoymours").addEventListener("keydown", function (e) {
-      if (e.keyCode === 13) {
-        if (getMessage.length >= 1) {
-          const Content = getMessage.filter((mess) => mess.content == searchContent);
-          Content.forEach((message, index) => {
-            document.querySelector(".HylinkSearch").setAttribute("href", `#${+message.id}`);
-            const idContentSearch = document.querySelector(".HylinkSearch").getAttribute("href");
-            setCurrentMessageId(idContentSearch);
-          });
-        } else if (getMessage == null) {
-          console.log("null");
-        } else {
-          console.log("err");
-        }
-        const idContent = document.querySelectorAll(".contentMessage");
-        idContent.forEach((id, index) => {
-          const test = id.getAttribute("id");
+    const Content = getMessage.filter((mess) => mess.content.includes(searchContent));
+    const received = UserIdSend.filter((mes) => mes.content.includes(searchContent));
 
-          if (currentMessageId == `#${test}`) {
-            id.style.backgroundColor = "#000";
-            id.style.color = "#fff";
-          } else {
-            console.log("lỗi");
-          }
-        });
-      }
-    });
+    setListSearchUser(Content.concat(received));
+    console.log(listSearchUser);
+    if (listSearchUser.length >= 1) {
+      document.querySelector(".Box_message").style.display = "none";
+    } else {
+      document.querySelector(".Box_message").style.display = "block";
+    }
+    // Content
+    //   ? (document.querySelector(".Box_message").style.display = "none")
+    //   : (document.querySelector(".Box_message").style.display = "block");
+    // document.querySelector(".seachAnoymours").addEventListener("keydown", function (e) {
+    //   if (e.keyCode === 13) {
+    //     if (getMessage.length >= 1) {
+    //       const Content = getMessage.filter((mess) => mess.content == searchContent);
+    //       Content.forEach((message, index) => {
+    //         document.querySelector(".HylinkSearch").setAttribute("href", `#${+message.id}`);
+    //         const idContentSearch = document.querySelector(".HylinkSearch").getAttribute("href");
+    //         setCurrentMessageId(idContentSearch);
+    //       });
+    //     } else if (getMessage == null) {
+    //       console.log("null");
+    //     } else {
+    //       console.log("err");
+    //     }
+    //     const idContent = document.querySelectorAll(".contentMessage");
+    //     idContent.forEach((id, index) => {
+    //       const test = id.getAttribute("id");
+
+    //       if (currentMessageId == `#${test}`) {
+    //         id.style.backgroundColor = "#000";
+    //         id.style.color = "#fff";
+    //       } else {
+    //         console.log("lỗi");
+    //       }
+    //     });
+    //   }
+    // });
   }, [searchContent]);
   //// xu ly file
   useEffect(() => {
@@ -174,6 +195,7 @@ const Anonymous = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   /// block message
   const handleBlock = () => {
+    setToggleOption(!toggleOption);
     if (UserOnlineId && !UserOnlineId.id) {
       return enqueueSnackbar("vui lòng chọn user", { variant: "error" });
     }
@@ -186,6 +208,7 @@ const Anonymous = () => {
   };
   /// hủy block
   const handleRemoveBlock = () => {
+    setToggleOption(!toggleOption);
     if (UserOnlineId && !UserOnlineId.id) {
       return enqueueSnackbar("vui lòng chọn user", { variant: "error" });
     }
@@ -199,9 +222,16 @@ const Anonymous = () => {
   ///search messge
 
   const handleSearch = () => {
-    const search = document.querySelector(".seachAnoymours");
-    setToggleSearchContext(!toggleSearchContext);
-    search.style.display = `${toggleSearchContext ? "none" : "block"}`;
+    setToggleOption(!toggleOption);
+    if (UserOnlineId == users.id) {
+      return enqueueSnackbar(" vui lòng chọn user ", { variant: "error" });
+    } else {
+      const search = document.querySelector(".seachAnoymours");
+      setToggleSearchContext(!toggleSearchContext);
+      search.style.display = `${toggleSearchContext ? "none" : "block"}`;
+
+      enqueueSnackbar(" tìm kiếm tin nhắn", { variant: "success" });
+    }
   };
 
   return (
@@ -213,9 +243,9 @@ const Anonymous = () => {
       <Box
         className='SideBarAy'
         sx={{
-          maxWidth: 470 + "px",
+          maxWidth: 430 + "px",
           backgroundColor: "#000000",
-          paddingLeft: 70 + "px",
+          paddingLeft: 40 + "px",
           paddingRight: 35 + "px",
           paddingTop: 24 + "px",
           paddingBottom: 24 + "px",
@@ -337,27 +367,29 @@ const Anonymous = () => {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <Link to={`/profile/${user.id}`}>
-                          <Stack
-                            direction='row'
-                            alignItems='center'
-                            mt={2}
-                            mb={1}
-                            style={{ cursor: "pointer", position: "relative" }}
-                            className='anonymos_img'
-                          >
-                            <img
-                              style={{
-                                width: 60 + "px",
-                                height: 60 + "px",
-                                borderRadius: 50 + "px",
-                              }}
-                              src={user.img}
-                              alt=''
-                            />
-                            <My_text ml={1}>{user.name}</My_text>
-                          </Stack>
-                        </Link>
+                        <Stack
+                          className='messageAnoymous hiddle'
+                          data-id={user.id}
+                          onClick={HandleMessage}
+                          direction='row'
+                          alignItems='center'
+                          mt={2}
+                          mb={1}
+                          style={{ cursor: "pointer", position: "relative" }}
+                          // className='anonymos_img'
+                        >
+                          <img
+                            style={{
+                              width: 60 + "px",
+                              height: 60 + "px",
+                              borderRadius: 50 + "px",
+                            }}
+                            src={user.img}
+                            alt=''
+                          />
+                          <My_text ml={1}>{user.name}</My_text>
+                        </Stack>
+
                         <Stack direction='row' alignItems='center'>
                           <DeleteIcon
                             className='deleteUser hiddle'
@@ -370,9 +402,9 @@ const Anonymous = () => {
                             }}
                           />
                           <MessageIcon
-                            className='messageAnoymous hiddle'
-                            data-id={user.id}
-                            onClick={HandleMessage}
+                            // className='messageAnoymous hiddle'
+                            // data-id={user.id}
+                            // onClick={HandleMessage}
                             style={{
                               color: "#fff",
                               padding: 4 + "px",
@@ -396,27 +428,26 @@ const Anonymous = () => {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <Link to={`/profile/${user.id}`}>
-                          <Stack
-                            direction='row'
-                            alignItems='center'
-                            mt={2}
-                            mb={1}
-                            style={{ cursor: "pointer", position: "relative" }}
-                            className='anonymos_img'
-                          >
-                            <img
-                              style={{
-                                width: 60 + "px",
-                                height: 60 + "px",
-                                borderRadius: 50 + "px",
-                              }}
-                              src={user.img}
-                              alt=''
-                            />
-                            <My_text ml={1}>{user.name}</My_text>
-                          </Stack>
-                        </Link>
+                        <Stack
+                          direction='row'
+                          alignItems='center'
+                          mt={2}
+                          mb={1}
+                          style={{ cursor: "pointer", position: "relative" }}
+                          className='anonymos_img'
+                        >
+                          <img
+                            style={{
+                              width: 60 + "px",
+                              height: 60 + "px",
+                              borderRadius: 50 + "px",
+                            }}
+                            src={user.img}
+                            alt=''
+                          />
+                          <My_text ml={1}>{user.name}</My_text>
+                        </Stack>
+
                         <Stack direction='row' alignItems='center'>
                           <DeleteIcon
                             className='deleteUser hiddle'
@@ -457,8 +488,9 @@ const Anonymous = () => {
           style={{
             width: 100 + "%",
             height: 100 + "%",
+            objectFit: "cover",
           }}
-          src={"https://haycafe.vn/wp-content/uploads/2021/12/hinh-nen-pc-hacker-cuc-chat.jpg"}
+          src={"https://st.quantrimang.com/photos/image/2018/01/05/bo-suu-tap-hinh-nen-3.jpg"}
           alt=''
         />
         {/*  */}
@@ -475,22 +507,21 @@ const Anonymous = () => {
               top: 0,
             }}
           >
-            <Stack direction='row' alignItems='center'>
-              <img
-                style={{
-                  width: 60 + "px",
-                  height: 60 + "px",
-                  borderRadius: 50 + "px",
-                  marginRight: 10 + "px",
-                }}
-                src={
-                  (UserOnlineId && UserOnlineId.img) ||
-                  `${process.env.PUBLIC_URL + "/assets/user.png"}`
-                }
-                alt=''
-              />
-              <My_text>{(UserOnlineId && UserOnlineId.name) || "User Name"}</My_text>
-            </Stack>
+            <Link to={`/profile/${(UserOnlineId && UserOnlineId.id) || users.id}`}>
+              <Stack direction='row' alignItems='center'>
+                <img
+                  style={{
+                    width: 60 + "px",
+                    height: 60 + "px",
+                    borderRadius: 50 + "px",
+                    marginRight: 10 + "px",
+                  }}
+                  src={(UserOnlineId && UserOnlineId.img) || `${users.Avarta}`}
+                  alt=''
+                />
+                <My_text>{(UserOnlineId && UserOnlineId.name) || users.name}</My_text>
+              </Stack>
+            </Link>
             <MoreHorizIcon
               onClick={() => {
                 setToggleOption(!toggleOption);
@@ -580,21 +611,25 @@ const Anonymous = () => {
                   fontSize: 35 + "px",
                 }}
               />
-              <a className='HylinkSearch' style={{ color: "#fff", cursor: "pointer" }}>
-                Tìm kiếm
-              </a>
-              <TextField
+
+              <input
+                className='inputSearchcontent'
                 value={searchContent}
                 onChange={(e) => setSearchContent(e.target.value)}
                 style={{
                   width: 100 + "%",
+                  height: 50 + "px",
+                  padding: 2 + "px",
+                  fontSize: 17 + "px",
                   borderStyle: "solid",
                   borderWidth: 1 + "px",
-                  borderColor: "#fff",
-                  color: "#fff !important",
+                  backgroundColor: "rgba(255, 255, 255, 10%)",
                   outline: "none",
                 }}
               />
+              <a className='HylinkSearch' style={{ color: "#fff", cursor: "pointer" }}>
+                <ArrowDownwardIcon />
+              </a>
             </Stack>
           </header>
         </Box>
@@ -641,7 +676,7 @@ const Anonymous = () => {
                           borderRadius: 24 + "px",
                         }}
                       >
-                        <div>
+                        <div id={`${message.id}`}>
                           <p className='contentMessage' id={message.id} style={{ fontWeight: 600 }}>
                             {message.content}
                           </p>
@@ -717,6 +752,36 @@ const Anonymous = () => {
             </div>
           )}
         </Box>
+        {listSearchUser &&
+          listSearchUser.map((mess) => {
+            return (
+              <a
+                href={`#${mess.id}`}
+                onClick={() => {
+                  document.querySelector(".Box_message").style.display = "block";
+                  console.log(document.getElementById(`${mess.id}`));
+                  document.getElementById(`${mess.id}`).style.backgroundColor = "#000";
+                  document.getElementById(`${mess.id}`).style.color = "#fff";
+                  document.getElementById(`${mess.id}`).style.borderRadius = 12 + "px";
+                  setListSearchUser("");
+                }}
+              >
+                <p
+                  style={{
+                    position: "absolute",
+                    maxWidth: 800 + "px",
+                    borderRadius: 32 + "px",
+                    marginBottom: 30 + "px",
+                    color: "#fff",
+                    left: 500,
+                    top: 200,
+                  }}
+                >
+                  {mess.content}
+                </p>
+              </a>
+            );
+          })}
       </Box>
 
       <Box
@@ -756,6 +821,35 @@ const Anonymous = () => {
               />
             )}
           </div>
+          <div
+            onClick={() => {
+              setToggleIcon(!toggleIcon);
+            }}
+            style={{ cursor: "pointer", marginRight: 2 + "px", position: "relative" }}
+          >
+            <FaSmile size={35} color='#FFF' />
+          </div>
+          <Stack
+            direction={"row"}
+            a
+            sx={{
+              display: "flex",
+              display: `${toggleIcon ? "block" : "none"}`,
+              position: "absolute",
+              top: -205 + "px",
+              flexWrap: "wrap",
+              width: 200 + "px",
+              height: 200 + "px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <FaSmile size={32} color='yellow' />
+            <FaSadTear size={32} color='blue' />
+            <FaGrin size={32} color='green' />
+            <FaDizzy size={32} color='purple' />
+            <FaAngry size={32} color='red' />
+            <FaMeh size={32} color='orange' />
+          </Stack>
           <TextField
             className={"inputMessageAnoymous"}
             style={{

@@ -62,6 +62,10 @@ const userApi = {
     const url = `/message/chat-unknown/${id}`;
     return axiosClient.get(url);
   },
+  changePassword(id, payload) {
+    const url = `/login/change_password/${id}`;
+    return axiosClient.post(url, payload);
+  },
 };
 
 export default userApi;

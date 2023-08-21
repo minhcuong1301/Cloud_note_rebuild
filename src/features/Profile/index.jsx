@@ -279,7 +279,7 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
             className='gapProfile'
             sx={{
               display: "flex",
-              gap: "50px",
+              gap: "30px",
               alignItems: "center",
               position: "relative",
               left: "13%",
@@ -301,6 +301,10 @@ function Profile({ usergg, data, handleDelNote, setArchivedData, toolsNote }) {
               </Typography>
               <Typography className='none' variant='h6' fontWeight={400}>
                 {usergg.email || profileInfo.createAccount}
+              </Typography>
+              {console.log(user)}
+              <Typography variant='h6' fontWeight={400}>
+                {user.gmail}
               </Typography>
             </Box>
             <Stack

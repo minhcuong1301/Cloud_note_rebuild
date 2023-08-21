@@ -31,6 +31,10 @@
   max-height: 470px;
   overflow: auto;
 }
+.inputSearchcontent {
+  padding-left: 5px;
+  color: #fff !important;
+}
 @media only screen and (min-width: 740px) and (max-width: 1024px) {
   .SideBarAy {
     max-width: 280px !important;

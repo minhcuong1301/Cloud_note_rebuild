@@ -62,14 +62,13 @@ function diff(color, otherColor) {
   return true;
 }
 
-
 function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const user =
-  useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
+    useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
   const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   const [selectedAvatarProfile, setSelectedAvatarProfile] = useState(null);
@@ -105,6 +104,8 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   const [showPassword2, setShowPassword2] = useState(false);
   const [valueLock2, setValueLock2] = useState("");
   const [openLock2, setOpenLock2] = useState(false);
+  const [valueChangePass, setValueChangePass] = useState("");
+  const [toogleLable, setToogleLable] = useState(false);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -131,37 +132,35 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   };
 
   async function uploadToImgBB(imageData) {
-    const apiKey = '75a856b5b33ad8e19d09ffe21758a1cf';
-  
+    const apiKey = "75a856b5b33ad8e19d09ffe21758a1cf";
+
     const formData = new FormData();
-    formData.append('image', imageData);
-  
-    const response = await fetch('https://api.imgbb.com/1/upload?key=' + apiKey, {
-      method: 'POST',
+    formData.append("image", imageData);
+
+    const response = await fetch("https://api.imgbb.com/1/upload?key=" + apiKey, {
+      method: "POST",
       body: formData,
     });
 
     const data = await response.json();
-  
+
     if (data && data.data && data.data.url) {
       return data.data.url;
     } else {
-      throw new Error('Failed to upload image to ImgBB');
+      throw new Error("Failed to upload image to ImgBB");
     }
   }
   const [editedName, setEditedName] = useState(user.name || usergg.name);
- 
+
   const handleEditProfile = async () => {
     if (checkJWT()) {
       return window.location.assign("/login");
     }
     const updatedData = {};
     const formData = new FormData();
-    formData.append("Avarta", selectedAvatar)
-    formData.append("AvtProfile", selectedAvatarProfile)
-   
-   
-    
+    formData.append("Avarta", selectedAvatar);
+    formData.append("AvtProfile", selectedAvatarProfile);
+
     if (selectedAvatarProfile) {
       const imgUrl = await uploadToImgBB(selectedAvatarProfile);
       updatedData.AvtProfile = imgUrl;
@@ -177,31 +176,26 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
       // Không có trường nào được cập nhật
       return;
     }
-      const dataToUpdate = {
-        userId: user.id,
-        ...updatedData
-        
-      };
+    const dataToUpdate = {
+      userId: user.id,
+      ...updatedData,
+    };
     console.log(updatedData);
 
-      console.log('dataToUpdate', dataToUpdate);
-      const response = await dispatch(updateProfile(dataToUpdate))
-  
-     console.log(response);
-      if (response) {
-     
-        localStorage.setItem(StorageKeys.USER, JSON.stringify(response.payload));
-        console.log('Updated user profile:', response.payload);
-        dispatch(updateUser(response.payload));
-        console.log(response.payload);
-        enqueueSnackbar("Profile update success", { variant: "success" });
-      } else {
-        console.log("sai");
-        enqueueSnackbar("Profile update failed ", { variant: "error" });
-      }
-    
+    console.log("dataToUpdate", dataToUpdate);
+    const response = await dispatch(updateProfile(dataToUpdate));
 
-
+    console.log(response);
+    if (response) {
+      localStorage.setItem(StorageKeys.USER, JSON.stringify(response.payload));
+      console.log("Updated user profile:", response.payload);
+      dispatch(updateUser(response.payload));
+      console.log(response.payload);
+      enqueueSnackbar("Profile update success", { variant: "success" });
+    } else {
+      console.log("sai");
+      enqueueSnackbar("Profile update failed ", { variant: "error" });
+    }
   };
   const handleChangeAvt = () => {
     const inputFile = document.getElementById("input-file-avt");
@@ -214,7 +208,6 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
     }
   };
 
-
   const handleChangeAvtProfile = () => {
     const inputFileAvatar = document.getElementById("input-file-avtprofile");
     inputFileAvatar.click();
@@ -225,10 +218,8 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
     if (file) {
       setSelectedAvatarProfile(file);
     }
-    
   };
 
-  
   const handleOkLock2 = async () => {
     try {
       const res = await userApi.lock2(user.id, { password_2: valueLock2 });
@@ -289,6 +280,28 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
     } catch (error) {
       console.log(error);
     }
+  };
+  ///hanlde changer pass
+  const handleChangePassword = () => {
+    const inputChangePassword = document.querySelector(".inputChangePassword");
+    const editChangePassword = document.querySelector(".editChangePassword");
+    editChangePassword.style.display = "none";
+    inputChangePassword.style.display = "block";
+  };
+  useEffect(() => {}, [valueChangePass]);
+  const handleCofimPassword = () => {
+    userApi
+      .changePassword(user.id, { ...user, password: valueChangePass })
+      .then((data) => {
+        enqueueSnackbar("xác nhận thành công vui lòng check email or spam", { variant: "success" });
+        setToogleLable(!toogleLable);
+        console.log(data);
+      })
+      .catch((e) => {
+        enqueueSnackbar("xác nhận không thành công vui lòng nhập lại mật khẩu", {
+          variant: "error",
+        });
+      });
   };
   return (
     <div
@@ -376,30 +389,28 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
               content_1={<span style={{ fontWeight: 600 }}>Avatar:</span>}
               content_2={
                 <div className='avt'>
-                  {selectedAvatar  ? (
+                  {selectedAvatar ? (
                     <Image
                       style={{ borderRadius: "50%" }}
                       width={50}
                       height={50}
                       src={
-                       
                         URL.createObjectURL(selectedAvatar) ||
                         usergg.Avarta ||
-                        "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"}
-                      alt="Selected Avatar"
+                        "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
+                      }
+                      alt='Selected Avatar'
                     />
-                  ):(
+                  ) : (
                     <Image
                       style={{ borderRadius: "50%" }}
                       width={50}
                       height={50}
-                      src={
-                        user.Avarta
-                       }
-                      alt="Selected Avatar"
+                      src={user.Avarta}
+                      alt='Selected Avatar'
                     />
                   )}
-                
+
                   <Button onClick={handleChangeAvt}>Choose</Button>
                   <input
                     type='file'
@@ -417,7 +428,7 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                 <TextField
                   id='outlined-basic'
                   variant='outlined'
-                  value={editedName||usergg.name }
+                  value={editedName || usergg.name}
                   onChange={(e) => setEditedName(e.target.value)}
                 />
               }
@@ -426,30 +437,28 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
               content_1={<span style={{ fontWeight: 600 }}>Cover image:</span>}
               content_2={
                 <div className='avt'>
-                  {selectedAvatarProfile  ? (
+                  {selectedAvatarProfile ? (
                     <Image
                       style={{ borderRadius: "50%" }}
                       width={50}
                       height={50}
                       src={
-                       
                         URL.createObjectURL(selectedAvatarProfile) ||
                         usergg.AvtProfile ||
-                        "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"}
-                      alt="Selected Avatar"
+                        "https://i.pinimg.com/736x/e0/7a/22/e07a22eafdb803f1f26bf60de2143f7b.jpg"
+                      }
+                      alt='Selected Avatar'
                     />
-                  ):(
+                  ) : (
                     <Image
                       style={{ borderRadius: "50%" }}
                       width={50}
                       height={50}
-                      src={
-                        user.AvtProfile
-                       }
-                      alt="Selected Avatar"
+                      src={user.AvtProfile}
+                      alt='Selected Avatar'
                     />
                   )}
-                
+
                   <Button onClick={handleChangeAvtProfile}>Choose</Button>
                   <input
                     type='file'
@@ -463,6 +472,28 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
             <BoxDoubleContent
               content_1={<span style={{ fontWeight: 600 }}>Gmail:</span>}
               content_2={usergg.email || user.gmail}
+            />
+            <BoxDoubleContent
+              content_1={<span style={{ fontWeight: 600 }}>PassWord Change:</span>}
+              content_2={
+                <div>
+                  <div className='editChangePassword' style={{}} onClick={handleChangePassword}>
+                    ****** <Button onClick={handleEditP2}>Edit</Button>
+                  </div>
+                  <div
+                    className='inputChangePassword'
+                    style={{ display: "none" }}
+                    onClick={handleChangePassword}
+                  >
+                    <TextField
+                      label={`${toogleLable ? "nhập mật khẩu mới" : "xác nhận mật khẩu cũ"}`}
+                      value={valueChangePass}
+                      onChange={(e) => setValueChangePass(e.target.value)}
+                    ></TextField>
+                    <Button onClick={handleCofimPassword}>Xác Nhận</Button>
+                  </div>
+                </div>
+              }
             />
             <BoxDoubleContent
               content_1={<span style={{ fontWeight: 600 }}>Password 2:</span>}
@@ -490,18 +521,18 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                   Update Profile
                 </Button>
               }
-            // content_2={
-            //   <Button
-            //     variant='contained'
-            //     onClick={() => {
-            //       setOpenLock(true);
-            //     }}
-            //     size='small'
-            //     sx={{ marginTop: "15px" }}
-            //   >
-            //     Delete Account
-            //   </Button>
-            // }
+              // content_2={
+              //   <Button
+              //     variant='contained'
+              //     onClick={() => {
+              //       setOpenLock(true);
+              //     }}
+              //     size='small'
+              //     sx={{ marginTop: "15px" }}
+              //   >
+              //     Delete Account
+              //   </Button>
+              // }
             />
           </Box>
           <Divider variant='middle' sx={{ maxWidth: "500px", minWidth: "300px" }} />
