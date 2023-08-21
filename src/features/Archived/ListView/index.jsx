@@ -217,11 +217,11 @@ function ListView({
                     color:  "rgb(79 73 73 / 80%)",
                     padding:  "5px 8px" ,
                     position: "relative",
-                    width:"100%",
+                    width:"100px",
                     marginRight: "15px",
                 }}
             >
-                Create at: 
+                Update at: 
                 {/* {dayjs(dataItem.createAt).format("DD/MM/YYYY hh:mm A")} */}
             </div>
                 </Button>
