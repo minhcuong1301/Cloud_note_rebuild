@@ -117,6 +117,7 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   const [valueLock2, setValueLock2] = useState("");
   const [openLock2, setOpenLock2] = useState(false);
   const [valueChangePass, setValueChangePass] = useState("");
+  const [valueChangePassNew, setValueChangePassNew] = useState("");
   const [toogleLable, setToogleLable] = useState(false);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -303,9 +304,20 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
   useEffect(() => {}, [valueChangePass]);
   const handleCofimPassword = () => {
     userApi
-      .changePassword(user.id, { ...user, password: valueChangePass })
+      .changePassword(user.id, {
+        ...user,
+        password: valueChangePass,
+        new_password: valueChangePassNew,
+      })
       .then((data) => {
-        enqueueSnackbar("xác nhận thành công vui lòng check email or spam", { variant: "success" });
+        if (data == "password is not correct") {
+          return enqueueSnackbar("xác nhận không thành công vui lòng nhập lại mật khẩu", {
+            variant: "error",
+          });
+        }
+        enqueueSnackbar("xác nhận thành công vui lòng check email or spam", {
+          variant: "success",
+        });
         setToogleLable(!toogleLable);
         console.log(data);
       })
@@ -498,9 +510,15 @@ function Settings({ usergg, setDf_nav, setColorNote, setUser }) {
                     onClick={handleChangePassword}
                   >
                     <TextField
-                      label={`${toogleLable ? "nhập mật khẩu mới" : "xác nhận mật khẩu cũ"}`}
+                      label={"xác nhận mật khẩu cũ"}
                       value={valueChangePass}
                       onChange={(e) => setValueChangePass(e.target.value)}
+                    ></TextField>
+
+                    <TextField
+                      label={"nhập mật khẩu mới"}
+                      value={valueChangePassNew}
+                      onChange={(e) => setValueChangePassNew(e.target.value)}
                     ></TextField>
                     <Button onClick={handleCofimPassword}>Xác Nhận</Button>
                   </div>

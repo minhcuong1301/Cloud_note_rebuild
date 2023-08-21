@@ -54,7 +54,6 @@ const diffTime = (lastDate) => {
 };
 
 export default function LandingPage() {
-
   const [menu, setMenu] = useState(false);
   const [listUserMostNote, setUserMostNote] = useState([]);
   const [newUsers, setNewUsers] = useState([]);
@@ -63,7 +62,6 @@ export default function LandingPage() {
   const [largeNote, setLargeNote] = useState(-1);
   const [theme, setTheme] = useState(true);
   const [listUserOnline, setlistUserOnline] = useState([]);
-
   useEffect(() => {
     userApi.getNewUsers().then((res) => setNewUsers(res.data.slice(0, 5)));
     userApi.userOnline().then((res) => {
@@ -82,7 +80,11 @@ export default function LandingPage() {
       })
       .then((notes) => setNewNotes(notes));
   }, []);
-
+  useEffect(() => {
+    noteApi.getNumberNote().then((data) => {
+      setUserMostNote(data.data);
+    });
+  }, [listUserMostNote]);
   const changeTheme = (val) => {
     setTheme(val);
   };
@@ -112,9 +114,11 @@ export default function LandingPage() {
           {/* <div className={cx("item")}>
             <Link to='/upload'>Upload</Link>
           </div> */}
-          <div className={cx("item")}>Contact Us</div>
+          <Link target='_blank' to={"https://thinkdiff.us/"}>
+            <div className={cx("item")}>Contact Us</div>
+          </Link>
           <div className={cx("item")}>Help</div>
-          <div className={cx("item")}>Blog</div> 
+          <div className={cx("item")}>Blog</div>
           <div className={cx("item")}>Support Forum</div>
           {!checkJWT() || (
             <>
@@ -147,17 +151,24 @@ export default function LandingPage() {
 
           <div className={cx("positive-users")}>
             <div className={cx("sort")}>Member</div>
-            <div className={cx("refresh")}>Refresh</div>
+            <div
+              onClick={() => {
+                window.location.assign("/");
+              }}
+              className={cx("refresh")}
+            >
+              Refresh
+            </div>
             <div className={cx("list")}>
-              {[1, 2, 3, 4, 5]
-                .map((item, index) => Math.floor(Math.random() * 750) + 251)
-                .sort((a, b) => b - a)
-                .map((item, index) => {
+              {listUserMostNote &&
+                listUserMostNote.map((item, index) => {
                   return (
                     <div className={cx("list-item")} key={index}>
-                      <div className={cx("index")}>{index}</div>
-                      <div className={cx("name")}>user {index}</div>
-                      <div className={cx("count")}></div> {item} notes
+                      <div className={cx("index")}>{index + 1}</div>
+                      <Link className={cx("name")} to={`profile/${item.idUser}`}>
+                        {item.name}
+                      </Link>
+                      <div className={cx("count")}></div> {item.nbnote} notes
                     </div>
                   );
                 })}
@@ -186,22 +197,24 @@ export default function LandingPage() {
               {newUsers &&
                 [...newUsers].map((user, index) => {
                   return (
-                    <div
-                      className={cx("user")}
-                      key={index}
-                      style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}
-                    >
+                    <Link to={`profile/${user.id}`}>
                       <div
-                        className={cx("avatar")}
-                        style={{ display: "flex", alignItems: "center" }}
+                        className={cx("user")}
+                        key={index}
+                        style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}
                       >
-                        <img src={user.linkAvatar} alt='' width={40} height={40} />
-                        {index}
+                        <div
+                          className={cx("avatar")}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <img src={user.linkAvatar} alt='' width={40} height={40} />
+                          {index}
+                        </div>
+                        <div className={cx("name")}>{user.name}</div>
+                        <div className={cx("date")}>{diffTime(user.createAt)}</div>
+                        <div className={cx("mail")}>{user.user_name}</div>
                       </div>
-                      <div className={cx("name")}>{user.name}</div>
-                      <div className={cx("date")}>{diffTime(user.createAt)}</div>
-                      <div className={cx("mail")}>{user.user_name}</div>
-                    </div>
+                    </Link>
                   );
                 })}
             </div>
@@ -410,13 +423,29 @@ function Note({ note, active, index, large = false, clearLarge }) {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const textRef = useRef(null);
   const clipboard = () => {
     navigator.clipboard.writeText("http://samnotes.online/note/" + noteId);
     enqueueSnackbar("Copied to Clipboard", { variant: "success" });
     handleClose();
     console.log("Clipboard");
   };
+  function handleKeyDown(event) {
+    if (event.which == 17 && event.key === "a") {
+      event.preventDefault();
+
+      selectText();
+    }
+  }
+
+  function selectText() {
+    const textNode = textRef.current;
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
 
   return (
     <div
@@ -440,7 +469,11 @@ function Note({ note, active, index, large = false, clearLarge }) {
         <span>{diffTime(note.createAt)}</span>
       </div>
       {(note.type === "text" || note.type === "image") && (
-        <div className={cx("content")}>{note.data}</div>
+        <div onKeyDown={handleKeyDown}>
+          <div ref={textRef} className={cx("content")}>
+            {note.data}
+          </div>
+        </div>
       )}
       {note.metaData && (
         <div className={cx("image")}>
@@ -461,6 +494,25 @@ function Note({ note, active, index, large = false, clearLarge }) {
       >
         Share
       </Button>
+      {console.log(note)}
+      {note.username && (
+        <Link to={`/profile/${note.idUser}`}>
+          <p
+            style={{
+              position: "absolute",
+              color: "#fff",
+              right: 25 + "px",
+              bottom: 25 + "px",
+              background: "#1976d2",
+              padding: 7 + "px",
+              cursor: "pointer",
+              borderRadius: 8 + "px",
+            }}
+          >
+            {note.username}
+          </p>
+        </Link>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Share</DialogTitle>
         <DialogContent>

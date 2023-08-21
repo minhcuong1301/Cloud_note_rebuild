@@ -17,7 +17,7 @@ import { convertColor } from "../../constants";
 import { Header } from "antd/es/layout/layout";
 import noteApi from "../../api/noteApi";
 import userApi from "../../api/userApi";
-
+import ToolsNote from "../ToolsNote";
 const Note = () => {
   const [data, setData] = useState(null);
   const [open, setOpen] = useState(false);
@@ -54,7 +54,6 @@ const Note = () => {
       }
     });
   }, []);
-
 
   console.log(profile);
   return (
@@ -103,14 +102,24 @@ const Note = () => {
               })}
             </Box>
           )}
+          <ToolsNote
+            type='Edit'
+            options={""}
+            handleChangeNote={""}
+            handleOptionsNote={""}
+            handleDelNote={""}
+            handleNoteForm={""}
+            dataItem={""}
+          />
           {data.type === "image" && (
             <Box>
               <img src={data.metaData} alt='' style={{ width: "100%", objectFit: "contain" }} />
             </Box>
           )}
+
           <Button sx={{ marginTop: "30px" }} variant='contained' onClick={handleClickOpen}>
             Share
-          </Button>       
+          </Button>
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Share</DialogTitle>
             <DialogContent>
@@ -127,8 +136,8 @@ const Note = () => {
               <Button onClick={clipboard}> COPY URL</Button>
             </DialogActions>
           </Dialog>
-          <Typography 
-            variant="subtitle1"
+          <Typography
+            variant='subtitle1'
             sx={{
               position: "relative",
               top: "2%",
@@ -136,7 +145,7 @@ const Note = () => {
               fontWeight: "bold",
               fontSize: "14px",
             }}
-            >
+          >
             Created by: {profile && profile.name}
           </Typography>
         </Box>
