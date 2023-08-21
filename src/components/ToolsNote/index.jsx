@@ -241,8 +241,7 @@ function ToolsNote({
             </ListItemButton>
           )}
               <DateTimePicker
-                open={popRemind}
-                minDateTime={dayjs().set('hour', new Date().getHours() ).set('minute', new Date().getMinutes() + 30).startOf("minute")}
+                minDateTime={dayjs().set('hour', new Date().getHours() ).set('minute', new Date().getMinutes() + 1).startOf("minute")}
                 onAccept={() => {
                   setPopRemind(false);
                   handleOptionsNote({
@@ -275,6 +274,10 @@ function ToolsNote({
                 }}
                 onChange={(newValue) => {
                   if(( new Date(new Date().getTime() + (30 * 60)) ) < new Date(dayjs(newValue))) setRemindAt(newValue);
+                  else {
+                    enqueueSnackbar("Can not select before today", {variant: "warning"}); 
+                    setRemindAt(new Date())
+                  }
                 }}
               />
 
@@ -413,7 +416,6 @@ function ToolsNote({
           )}
 
           <DateTimePicker
-            open={popDate}
             minDateTime={dayjs().set('hour', new Date().getHours()).set('minute', new Date().getMinutes()).startOf("minute")}
             onAccept={() => {
               setPopDate(false);
@@ -445,7 +447,11 @@ function ToolsNote({
               right: "15px",
             }}
             onChange={(newValue) => {
-              if( new Date()  < new Date(dayjs(newValue))) setDueAt(newValue);
+              if( new Date()  < new Date(dayjs(newValue).format("YYYY/MM/DD hh:mm:ss A"))) setDueAt(newValue);
+              else {
+                enqueueSnackbar("Can not select before today", {variant: "warning"});
+                setDueAt(new Date())
+              }
             }}
           />
         </ListItem>

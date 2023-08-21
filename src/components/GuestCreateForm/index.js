@@ -118,6 +118,7 @@ export default function GuestCreateForm({ clear }) {
       setShareLink(shareLink);
       enqueueSnackbar("Note was created successfully", { variant: "success" });
       setIsNoteCreated(true); 
+      if(res.status === 200) window.location.href = "/home/archived";
     } catch (err) {
       setError('Failed to create note. Please try again.');
       enqueueSnackbar(err.message, { variant: "error" });
@@ -210,6 +211,7 @@ const copyToClipboard = (text) => {
         <input
           type='text'
           tabIndex={1}
+          maxLength={100}
           placeholder="Note's title"
           onChange={(e) => setTitle(e.target.value)}
         />

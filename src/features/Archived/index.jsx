@@ -20,7 +20,7 @@ import { Tab } from "@mui/material";
 
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import MoreTimeIcon from "@mui/icons-material/MoreTime";
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
@@ -37,11 +37,19 @@ Archived.propTypes = {
 Archived.defaultProps = {};
 
 function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
+
   const [value, setValue] = useState("");
   const [dataFilter, setDataFilter] = useState([]);
   const [construct, setConstruct] = useState("List");
   const { view } = useSelector((state) => state.settings);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [isTabsOpen, setIsTabsOpen] = useState(false);
+  const [tabValue, setTabValue] = useState("1");
+  const [filteredData, setFilteredData] = useState(dataFilter);
+  const [sortByLatest, setSortByLatest] = useState(true);
+  const [countRemind, setCountRemind] = useState(0);
+  const [sortAscending, setSortAscending] = useState(true);
+  const [infoUser, setInfoUser] = useState([]);
   const [drawerEdit, setDrawerEdit] = useState(false);
   const [originalData, setOriginalData] = useState([]);
 
@@ -51,12 +59,19 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
     // setDrawerEdit((prevState) => true);
   };
 
-  const user =
-    useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
-
-  const [infoUser, setInfoUser] = useState([]);
+  const user = useSelector((state) => state.user.current) || JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
+
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
+  const overlayRef = useRef(null);
+
+  const toggleTabs = () => {
+    setIsTabsOpen(!isTabsOpen);
+  };
 
   useEffect(() => {
     (async () => {
@@ -87,20 +102,13 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
 
   useEffect(() => {
     setDataFilter(data);
+    setCountRemind(data.filter(e => e.remindAt && new Date(e.remindAt) < new Date()).length)
   }, [data]);
-  const [isTabsOpen, setIsTabsOpen] = useState(false);
-  const [tabValue, setTabValue] = useState("1");
 
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
-  const overlayRef = useRef(null);
-
-  const toggleTabs = () => {
-    setIsTabsOpen(!isTabsOpen);
-  };
-
+  useMemo(()=> {
+      if(countRemind) document.title = `(${countRemind}) Cloud note`;
+  }, [countRemind])
+  
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (isTabsOpen && overlayRef.current && !overlayRef.current.contains(event.target)) {
@@ -114,12 +122,11 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [isTabsOpen]);
+  
   function getColorObjectFromColorName(colorName) {
     return colorMapping[colorName] || null;
   }
-  const [filteredData, setFilteredData] = useState(dataFilter);
-  const [sortByLatest, setSortByLatest] = useState(true);
-  console.log(filteredData);
+  
   const handleOverlayClick = (event) => {
     const isInsideTabContext = event.target.closest(".tabbb");
     const isInsideTabPanel = event.target.closest(".MuiTabPanel-root");
@@ -175,6 +182,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
     console.log(filteredData);
     setIsTabsOpen(false);
   };
+
   const handleSortByOldest = () => {
     const sortedData = [...dataFilter]
       .slice(0, 50)
@@ -183,7 +191,6 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
     setFilteredData(sortedData.reverse());
     setIsTabsOpen(false); //
   };
-  const [sortAscending, setSortAscending] = useState(true);
   const handleSortByAlphabetically = () => {
     const dataToSort = [...filteredData];
 

@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import KeyIcon from "@mui/icons-material/Key";
+import Badge from '@mui/material/Badge';
 import EditForm from "../EditForm";
 import "./ListView.css";
 import noteApi from "../../../api/noteApi";
 import { enqueueSnackbar } from "notistack";
-
 import { checkJWT } from "../../../constants";
-
 import { useLocation } from "react-router-dom/dist";
+import dayjs from "dayjs";
 
 function ListView({
   construct = "Grid",
@@ -76,7 +76,7 @@ function ListView({
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          gap: "8px",
+          gap: "15px",
           padding: "0 20px",
         }}
       >
@@ -139,12 +139,20 @@ function ListView({
               </div>
             ))
           : data.slice(0, 50).map((item, index) => (
-              <div key={index}>
+              <div key={index} style={{position: "relative"}}>
+                { //Them badge voi nhung note da toi ngay remind
+                  (item.remindAt && new Date(item.remindAt) < new Date()) && (
+                    <Badge color="warning" badgeContent=""
+                    sx={{
+                      position: "absolute"
+                    }}
+                    />
+                )}
                 <Button
                   sx={{
                     backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
                     color: "#000",
-                    padding: "10px 16px",
+                    padding: "12px 16px",
                     width: "100%",
                     display: "grid",
                     gridTemplateColumns: "50px 1fr",
