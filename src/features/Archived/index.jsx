@@ -108,17 +108,7 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
   useMemo(()=> {
       if(countRemind) document.title = `(${countRemind}) Cloud note`;
   }, [countRemind])
-
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
-  const overlayRef = useRef(null);
-
-  const toggleTabs = () => {
-    setIsTabsOpen(!isTabsOpen);
-  };
-
+  
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (isTabsOpen && overlayRef.current && !overlayRef.current.contains(event.target)) {
