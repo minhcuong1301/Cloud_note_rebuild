@@ -20,7 +20,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { FaSmile, FaSadTear, FaGrin, FaDizzy, FaAngry, FaMeh } from "react-icons/fa";
 const Anonymous = () => {
-  const [currentMessageId, setCurrentMessageId] = useState(null);
+  const [CountMessage, setCountMessage] = useState(0);
   const [getMessage, setGetMessageuser] = useState([]);
   const [messageContent, setMessageContent] = useState("");
   const [searchContent, setSearchContent] = useState("");
@@ -56,7 +56,12 @@ const Anonymous = () => {
       });
     });
   };
-
+  useEffect(() => {
+    //
+    setCountMessage(getMessage.length);
+    console.log(CountMessage);
+    document.title = `Bạn đang có ${getMessage.length} tin nhắn`;
+  }, [CountMessage]);
   useEffect(() => {
     const check = listUserOnline.filter((user, index) => user.name.includes(inputUser));
     setListInputUser(check);
@@ -646,7 +651,7 @@ const Anonymous = () => {
           }}
         >
           {UserOnlineId &&
-            getMessage.map((message) => {
+            getMessage.map((message, index) => {
               return UserOnlineId.id == message.idSend ? (
                 <Stack key={message.id} mt={4} direction='column' alignItems='center'>
                   <Stack
@@ -661,8 +666,8 @@ const Anonymous = () => {
                   >
                     <>
                       <img
-                        style={{ width: 60 + "px", height: 60 + "px" }}
-                        src={`${process.env.PUBLIC_URL + "/assets/user.png"}`}
+                        style={{ width: 60 + "px", height: 60 + "px", borderRadius: 50 + "px" }}
+                        src={`${UserOnlineId.img || process.env.PUBLIC_URL + "/assets/user.png"}`}
                         alt=''
                       ></img>
                       <Box
