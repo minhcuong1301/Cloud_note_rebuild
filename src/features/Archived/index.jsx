@@ -332,26 +332,8 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
                     <div className='color green5'></div>
                     <div className='color purple'></div>
                   </TabPanel>
-                  <TabPanel className='nn' value='2'>
-                    <div className='custom-tab' onClick={handleSortByLatest}>
-                      <AccessTimeIcon /> By lastest record
-                    </div>
-                    <div className='custom-tab' onClick={handleSortByOldest}>
-                      <MoreTimeIcon /> By oldest record
-                    </div>
-                    <div className='custom-tab' onClick={handleSortByAlphabetically}>
-                      <SortByAlphaIcon /> By alphabetically
-                    </div>
-                    {/* <div className="custom-tab"><NotificationsActiveIcon/> By reminder time</div> */}
-                  </TabPanel>
-                  <TabPanel className='nn' value='3'>
-                    <div className='custom-tab' onClick={() => handleToggleView("List")}>
-                      <FormatListNumberedRtlIcon /> List
-                    </div>
-                    <div className='custom-tab' onClick={() => handleToggleView("Grid")}>
-                      <GridViewOutlined /> Grid
-                    </div>
-                  </TabPanel>
+                  
+                  
 
                 <TabPanel className="nn" value="2">
                   <div className="custom-tab" onClick={handleSortByLatest}><AccessTimeIcon/> By lastest record</div>

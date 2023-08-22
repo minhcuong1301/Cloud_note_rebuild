@@ -45,7 +45,11 @@ function ListView({
       setSelected(null);
     }
   };
-
+  // const a =data.map((item,index)=>(
+  //   <div key={index}>
+  //     {console.log(item)}
+  //   </div>
+  // ))
   const unlockNote = async () => {
     try {
       const lockNote = await noteApi.openNote(data[selected].idNote, { pass_lock: password });
@@ -75,7 +79,7 @@ function ListView({
         sx={{
           width: "100%",
           display: "flex",
-     
+
           flexDirection: "column",
           gap: "8px",
           padding: "0 20px",
@@ -83,150 +87,167 @@ function ListView({
       >
         {toggleNote === true
           ? limitedData.map((item, index) => (
-              <div key={index}>
-             
-                <Button
-                  sx={{
-                    backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
-                    color: "#000",
-                    padding: "10px 16px",
-                
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: "50px 1fr",
-                    textAlign: "left",
-                    
-                  }}
-                  onClick={() => {
-                    setSelected(item.idNote);
+            <div key={index}>
 
-                    setDialog(true);
-                    window.history.pushState({}, "", `/note/${item.idNote}`);
+              <Button
+                sx={{
+                  backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
+                  color: "#000",
+                  padding: "10px 16px",
+
+                  width: "100%",
+                  display: "grid",
+                  gridTemplateColumns: "50px 1fr",
+                  textAlign: "left",
+
+                }}
+                onClick={() => {
+                  setSelected(item.idNote);
+
+                  setDialog(true);
+                  window.history.pushState({}, "", `/note/${item.idNote}`);
+                }}
+
+              >
+
+                {item.type === "text" && (
+                  <ListItemIcon>
+                    <TextSnippetOutlined fontSize='small' />
+                  </ListItemIcon>
+                )}
+                {item.type === "checklist" && (
+                  <ListItemIcon>
+                    <ListAltOutlined fontSize='small' />
+                  </ListItemIcon>
+                )}
+                {item.type === "image" && (
+                  <ListItemIcon className='none'>
+                    <Photo fontSize='small' />
+                  </ListItemIcon>
+                )}
+                <span
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "flex",
+                    alignItems: "center",
                   }}
-                  
+                  title={item.title}
                 >
-                  
-                  {item.type === "text" && (
-                    <ListItemIcon>
-                      <TextSnippetOutlined fontSize='small' />
-                    </ListItemIcon>
-                  )}
-                  {item.type === "checklist" && (
-                    <ListItemIcon>
-                      <ListAltOutlined fontSize='small' />
-                    </ListItemIcon>
-                  )}
-                  {item.type === "image" && (
-                    <ListItemIcon className='none'>
-                      <Photo fontSize='small' />
-                    </ListItemIcon>
-                  )}
-                  <span
-                    style={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                    title={item.title}
-                  >
-                    {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                    {item.title.length === 0 ? "No title" : item.title}
-                  </span>
-                  {item.type === "image" && (
-                    <img
-                      src={item.metaData}
-                      alt={item.title}
-                      style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
-                    />
-                  )}
-                </Button>
-              </div>
-            ))
+                  {item.lock && <KeyIcon style={{ color: "#33f" }} />}
+                  {item.title.length === 0 ? "No title" : item.title}
+                </span>
+                {item.type === "image" && (
+                  <img
+                    src={item.metaData}
+                    alt={item.title}
+                    style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
+                  />
+                )}
+              </Button>
+            </div>
+          ))
           : data.slice(0, 50).map((item, index) => (
-              <div key={index}>
-                <Button
-                  sx={{
-                    backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
-                    color: "#000",
-                    padding: "10px 16px",
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: "50px 1fr",
-                    textAlign: "left",
-                  }}
-                  onClick={() => {
-                    if (checkJWT()) {
-                      return window.location.assign("/login");
-                    }
-                    // setSelected(item.idNote);
-                    setSelected(index);
+            <div key={index}>
 
-                    setDialog(true);
-                    if (item.notePublic === 1) {
-                      return window.history.pushState({}, "", `/note/${item.idNote}`);
-                    }
-                    window.history.pushState({}, "", "/home/archived");
+
+              <Button
+                sx={{
+                  backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,
+                  color: "#000",
+                  padding: "10px 16px",
+                  width: "100%",
+                  display: "grid",
+                  gridTemplateColumns: "50px 1fr",
+                  textAlign: "left",
+                }}
+                onClick={() => {
+                  if (checkJWT()) {
+                    return window.location.assign("/login");
+                  }
+                  // setSelected(item.idNote);
+                  setSelected(index);
+
+                  setDialog(true);
+                  if (item.notePublic === 1) {
+                    return window.history.pushState({}, "", `/note/${item.idNote}`);
+                  }
+                  window.history.pushState({}, "", "/home/archived");
+                }}
+              >
+
+                {item.type === "text" && (
+                  <ListItemIcon>
+                    <TextSnippetOutlined fontSize='small' />
+                  </ListItemIcon>
+                )}
+                {item.type === "checklist" && (
+                  <ListItemIcon>
+                    <ListAltOutlined fontSize='small' />
+                  </ListItemIcon>
+                )}
+                {item.type === "image" && (
+                  <ListItemIcon>
+                    <Photo fontSize='small' />
+                  </ListItemIcon>
+                )}
+
+                <span
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "flex",
+                    alignItems: "center",
                   }}
+                  title={item.title}
                 >
-                  
-                  {item.type === "text" && (
-                    <ListItemIcon>
-                      <TextSnippetOutlined fontSize='small' />
-                    </ListItemIcon>
-                  )}
-                  {item.type === "checklist" && (
-                    <ListItemIcon>
-                      <ListAltOutlined fontSize='small' />
-                    </ListItemIcon>
-                  )}
-                  {item.type === "image" && (
-                    <ListItemIcon>
-                      <Photo fontSize='small' />
-                    </ListItemIcon>
-                  )}
-                  
-                  <span
-                    style={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                    title={item.title}
-                  >
-                    {item.lock && <KeyIcon style={{ color: "#33f" }} />}
-                    {item.title.length === 0 ? "No title" : item.title}
-                  </span>
-                  {item.type === "image" && (
-                    <img
-                      src={item.metaData}
-                      alt={item.title}
-                      style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
-                    />
-                  )}
-                   <div
-                style={{
+                  {item.lock && <KeyIcon style={{ color: "#33f" }} />}
+                  {item.title.length === 0 ? "No title" : item.title}
+                </span>
+                {item.type === "image" && (
+                  <img
+                    src={item.metaData}
+                    alt={item.title}
+                    style={{ width: "100%", objectFit: "contain", gridColumn: "span 2" }}
+                  />
+                )}
+                <div
+                  style={{
                     fontWeight: 500,
                     fontSize: "14px",
-                    background:  "rgba(255, 255, 255, 0.160784)" ,
+                    background: "rgba(255, 255, 255, 0.160784)",
                     borderRadius: "3px",
                     display: "inline-block",
-                    color:  "rgb(79 73 73 / 80%)",
-                    padding:  "5px 8px" ,
+                    color: "rgb(79 73 73 / 80%)",
+                    padding: "5px 8px",
                     position: "relative",
-                    width:"100px",
+                    width: "235px",
                     marginRight: "15px",
-                }}
-            >
-                Update at: 
-                {/* {dayjs(dataItem.createAt).format("DD/MM/YYYY hh:mm A")} */}
+                  }}
+                >
+                  Update at:
+                  <span>{" "}
+                    {new Date().toLocaleDateString() ===new Date(item.updateAt).toLocaleDateString() ? (
+                      new Date(item.updateAt).getHours() === new Date().getHours() ? (
+                        new Date(item.updateAt).getMinutes() === new Date().getMinutes() ? (
+                          "Just now"
+                        ) : (
+                          new Date(item.updateAt).getMinutes() + " minutes ago"
+                        )
+                      ) : (
+                        new Date(item.updateAt).getHours() + " hours ago"
+                      )
+                    ) : new Date().getDate() - new Date(item.updateAt).getDate() === 1 ? (
+                      "Yesterday"
+                    ) : (
+                      new Date(item.updateAt).toLocaleString()
+                    )}</span>
+                </div>
+              </Button>
             </div>
-                </Button>
-              </div>
-            ))}
+          ))}
       </Box>
 
       {data[selected] &&
