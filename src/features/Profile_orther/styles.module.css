@@ -65,14 +65,14 @@
 .styleFist {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 10px;
   display: flex;
 }
 .styleLast {
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  justify-content: start;
+  justify-content: flex-start;
   display: flex;
   gap: 10px;
 }

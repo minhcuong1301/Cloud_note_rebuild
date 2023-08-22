@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import KeyIcon from "@mui/icons-material/Key";
-import Badge from '@mui/material/Badge';
+import Badge from "@mui/material/Badge";
 import EditForm from "../EditForm";
 import "./ListView.css";
 import noteApi from "../../../api/noteApi";
@@ -60,6 +60,20 @@ function ListView({
     }
   };
 
+  const handleNoteForm = async (value, idNote) => {
+    const configParam = {
+      ...value
+    };
+    try {
+      const res = await noteApi.editNote(idNote, configParam);
+
+      enqueueSnackbar(res.message, { variant: "success" });
+      setArchivedData(idNote, res.note);
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: "error" });
+    }
+  };
+
   return (
     <Box
       className='root'
@@ -77,7 +91,8 @@ function ListView({
           display: "flex",
           flexDirection: "column",
           gap: "15px",
-          padding: "0 20px",
+          padding: "10px 20px",
+          boxSizing: "border-box"
         }}
       >
         {toggleNote === true
@@ -139,15 +154,21 @@ function ListView({
               </div>
             ))
           : data.slice(0, 50).map((item, index) => (
-              <div key={index} style={{position: "relative"}}>
-                { //Them badge voi nhung note da toi ngay remind
+              <div key={index} 
+              style={{position: "relative"}}
+              onClick={() => {
+                if(item.remindAt && new Date(item.remindAt) < new Date()) {
+                  handleNoteForm(
+                    {remindAt: null}, 
+                    item.idNote)
+                }
+              }}
+              >
+                {
                   (item.remindAt && new Date(item.remindAt) < new Date()) && (
-                    <Badge color="warning" badgeContent=""
-                    sx={{
-                      position: "absolute"
-                    }}
-                    />
-                )}
+                    <Badge badgeContent="" color="warning" sx={{position: "absolute"}}/>
+                  )
+                }
                 <Button
                   sx={{
                     backgroundColor: `rgba(${item.color.r},${item.color.g},${item.color.b},${item.color.a})`,

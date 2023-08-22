@@ -86,7 +86,6 @@ export default function EditForm({
     try {
       setIsSubmitting(true);
       const res = await noteApi.editNote(dataItem.idNote, configParam);
-
       setIsSubmitting(false);
 
       enqueueSnackbar(res.message, { variant: "success" });
@@ -164,6 +163,7 @@ export default function EditForm({
             Edit
           </span>
         </Box>
+
         <Box
           className='box-container boxEdit'
           sx={{
@@ -241,6 +241,7 @@ export default function EditForm({
             />
           )}
         </Box>
+        
         <Box style={{ height: "calc((100% - 50px)/2)", marginTop: "5px" }}>
           <ToolsNote
             type='Edit'

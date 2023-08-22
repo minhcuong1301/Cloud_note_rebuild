@@ -216,10 +216,15 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
       setConstruct("List");
     }
   };
-  const sortedAndFilteredData =
-    filteredData.length > 0
-      ? filteredData.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
-      : dataFilter.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
+
+  const sortedAndFilteredData = filteredData.length > 0
+  ? filteredData.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+  : dataFilter.slice(-50).sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
+  
+  const handleRefresh = () => {
+    handleSortByLatest(); 
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.headerFeature}>
@@ -286,6 +291,25 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
           >
             Sort By
           </Button>
+
+           <Button
+            className={classNames(classes.List,"sort-button-text")}
+            variant='outlined'
+            sx={{
+              color: "black",
+              textTransform: "capitalize",
+              borderRadius: "10px",
+              borderColor: "black",
+              width: view && construct === "Refresh"? "100px" : "auto",
+              marginLeft:"20px",
+              "&:hover": { borderColor: "black" },
+            }}
+            startIcon={construct === "Refresh" ? <LoopIcon /> : <LoopIcon />}
+            onClick={handleRefresh}
+          >
+   
+          </Button>
+
           {isTabsOpen && (
             <div className='overlay' ref={overlayRef} onClick={handleOverlayClick}>
               <TabContext value={tabValue}>
@@ -336,7 +360,9 @@ function Archived({ data, handleDelNote, setArchivedData, toolsNote, clear }) {
               </TabContext>
             </div>
           )}
+
         </Box>
+
         <SearchInput setValue={setValue} onSearchItemClick={handleSearchItemClick} />
       </div>
       {view === "Side" && construct === "List" ? (
